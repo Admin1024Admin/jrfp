@@ -1,0 +1,307 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<div th:fragment="copy1" class="modal fade" tabindex="-1" role="dialog" id="myModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">个人资料</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="formSelf" method="POST">
+						<!-- id -->	
+						<input type="hidden" name="id" th:value="${session.currentUser.id}">
+						<input type="hidden" name="valid" th:value="${session.currentUser.valid}">
+						<input type="hidden" name="type" th:value="${session.currentUser.type}">
+						
+						<div class="form-group">
+							<label for=loginId><span style="color:red">* </span>登录名(不超过10个字符)：</label>
+							 <input type="text" th:value="${session.currentUser.loginId}"
+								class="form-control" id="loginId" name="loginId"
+								placeholder="登录名"> <span id="loginIdMsg"
+								class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="name"><span style="color:red">* </span>姓名(不超过10个字符)：</label> 
+							<input type="text" th:value="${session.currentUser.name}"
+								class="form-control" id="name" name="name" placeholder="姓名">
+							<span id="nameMsg" class="help-block"></span>
+						</div>	
+						<div class="form-group">
+							<label for="mobile"><span style="color:red">* </span>手机(不超过11个字符)：</label> 
+							<input type="number" th:value="${session.currentUser.mobile}"
+								class="form-control" id="mobile" name="mobile" placeholder="手机">
+							<span id="mobileMsg" class="help-block"></span>
+						</div>
+						
+						<div class="form-group" th:switch="${session.currentUser.type}">
+				
+							<label for="mobile"><span style="color:red">* </span>角色：</label> 
+							<input th:case="1" th:value="操作员" type="text" class="form-control" disabled>
+							<input th:case="2" th:value="业务主管" type="text" class="form-control" disabled>
+							<input th:case="3" th:value="系统管理员" type="text" class="form-control" disabled>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="fromSelfSubmit">保存</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
+	
+	<div th:fragment="copy2" class="modal fade" tabindex="-1" role="dialog" id="pwdModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="winTitle">修改密码</h4>
+				</div>
+				<div class="modal-body">
+					<form method="post" id="formPwd">
+						<!-- id -->
+						<input type="hidden" name="id" th:value="${session.currentUser.id}">
+	
+						<div class="form-group">
+							<label for=loginId><span style="color:red">* </span>密码(当前使用的密码)：</label>
+								<input type="password"
+								class="form-control" id="oldPwd" name="oldPwd"
+								placeholder="密码"> <span id="oldPwdMsg"
+								class="help-block"></span>
+						</div>
+						
+						<div class="form-group">
+							<label for=loginId><span style="color:red">* </span>新密码(长度不超过16个字符)：</label>
+								<input type="password"
+								class="form-control" id="newPwd1" name="newPwd1"
+								placeholder="新密码"> <span id="newPwd1Msg"
+								class="help-block"></span>
+						</div>
+						
+						<div class="form-group">
+							<label for=loginId><span style="color:red">* </span>再次输入新密码(长度不超过16个字符)：</label>
+								<input type="password"
+								class="form-control" id="newPwd2" name="newPwd2"
+								placeholder="密码确认"> <span id="newPwd2Msg"
+								class="help-block"></span>
+				
+						</div>
+					
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="formPwdSubmit">保存</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
+	<div th:fragment="copy3" class="modal fade" tabindex="-1" role="dialog" id="nameModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="winTitle">系统配置</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="formSet">
+						<!-- id -->
+						<input type="hidden" name="id"  th:value="${session.cfg.id}">
+	
+						<div class="form-group">
+							<label for=loginId>系统名称(根据单位名称自动生成)：</label> 
+								<input disabled type="text" th:value="${session.cfg.projectName}"
+								class="form-control" name="projectName"
+								placeholder="系统名称"> <span id="loginIdMsg"
+								class="help-block"></span>
+						</div>
+						
+						<div class="form-group">
+							<label for=loginId>单位名称：</label> 
+								<input type="text" th:value="${session.cfg.dptName}"
+								class="form-control" name="dptName"
+								placeholder="单位名称"> <span id="loginIdMsg"
+								class="help-block"></span>
+						</div>
+						
+						<div class="form-group">
+							<label for=loginId>单位层级：</label> 
+							<select name="dptType" id="dptType" class="form-control"  th:switch="${session.cfg.dptType}"> 
+								<option th:case="1" value="1">
+									县支行
+								</option>
+								<option th:case="2" value="2">
+									地市中心支行
+								</option>
+								<option th:case="3" value="3">
+									省会及副省级城市中心支行
+								</option>
+								<option th:case="4" value="4">
+									上海总部、分行及营管部
+								</option>
+								
+								<option value="1" th:if="${session.cfg.dptType } !=1">县支行</option>
+								<option value="2" th:if="${session.cfg.dptType } !=2">地市中心支行</option>
+								<option value="3" th:if="${session.cfg.dptType } !=3">省会及副省级城市中心支行</option>
+								<option value="4" th:if="${session.cfg.dptType } !=4">上海总部、分行及营管部</option>
+							</select>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="formSetSubmit">保存</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<script th:fragment="copy4">
+	// 验证中文名称
+	function isName(name) {
+	    var pattern = /^[\u4E00-\u9FA5]{1,6}$/;
+	    return pattern.test(name);
+	}
+	
+	// 验证手机号
+	function isPhone(phone) {  
+	    var pattern = /^1[34578]\d{9}$/;  
+	    return pattern.test(phone);  
+	}
+	function validate3() {
+		var result = true;
+
+		if (!$('#loginId').val()) {
+			$('#loginIdMsg').html('登录名不能空');
+			result = false;
+		} else {
+			$('#loginIdMsg').html('');
+		}
+
+		if (!$('#name').val()) {
+			$('#nameMsg').html('姓名不能空');
+			result = false;
+		} else {
+			if(!isName($('#name').val())){
+				$('#nameMsg').html('姓名不合法');
+				result = false;
+			}else{
+				$('#nameMsg').html('');
+			}
+		}
+
+		if (!$('#mobile').val()) {
+			$('#mobileMsg').html('手机不能空');
+			result = false;
+		} else {
+			if(!isPhone($('#mobile').val())){
+				$('#mobileMsg').html('手机不合法');
+				result = false;
+			}else{
+				$('#mobileMsg').html('');
+			}
+			
+		}
+
+		return result;
+	}
+
+	//个人资料修改
+	$('#fromSelfSubmit').click(function() {
+		if(validate3()){
+			$.ajax({
+				method : 'post',
+				url : "[[@{/set/self}]]",
+				data : $('#formSelf').serialize(),
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success)
+						window.location = window.location;
+				}
+			});
+		}
+	});
+	
+	function validate2() {
+		var result = true;
+		if(!$("#oldPwd").val()){
+			$("#oldPwdMsg").html('密码不允许为空');
+			result = false;
+		}else{
+			$("#oldPwd").html('');
+		}
+		
+		if(!$("#newPwd1").val()){
+			$("#newPwd1Msg").html('密码不允许为空');
+			result = false;
+		}else{
+			$("#newPwd1").html('');
+		}
+		
+		if(!$("#newPwd2").val()){
+			$("#newPwd2Msg").html('密码不允许为空');
+			result = false;
+		}else{
+			$("#newPwd2Msg").html('');
+		}
+		
+		return result;
+		
+	}
+	
+	// 修改密码
+	$('#formPwdSubmit').click(function() {
+		if(!validate2()){
+			return false;
+		}
+		
+		if ($("newPwd1").val() != $("newPwd2").val()) {
+			alert("密码两次输入不一致");
+			return false;
+		}
+		$.ajax({
+			method : 'post',
+			url : "[[@{/set/pwd}]]",
+			data : $('#formPwd').serialize(),
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+	});
+	
+	// 修改项目名称
+	$('#formSetSubmit').click(function() {
+		$.ajax({
+			method : 'post',
+			url : "[[@{/set/dpt}]]",
+			data : $('#formSet').serialize(),
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+	});
+	</script>
+</html>

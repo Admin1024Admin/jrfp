@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+</head>
+<style>
+    .buju{
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+<script>
+    $(function(){
+//            getChun();
+        //用来判断
+        var isShow = false;
+        var isShow2 = false;
+        $("#ChaXunMianBan").hide();
+        //查询按钮点击事件
+        $("#tongJiMianBan").hide();
+        $("#chaxun").click(function(){
+            isShow = !isShow;
+            if(isShow){
+                $("#ChaXunMianBan").show();
+            }else{
+                $("#ChaXunMianBan").hide();
+            }
+        });
+        //统计按钮
+        $("#tongji").click(function(){
+            isShow2=!isShow2;
+            if(isShow2){
+                $("#tongJiMianBan").show();
+            }else{
+                $("#tongJiMianBan").hide();
+            }
+        });
+        //查询按钮点击事件
+        $("#dc").click(function(){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    area: ['90%', '90%'],
+                    anim: 6,
+                    type: 2,
+                    title:"请选择需要导出的字段",
+                    fixed:false,
+                    //resize:false,
+                    scrollbar:false,
+//                    move:false,
+                    moveOut:true,
+                    content:'/fpxexd/gotoFpxexdFields'//$("#tanchu").html() //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    ,btn: ['取消']
+                    ,yes: function(index, layero){
+                        layer.closeAll();
+                    },
+                    zIndex: layer.zIndex, //重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            });
+        });
+        //查询按钮点击事件
+        $("#danTiaoLuRu").click(function(){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    area: ['70%', '60%'],
+                    anim: 6,
+                    type: 2,
+                    title:"请选择需要录入的字段",
+                    fixed:false,
+                    //resize:false,
+                    scrollbar:false,
+//                    move:false,
+                    moveOut:true,
+                    content:'/qtgrjzfpdk/gotoFpxexdFields?cz=dtlr'//$("#tanchu").html() //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    ,btn: ['取消']
+                    ,yes: function(index, layero){
+                        layer.closeAll();
+                    },
+                    zIndex: layer.zIndex, //重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            });
+        });
+        //批量录入样式表格下载
+        $("#demo").click(function(){
+            alert("xx");
+            $.ajax({
+                url:'/fpxexd/demoExportFpxexd',
+                method:'get',
+                success:function (data) {
+                    alert("下载成功");
+                }
+            })
+        })
+    })
+</script>
+<body>
+    <div class="layui-fluid">
+    <div class="layui-row">
+        <!--工具栏-->
+        <div class="layui-card" style="height:50px;margin-top:10px;">
+            <button class="layui-btn" id="chaxun">查询</button>
+        </div>
+        <div class="layui-card" id="ChaXunMianBan">
+            <form class="layui-form" id="#myform">
+                <!--乡镇，村，社，姓名-->
+                <div class="layui-form-item">
+                    <div class="layui-inline buju">
+                        <div>
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" placeholder="请输入查询的名字" autocomplete="off" class="layui-input" style="width: 200px;">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="layui-form-label">身份证号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cardId" placeholder="请输入查询的身份证" autocomplete="off" class="layui-input" style="width: 200px;">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="layui-form-label">贷款合同编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agreementNo" placeholder="请输入查询的贷款合同编号" autocomplete="off" class="layui-input" style="width: 200px;">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">其他个人精准扶贫贷款类别</label>
+                            <div class="layui-input-block">
+                                <select name="fuPinDaiKuanLeiBie">
+                                    <option value=""></option>
+                                    <option value="新型农业经营主体精准扶贫贷款">新型农业经营主体精准扶贫贷款</option>
+                                    <option value="其他类型个人精准扶贫贷款">其他类型个人精准扶贫贷款</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">其他个人精准扶贫贷款类别</label>
+                            <div class="layui-input-block">
+                                <select name="zhuTiDaiKuanLeiBie">
+                                    <option value=""></option>
+                                    <option value="家庭农场贷款">家庭农场贷款</option>
+                                    <option value="农业专业大户贷款">农业专业大户贷款</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline buju">
+                        <label class="layui-form-label">审核状态</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="checkStatus" value="" title="全部" checked>
+                            <input type="radio" name="checkStatus" value="未审核" title="未审核" checked>
+                            <input type="radio" name="checkStatus" value="通过" title="通过">
+                            <input type="radio" name="checkStatus" value="未通过" title="未通过">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="tj">查询</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--统计面板-->
+     <div class="layui-row" id="tongJiMianBan">
+         <form action="/fpxexd/statistical" method="post">
+             <div class="layui-inline">
+                 <label class="layui-form-label">开始时间:</label>
+                 <div class="layui-input-inline">
+                     <input type="date" name="beginDate" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+             <div class="layui-inline">
+                 <label class="layui-form-label">结束时间:</label>
+                 <div class="layui-input-inline">
+                     <input type="date" name="endDate" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+            <input type="submit" value="统计" class="layui-btn layui-btn-danger">
+         </form>
+     </div>
+    <table class="layui-table" lay-data="{url:'/qtgrjzfpdkHistory/qtgrjzfpdkHistory',cellMinWidth:200,page:true,id:'mytable'}" lay-filter="mytable" lay-size="sm">
+        <thead>
+        <tr>
+            <td colspan="46">其他个人精准扶贫贷款</td>
+        </tr>
+        <tr>
+            <th lay-data="{field:'uid',align:'center',style:'background-3olor: #5FB878;font-size:18px;'}" rowspan="3">序号</th>
+
+            <th lay-data="{field:'operation',align:'center'}" rowspan="3">操作状态</th>
+            <th lay-data="{field:'operationPerson',align:'center'}" rowspan="3">操作人</th>
+            <th lay-data="{field:'operationDate',align:'center'}" rowspan="3">操作时间</th>
+            <th lay-data="{field:'checkStatus',align:'center'}" rowspan="3">审核状态</th>
+            <th lay-data="{field:'checkPerson',align:'center'}" rowspan="3">审核人</th>
+            <th lay-data="{field:'checkDate',align:'center'}" rowspan="3">审核时间</th>
+            <th lay-data="{field:'reason',align:'center'}" rowspan="3">拒绝理由</th>
+
+            <th lay-data="{field:'name',align:'center'}" rowspan="3">贷款人姓名</th>
+            <th lay-data="{field:'cardId',align:'center'}" rowspan="3">贷款人身份证号证号</th>
+            <th lay-data="{field:'address',align:'center'}" rowspan="3">常驻地址常驻地址</th>
+            <th lay-data="{field:'telephone',align:'center'}" rowspan="3">联系电话联系电话</th>
+            <th lay-data="{field:'agreementNo',align:'center'}" rowspan="3">贷款合同编号</th>
+            <th lay-data="{field:'daiKuanJinE',align:'center'}" rowspan="3">贷款金额</th>
+            <th lay-data="{field:'daiKuanQiXian',align:'center'}" rowspan="3">贷款期限</th>
+            <th lay-data="{field:'daiKuanDate',align:'center'}" rowspan="3">贷款日期</th>
+            <th lay-data="{field:'daoQiDate',align:'center'}" rowspan="3">到期日期</th>
+            <th lay-data="{field:'daiKuanLiLv',align:'center'}" rowspan="3">贷款利率</th>
+            <th lay-data="{field:'daiKuanZhongLei',align:'center'}" rowspan="3">贷款种类</th>
+            <th lay-data="{field:'daiKuanFangShi',align:'center'}" rowspan="3">贷款方式</th>
+            <th lay-data="{field:'daiKuanYongTu',align:'center'}" rowspan="3">贷款用途</th>
+            <th lay-data="{field:'shiYongDiYu',align:'center'}" rowspan="3">贷款使用地域</th>
+            <th lay-data="{field:'chanYeLeiBie',align:'center'}" rowspan="3">产业类别</th>
+
+            <th lay-data="{align:'center'}" colspan="3" rowspan="1">新型农业经营主体精准扶贫贷款</th>
+            <!--<tr>-->
+                <!--<th lay-data="{field:'',align:'center'}"colspan="1">家庭农场贷款</th>-->
+                <!--<th lay-data="{field:'',align:'center'}" colspan="1">农业专业大户贷款</th>-->
+                <!--<th lay-data="{field:'',align:'center'}" colspan="1">其他</th>-->
+            <!--</tr>-->
+
+
+            <th lay-data="{field:'fuPinDaiKuanLeiBie',align:'center'}" rowspan="3">其他个人精准扶贫贷款类别</th>
+
+            <th lay-data="{field:'daiKuanJinRongJiGou',align:'center'}" rowspan="3">贷款金融机构</th>
+
+            <th lay-data="{align:'center'}" rowspan="1" colspan="4">贷款投放进度</th>
+
+
+
+            <th lay-data="{align:'center'}" rowspan="1" colspan="4">贷款偿还进度</th>
+
+            <th lay-data="{field:'yuQiJinE',align:'center'}" rowspan="3">贷款逾期金额</th>
+            <th lay-data="{field:'yuQiDate',align:'center'}" rowspan="3">贷款逾期时间</th>
+            <th lay-data="{field:'qianXiDate',align:'center'}" rowspan="3">欠息时间</th>
+            <th lay-data="{field:'qianXiJinE',align:'center'}" rowspan="3">欠息金额</th>
+            <th lay-data="{field:'liYiLianJieFangShi',align:'center'}" rowspan="3">利益联结方式</th>
+            <th lay-data="{field:'daiDongPkhMingDan',align:'center'}" rowspan="3">带动贫困户名单</th>
+            <th lay-data="{field:'daiDongPkRenKouShu',align:'center'}" rowspan="3">带动贫困人口数</th>
+            <th lay-data="{field:'zhiJieDaiDongXiaoYi',align:'center'}" rowspan="3">直接带动效益</th>
+            <th lay-data="{field:'note',align:'center'}" rowspan="3">备注</th>
+            <th lay-data="{field:'shuJuWeiHuDanWei',align:'center'}" rowspan="3">数据维护单位</th>
+            <th lay-data="{fixed: 'right',title:'操作', width:300, align:'center', toolbar: '#barDemo'}">操作</th>
+
+        </tr>
+        <tr>
+            <th lay-data="{field:'t1',align:'center'}" colspan="1" rowspan="2">家庭农场贷款</th>
+            <th lay-data="{field:'t2',align:'center'}" colspan="1" rowspan="2">农业专业大户贷款</th>
+            <th lay-data="{field:'t3',align:'center'}" colspan="1" rowspan="2">其他</th>
+            <th lay-data="{field',touFangDate',align:'center'}" colspan="1" rowspan="2">投放日期</th>
+            <th lay-data="{field:'touFangJinE',align:'center'}" colspan="1" rowspan="2">投放金额</th>
+            <th lay-data="{field:'leiJiTouFangJinE',align:'center'}" colspan="1" rowspan="2">累计投放金额</th>
+            <th lay-data="{field:'weiTouFangYuE',align:'center'}" colspan="1" rowspan="2">未投放贷款余额</th>
+
+            <th lay-data="{field:'changHuanJinE',align:'center'}" colspan="1" rowspan="2">偿还贷款金额</th>
+            <th lay-data="{field:'changHuanDate',align:'center'}" colspan="1" rowspan="2">偿还贷款时间</th>
+            <th lay-data="{field:'leiJiChangHuanJinE',align:'center'}"colspan="1" rowspan="2">累计偿还贷款金额</th>
+            <th lay-data="{field:'weiChangHuanYuE',align:'center'}" colspan="1" rowspan="2">未偿还贷款余额</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+        //监听提交
+        form.on('submit(tj)', function(data){
+            alert(1);
+            //这里以搜索为例
+            table.reload('mytable',{
+                url:'/qtgrjzfpdkHistory/findQtgrjzfpdkHistoryWhere',
+                method:'post',
+                where: { //设定异步数据接口的额外参数，任意设
+                    xiang:data.field['xiang'],
+                    chun:data.field['chun'],
+                    name:data.field['name'],
+                    cardId:data.field['cardId'],
+                    checkStatus:data.field['checkStatus']
+                }
+            });
+            return false;
+        });
+        //监听工具条
+        table.on('tool(mytable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if(layEvent === 'detail'){ //查看
+                console.log(data);
+                alert("查看的编号:"+data['uid']);
+                // window.location.href='/fields';
+                window.location.href='/qtgrjzfpdkHistory/findByNo?no='+data['uid'];
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    alert(index);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url:"/qtgrjzfpdkHistory/delByNo?no="+data['uid'],
+                        async:true,
+                        type:"get",
+                        success:function(result){
+                            layui.use('layer', function(){
+                                var layer = layui.layer;
+                                layer.msg(result);
+                                table.reload('mytable', {});
+                            });
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){ //审核
+                alert("编辑的贷款人身份证号码:"+data['uid']);
+                window.location.href='/qtgrjzfpdkHistory/findByNo?no='+data['uid']+"&cz=shenhe";
+            }else if(layEvent==='md'){
+                alert(1);
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        area: ['800px', '370px'],
+                        anim: 6,
+                        type: 2,
+                        title:"带动贫困户名单",
+                        fixed:false,
+                        resize:false,
+                        scrollbar:false,
+                        move:false,
+                        content:'/qtgrjzfpdkHistory/md?agreementNo='+data['agreementNo']//$("#md").html() 这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        ,btn: ['关闭']
+                        ,yes: function(index, layero){
+                            layer.closeAll();
+                        },
+                        zIndex: layer.zIndex, //重点1
+                        success: function(layero){
+                            layer.setTop(layero); //重点2
+                        }
+                    });
+                });
+            }
+        });
+    });
+</script>
+<!--查看删除模板-->
+<script type="text/html" id="barDemo">
+    <button class="layui-btn layui-btn-xs" lay-event="md">带动贫困户名单</button>
+    <button class="layui-btn layui-btn-xs" lay-event="detail">查看</button>
+    <button class="layui-btn layui-btn-xs" lay-event="edit">审核</button>
+    <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+</script>
+</body>
+</html>

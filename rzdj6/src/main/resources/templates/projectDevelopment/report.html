@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" th:href="@{/css/myNavbar.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap.min2.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+<script type="text/javascript" th:src="@{/js/jquery2.1.1.min.js}"></script>
+
+<script th:src="@{/js/excellentexport.js}"></script>
+<script th:src="@{/js/jquery-migrate-1.2.1.min.js}"></script>
+<script th:src="@{/js/jquery.jqprint-0.3.js}"></script>
+<style>
+.edit {
+	width: 50px
+}
+
+table {
+	border: 1px solid #ccc !important;
+}
+
+table tr {
+	border: 1px solid #ccc !important;
+}
+
+table td {
+	border: 1px solid #ccc !important;
+	vertical-align: middle !important;
+}
+
+table th {
+	border: 1px solid #ccc !important;
+	vertical-align: middle !important;
+}
+
+table caption {
+	border: none !important;
+}
+</style>
+<script>
+	var id = "[[${model.id}]]";
+	var name = "[[${model.name}]]";
+	var state = "[[${model.state}]]"
+
+	//审核
+	function audit(id, flag) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/projectDevelopment/audit}]]",
+			data : {
+				'id' : id,
+				'flag' : flag
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			},
+			error : function() {
+				alert('no');
+			}
+		});
+	}
+
+	$(function() {
+		$('.find').show();
+		$('.find').css("visibility", "visible");
+		$('.edit').hide();
+		$('.edit').css("visibility", "hidden");
+
+		$("#btnEdit").bind('click', function() {
+			$('.find').hide();
+			$('.find').css("visibility", "hidden");
+			$('.edit').show();
+			$('.edit').css("visibility", "visible");
+		});
+
+		$("#btnSave").bind('click', function() {
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/projectDevelopment/save}]]",
+				data : $('#f1').serialize(),
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success) {
+						window.location = window.location;
+						$('.find').css("visibility", "visible");
+						$('.edit').css("visibility", "hidden");
+					}
+
+				},
+				error : function() {
+					alert('保存失败');
+				}
+			});
+
+		});
+
+		//提交
+		$('#btnSubmit').bind('click', function() {
+			var result = confirm('将要提交<' + name + '>是否继续?提交后将不能编辑');
+			if (!result)
+				return;
+
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/projectDevelopment/submit}]]",
+				data : {
+					'id' : id,
+				},
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success)
+						window.location = window.location;
+				}
+			});
+
+		});
+
+		//审核通过
+		$('#flag1').bind('click', function() {
+			audit(id, '1');
+		});
+
+		//审核不通过
+		$('#flag0').bind('click', function() {
+			audit(id, '0');
+		});
+
+		//打印
+		$('#btnPrint').bind('click', function() {
+			if (state != 2) {
+				alert("当前报表状态不允许打印，报表为通过状态下才能打印!");
+				return false;
+			}
+			$("#dataPane").jqprint();
+		});
+
+	});
+</script>
+</head>
+<body>
+<body>
+	<div class="container" style="width: 100%">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron"
+			style="background: #F8F8FF; border: 1px solid #F5F5F5; color: #666; height: 140px">
+			<h3 th:text="'报表：'+${reportName}"
+				style="margin-top: -14px; margin-left: -35px">2017年度人员情况统计表</h3>
+			<h3 th:switch="${model.state}" style="margin-left: -35px">
+				状态： <span style="color: red" th:case="0">编辑</span> <span
+					style="color: red" th:case="1">待审核</span> <span style="color: red"
+					th:case="2">通过</span> <span style="color: red" th:case="3">不通过</span>
+			</h3>
+		</div>
+		<div class="panel" th:switch="${model.state}">
+			<button th:case="0" th:if="${session.currentUser.type} == 1"
+				type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnEdit">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+
+			<button th:case="3" th:if="${session.currentUser.type} == 1"
+				type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnEdit">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+
+			<button th:case="2" th:if="${session.currentUser.type} == 1"
+				type="button" class="btn btn-primary" data-toggle="modal"
+				onclick="alert('当前状态不允许编辑')">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+
+			<button th:case="1" th:if="${session.currentUser.type} == 1"
+				type="button" class="btn btn-primary" data-toggle="modal"
+				onclick="alert('当前状态不允许编辑')">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			<button th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnSave">
+				<span class="glyphicon glyphicon-send"></span> 保存
+			</button>
+			<button th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnSubmit">
+				<span class="glyphicon glyphicon-send"></span> 提交
+			</button>
+			<div class="btn-group">
+				<button th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-th-large"></span> 审核
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li id='flag1'><a href="javascript:void(0)">通过</a></li>
+					<li class="divider"></li>
+					<li id='flag0'><a href="javascript:void(0)">不通过</a></li>
+				</ul>
+			</div>
+			<span th:switch="${model.state}"> <a th:case="2"
+				href="javascript:void(0)" th:if="${session.currentUser.type} == 2"
+				role="button" class="btn btn-primary" th:download="${model.name}"
+				onclick="return ExcellentExport.excel(this, 'datatable','Sheet Name Here')">
+					<span class="glyphicon glyphicon-folder-open"></span> 导出
+			</a>
+				<button th:case="1" onclick="alert('不能导出未通过的报表')"
+					th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary" data-toggle="modal">
+					<span class="glyphicon glyphicon-folder-open"></span> 导出
+				</button>
+				<button th:case="3" onclick="alert('不能导出未通过的报表')"
+					th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary" data-toggle="modal">
+					<span class="glyphicon glyphicon-folder-open"></span> 导出
+				</button>
+			</span>
+
+			<button th:if="${session.currentUser.type} == 2" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnPrint">
+				<span class="glyphicon glyphicon-print"></span> 打印
+			</button>
+		</div>
+		<div class="panel panel-default" id="dataPane" style="border: none">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="datatable">
+					<caption>
+						<h3 style="text-align: center; color: #333">内审项目开展情况统计表</h3>
+						<span style="float: left" th:text="'填报单位：'+${session.cfg.dptName}"></span>
+						<span style="float: right"
+							th:text="'填报时间：'+${#dates.format(model.sumbitDate,'yyyy-MM-dd')}"></span>
+					</caption>
+					<form id="f1" name="f1" method="POST">
+						<input style="width: 50px"
+							th:if="${session.currentUser.type} == 1" type="hidden" name="id"
+							th:value="${model.id}">
+						<tr>
+							<th rowspan="4" style="text-align: center;">单位</th>
+							<th colspan="22" style="text-align: center;">常规审计</th>
+							<th colspan="32" style="text-align: center;">专项审计</th>
+							<th colspan="4" rowspan="2" style="text-align: center;">后续审计</th>
+						</tr>
+						<tr>
+
+							<th colspan="5" style="text-align: center;">离任审计</th>
+							<th colspan="5" style="text-align: center;">履职审计</th>
+							<th colspan="4" style="text-align: center;">预算管理审计</th>
+							<th colspan="4" style="text-align: center;">依法行政审计</th>
+							<th colspan="4" style="text-align: center;">单位经营管理审计</th>
+							<th colspan="8" style="text-align: center;">财务专项审计</th>
+							<th colspan="8" style="text-align: center;">业务专项审计</th>
+							<th colspan="8" style="text-align: center;">信息技术专项审计</th>
+							<th colspan="8" style="text-align: center;">其他</th>
+						</tr>
+						<tr>
+							<td rowspan="2" style="text-align: center;">项目数合计
+							</th>
+							<td colspan="3" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数合计
+							</th>
+							<td colspan="3" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数合计
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数合计
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数合计
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数
+							</th>
+							<td colspan="4" style="text-align: center;">分类1
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数
+							</th>
+							<td colspan="4" style="text-align: center;">分类1
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数
+							</th>
+							<td colspan="4" style="text-align: center;">分类1
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数
+							</th>
+							<td colspan="4" style="text-align: center;">分类1
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+
+							<td rowspan="2" style="text-align: center;">项目数合计
+							</th>
+							<td colspan="2" style="text-align: center;">分类2
+							</th>
+							<td rowspan="2" style="text-align: center;">工作量
+							</th>
+						</tr>
+						<tr>
+
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+							<td rowspan="1" style="text-align: center;">附属单位
+							</th>
+
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+							<td rowspan="1" style="text-align: center;">附属单位
+							</th>
+
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">总行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">分行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">省会中支行系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">本级行项目
+							</th>
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">总行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">分行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">省会中支行系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">本级行项目
+							</th>
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">总行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">分行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">省会中支行系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">本级行项目
+							</th>
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">总行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">分行级系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">省会中支行系统项目
+							</th>
+							<td rowspan="1" style="text-align: center;">本级行项目
+							</th>
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+							<td rowspan="1" style="text-align: center;">同级审
+							</th>
+							<td rowspan="1" style="text-align: center;">上审下
+							</th>
+
+						</tr>
+
+						<tr>
+							<td style="text-align: center;">上海总部
+							</th>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td1}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td1"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td1}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td2}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td2"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td2}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td3}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td3"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td3}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td4}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td4"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td4}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td5}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td5"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td5}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td6}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td6"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td6}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td7}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td7"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td7}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td8}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td8"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td8}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td9}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td9"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td9}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td10}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td10"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td10}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td11}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td11"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td11}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td12}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td12"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td12}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td13}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td13"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td13}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td14}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td14"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td14}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td15}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td15"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td15}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td16}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td16"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td16}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td17}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td17"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td17}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td18}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td18"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td18}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td19}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td19"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td19}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td20}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td20"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td20}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td21}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td21"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td21}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td22}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td22"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td22}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td23}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td23"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td23}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td24}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td24"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td24}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td25}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td25"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td25}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td26}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td26"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td26}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td27}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td27"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td27}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td28}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td28"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td28}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td29}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td29"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td29}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td30}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td30"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td30}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td31}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td31"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td31}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td32}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td32"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td32}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td33}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td33"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td33}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td34}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td34"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td34}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td35}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td35"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td35}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td36}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td36"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td36}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td37}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td37"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td37}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td38}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td38"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td38}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td39}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td39"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td39}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td40}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td40"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td40}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td41}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td41"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td41}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td42}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td42"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td42}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td43}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td43"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td43}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td44}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td44"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td44}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td45}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td45"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td45}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td46}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td46"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td46}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td47}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td47"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td47}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td48}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td48"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td48}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td49}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td49"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td49}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td50}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td50"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td50}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td51}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td51"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td51}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td52}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td52"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td52}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td53}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td53"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td53}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td54}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td54"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td54}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td55}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td55"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td55}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td56}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td56"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td56}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td57}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td57"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td57}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td58}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td58"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td58}"></td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">省会中支
+							</th>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td59}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td59"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td59}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td60}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td60"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td60}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td61}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td61"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td61}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td62}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td62"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td62}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td63}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td63"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td63}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td64}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td64"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td64}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td65}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td65"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td65}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td66}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td66"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td66}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td67}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td67"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td67}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td68}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td68"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td68}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td69}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td69"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td69}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td70}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td70"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td70}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td71}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td71"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td71}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td72}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td72"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td72}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td73}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td73"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td73}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td74}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td74"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td74}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td75}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td75"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td75}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td76}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td76"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td76}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td77}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td77"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td77}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td78}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td78"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td78}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td79}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td79"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td79}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td80}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td80"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td80}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td81}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td81"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td81}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td82}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td82"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td82}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td83}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td83"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td83}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td84}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td84"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td84}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td85}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td85"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td85}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td86}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td86"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td86}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td87}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td87"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td87}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td88}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td88"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td88}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td89}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td89"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td89}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td90}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td90"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td90}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td91}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td91"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td91}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td92}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td92"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td92}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td93}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td93"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td93}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td94}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td94"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td94}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td95}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td95"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td95}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td96}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td96"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td96}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td97}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td97"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td97}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td98}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td98"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td98}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td99}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td99"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td99}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td100}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td100"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td100}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td101}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td101"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td101}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td102}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td102"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td102}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td103}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td103"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td103}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td104}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td104"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td104}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td105}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td105"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td105}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td106}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td106"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td106}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td107}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td107"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td107}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td108}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td108"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td108}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td109}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td109"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td109}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td110}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td110"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td110}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td111}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td111"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td111}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td112}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td112"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td112}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td113}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td113"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td113}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td114}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td114"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td114}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td115}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td115"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td115}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td116}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td116"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td116}"></td>
+
+						</tr>
+						<tr>
+							<td style="text-align: center;">地市中支
+							</th>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td117}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td117"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td117}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td118}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td118"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td118}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td119}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td119"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td119}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td120}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td120"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td120}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td121}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td121"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td121}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td122}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td122"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td122}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td123}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td123"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td123}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td124}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td124"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td124}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td125}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td125"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td125}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td126}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td126"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td126}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td127}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td127"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td127}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td128}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td128"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td128}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td129}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td129"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td129}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td130}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td130"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td130}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td131}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td131"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td131}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td132}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td132"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td132}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td133}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td133"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td133}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td134}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td134"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td134}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td135}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td135"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td135}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td136}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td136"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td136}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td137}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td137"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td137}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td138}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td138"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td138}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td139}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td139"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td139}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td140}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td140"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td140}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td141}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td141"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td141}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td142}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td142"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td142}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td143}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td143"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td143}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td144}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td144"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td144}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td145}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td145"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td145}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td146}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td146"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td146}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td147}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td147"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td147}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td148}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td148"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td148}"></td>
+
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td149}"></span> <input
+								th:if="${session.currentUser.type} == 1" name="td149"
+								style="width: 50px" type="number" class="edit"
+								th:value="${model.td149}"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td150}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td150}"
+								th:if="${session.currentUser.type} == 1" name="td150"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td151}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td151}"
+								th:if="${session.currentUser.type} == 1" name="td151"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td152}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td152}"
+								th:if="${session.currentUser.type} == 1" name="td152"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td153}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td153}"
+								th:if="${session.currentUser.type} == 1" name="td153"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td154}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td154}"
+								th:if="${session.currentUser.type} == 1" name="td154"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td155}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td155}"
+								th:if="${session.currentUser.type} == 1" name="td155"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td156}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td156}"
+								th:if="${session.currentUser.type} == 1" name="td156"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td157}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td157}"
+								th:if="${session.currentUser.type} == 1" name="td157"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td158}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td158}"
+								th:if="${session.currentUser.type} == 1" name="td158"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td159}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td159}"
+								th:if="${session.currentUser.type} == 1" name="td159"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td160}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td160}"
+								th:if="${session.currentUser.type} == 1" name="td160"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td161}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td161}"
+								th:if="${session.currentUser.type} == 1" name="td161"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td162}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td162}"
+								th:if="${session.currentUser.type} == 1" name="td162"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td163}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td163}"
+								th:if="${session.currentUser.type} == 1" name="td163"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td164}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td164}"
+								th:if="${session.currentUser.type} == 1" name="td164"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td165}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td165}"
+								th:if="${session.currentUser.type} == 1" name="td165"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td166}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td166}"
+								th:if="${session.currentUser.type} == 1" name="td166"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td167}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td167}"
+								th:if="${session.currentUser.type} == 1" name="td167"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td168}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td168}"
+								th:if="${session.currentUser.type} == 1" name="td168"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td169}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td169}"
+								th:if="${session.currentUser.type} == 1" name="td169"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td170}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td170}"
+								th:if="${session.currentUser.type} == 1" name="td170"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td171}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td171}"
+								th:if="${session.currentUser.type} == 1" name="td171"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td172}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td172}"
+								th:if="${session.currentUser.type} == 1" name="td172"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td173}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td173}"
+								th:if="${session.currentUser.type} == 1" name="td173"></td>
+								
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td174}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td174}"
+								th:if="${session.currentUser.type} == 1" name="td174"></td>
+
+						</tr>
+						<tr>
+							<td style="text-align: center;">县支行
+							</th>
+							
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td175}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td175}"
+								th:if="${session.currentUser.type} == 1" name="td175"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td176}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td176}"
+								th:if="${session.currentUser.type} == 1" name="td176"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td177}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td177}"
+								th:if="${session.currentUser.type} == 1" name="td177"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td178}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td178}"
+								th:if="${session.currentUser.type} == 1" name="td178"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td179}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td179}"
+								th:if="${session.currentUser.type} == 1" name="td179"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td180}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td180}"
+								th:if="${session.currentUser.type} == 1" name="td180"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td181}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td181}"
+								th:if="${session.currentUser.type} == 1" name="td181"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td182}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td182}"
+								th:if="${session.currentUser.type} == 1" name="td182"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td183}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td183}"
+								th:if="${session.currentUser.type} == 1" name="td183"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td184}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td184}"
+								th:if="${session.currentUser.type} == 1" name="td184"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td185}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td185}"
+								th:if="${session.currentUser.type} == 1" name="td185"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td186}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td186}"
+								th:if="${session.currentUser.type} == 1" name="td186"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td187}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td187}"
+								th:if="${session.currentUser.type} == 1" name="td187"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td188}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td188}"
+								th:if="${session.currentUser.type} == 1" name="td188"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td189}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td189}"
+								th:if="${session.currentUser.type} == 1" name="td189"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td190}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td190}"
+								th:if="${session.currentUser.type} == 1" name="td190"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td191}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td191}"
+								th:if="${session.currentUser.type} == 1" name="td191"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td192}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td192}"
+								th:if="${session.currentUser.type} == 1" name="td192"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td193}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td193}"
+								th:if="${session.currentUser.type} == 1" name="td193"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td194}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td194}"
+								th:if="${session.currentUser.type} == 1" name="td194"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td195}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td195}"
+								th:if="${session.currentUser.type} == 1" name="td195"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td196}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td196}"
+								th:if="${session.currentUser.type} == 1" name="td196"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td197}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td197}"
+								th:if="${session.currentUser.type} == 1" name="td197"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td198}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td198}"
+								th:if="${session.currentUser.type} == 1" name="td198"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td199}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td199}"
+								th:if="${session.currentUser.type} == 1" name="td199"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td200}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td200}"
+								th:if="${session.currentUser.type} == 1" name="td200"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td201}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td201}"
+								th:if="${session.currentUser.type} == 1" name="td201"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td202}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td202}"
+								th:if="${session.currentUser.type} == 1" name="td202"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td203}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td203}"
+								th:if="${session.currentUser.type} == 1" name="td203"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td204}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td204}"
+								th:if="${session.currentUser.type} == 1" name="td204"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td205}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td205}"
+								th:if="${session.currentUser.type} == 1" name="td205"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td206}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td206}"
+								th:if="${session.currentUser.type} == 1" name="td206"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td207}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td207}"
+								th:if="${session.currentUser.type} == 1" name="td207"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td208}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td208}"
+								th:if="${session.currentUser.type} == 1" name="td208"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td209}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td209}"
+								th:if="${session.currentUser.type} == 1" name="td209"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td210}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td210}"
+								th:if="${session.currentUser.type} == 1" name="td210"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td211}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td211}"
+								th:if="${session.currentUser.type} == 1" name="td211"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td212}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td212}"
+								th:if="${session.currentUser.type} == 1" name="td212"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td213}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td213}"
+								th:if="${session.currentUser.type} == 1" name="td213"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td214}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td214}"
+								th:if="${session.currentUser.type} == 1" name="td214"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td215}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td215}"
+								th:if="${session.currentUser.type} == 1" name="td215"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td216}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td216}"
+								th:if="${session.currentUser.type} == 1" name="td216"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td217}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td217}"
+								th:if="${session.currentUser.type} == 1" name="td217"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td218}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td218}"
+								th:if="${session.currentUser.type} == 1" name="td218"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td219}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td219}"
+								th:if="${session.currentUser.type} == 1" name="td219"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td220}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td220}"
+								th:if="${session.currentUser.type} == 1" name="td220"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td221}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td221}"
+								th:if="${session.currentUser.type} == 1" name="td221"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td222}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td222}"
+								th:if="${session.currentUser.type} == 1" name="td222"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td223}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td223}"
+								th:if="${session.currentUser.type} == 1" name="td223"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td224}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td224}"
+								th:if="${session.currentUser.type} == 1" name="td224"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td225}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td225}"
+								th:if="${session.currentUser.type} == 1" name="td225"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td226}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td226}"
+								th:if="${session.currentUser.type} == 1" name="td226"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td227}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td227}"
+								th:if="${session.currentUser.type} == 1" name="td227"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td228}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td228}"
+								th:if="${session.currentUser.type} == 1" name="td228"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td229}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td229}"
+								th:if="${session.currentUser.type} == 1" name="td229"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td230}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td230}"
+								th:if="${session.currentUser.type} == 1" name="td230"></td>
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td231}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td231}"
+								th:if="${session.currentUser.type} == 1" name="td231"></td>
+								
+							<td style="text-align: center;"><span class="find"
+								th:text="${model.td232}"></span> <input style="width: 50px"
+								type="number" class="edit" th:value="${model.td232}"
+								th:if="${session.currentUser.type} == 1" name="td232"></td>
+
+
+						</tr>
+						<tr>
+							<td style="text-align: center;">合计</td>
+							<th:block th:each="userStat:${countList}">
+								<td style="text-align: center;"><span
+									th:text="${userStat==0?'':userStat}"></span></td>
+							</th:block>
+						</tr>
+					</form>
+				</table>
+			</div>
+			<div class="panel panel-default"
+				style="font-size: 15px; margin-top: 5px; border: none; color: red;"
+				id="pagebar">
+
+				<p>
+					<span style="margin-left: 0px;">填表说明：1.工作量指投入现场审计的实际人次和天数，公式：工作量=∑（人次×天数）。</span>
+				</p>
+				<p>
+					<span style="margin-left: 75px;">2.离任审计、履职审计中，委托审计计入立项单位工作量，授权审计计入实施单位工作量。</span>
+				</p>
+				<p>
+					<span style="margin-left: 75px;">3.预算管理、依法行政、专项审计中，涉及多个层级的审计，以立项（审计通知书）为准，1次立项为一个审计项目。</span>
+				</p>
+				<p>
+					<span style="margin-left: 75px;">4.各类审计包括审计和审计调查。 </span>
+				</p>
+				<p>
+					<span style="margin-left: 75px;">5.附属单位经验管理审计指分支行对社团、食堂、票交所等附属单位开展的经营管理审计，不含对附属单位开展的离任履职审计。</span>
+				</p>
+
+			</div>
+		</div>
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+
+	<!-- /container -->
+<body th:replace="/layout/bootstrap :: bootstrapJs" />
+<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+</body>
+</html>

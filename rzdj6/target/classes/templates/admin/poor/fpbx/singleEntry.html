@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        td{
+            display:none;
+        }
+    </style>
+    <script th:inline="javascript">
+        $(function(){
+            //$.each($("#myTable td"), function(i){ if(i > 0){ this.style.display = 'none'; } });
+            var list = [[${fields}]];
+            for(var i=0;i<list.length;i++){
+                var id = "#"+list[i];
+                $(id).css("display","block");
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <h1>扶贫保险</h1>
+    <form class="layui-form" action="/fpbx/saveSingle" method="post">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <table class="layui-table">
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px;">基本情况</td>
+                    </tr>
+                    <tr>
+                        <td id="xiang">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">乡（镇）</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xiang" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chun">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">行政村</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chun" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="zu">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">组别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zu" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="huZhuName">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">户主姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="huZhuName" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="familyMemberName">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">家庭成员姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="familyMemberName" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="cardId">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="cardId" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="familyRelation">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">与户主关系</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="familyRelation"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="familyMemberCount">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">家庭人口</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="familyMemberCount"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="baoFeiZongE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">总额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="baoFeiZongE"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="baoFeiZiFu">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">其中：自付</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="baoFeiZiFu" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="baoFeiBuTie">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">其中：财政补贴</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="baoFeiBuTie" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="baoZhangJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">保障金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="baoZhangJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="baoZhangQiJian">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">保障期间</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="baoZhangQiJian" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="touBaoDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">投保时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="touBaoDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daoQiDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">到期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="daoQiDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="liPeiShiXiang">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">理赔事项</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="liPeiShiXiang" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="liPeiDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">理赔时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="liPeiDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="liPeiJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">理赔金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="liPeiJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="liPeiShouYiRen">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">受益人</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="liPeiShouYiRen" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chengBaoJiGou">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">承办保险机构</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chengBaoJiGou" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="touPinYear">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">脱贫年度</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="touPinYear" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="note">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="note" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="float:right;">
+                <button class="layui-btn layui-layer-btn0" type="reset">重置</button>
+                <button class="layui-btn" lay-submit lay-filter="save">录入</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        //监听提交
+        form.on('submit(save)', function(data){
+            layer.msg("正在录入...");
+//            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+//            parent.layer.close(index); // 关闭layer
+
+            //roleId在这里没多少用
+            $.ajax({
+                type: 'POST',
+                url:'/fpbx/saveSingle',
+                //dataType:'json',
+                data: data.field,
+                async: true,
+                success: function (result) {
+                    alert(result);
+                    if (result=='ok') {
+                        layer.msg('success:录入成功', {icon: 1, time:2000});
+//                        setTimeout(function(){
+//                            top.layer.closeAll('iframe');
+//                            //刷新父亲的页面
+//                            parent.refreshIframe();
+//                        },800);
+                    } else {
+                        consol.alert(result);
+                        layer.msg('eles:录入失败！', {icon: 2, time:1000});
+                    }
+                },
+                error:function(){
+                    layer.msg('eles:录入失败！', {icon: 2, time:1000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

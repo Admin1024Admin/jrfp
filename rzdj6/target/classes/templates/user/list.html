@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="|${session.cfg.projectName} - 用户管理|"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<script>
+	function validatePwd() {
+		var result = true;
+		var pwd = $('#pwd').val();
+		var pwd1 = $('#pwd1').val();
+		if (pwd.length < 8) {
+			$('#pwdMsg').html('密码长度至少8位');
+			result = false;
+			return;
+		}
+		
+		var partten1 = /\d/;
+		var partten2 = /[a-z]/;
+		var partten3 = /[A-Z]/;
+		
+		if (!pwd.match(partten1)) {
+			$('#pwdMsg').html('密码中至少有一位数字');
+			result = false;
+			return;
+		}
+		else {
+			$('#pwdMsg').html('');
+		}
+		
+		if (!pwd.match(partten2)) {
+			$('#pwdMsg').html('密码中至少有一个小写字母');
+			result = false;
+			return;
+		}
+		else {
+			$('#pwdMsg').html('');
+		}
+		
+		if (!pwd.match(partten3)) {
+			$('#pwdMsg').html('密码中至少有一个大写字母');
+			result = false;
+			return;
+		}
+		else {
+			$('#pwdMsg').html('');
+		}
+		
+		
+		if (pwd != pwd1) {
+			$('#pwd1Msg').html('两次密码不相同');
+			result = false;
+			return;
+		}
+		else {
+			$('#pwd1Msg').html('');
+		}
+		
+		return result;
+	}
+	//验证中文名称
+	function isName(name) {
+	    var pattern = /^[\u4E00-\u9FA5]{1,6}$/;
+	    return pattern.test(name);
+	}
+	
+	// 验证手机号
+	function isPhone(phone) {  
+	    var pattern = /^1[34578]\d{9}$/;  
+	    return pattern.test(phone);  
+	}
+	//判空
+	function validate() {
+		var result = true;
+
+		if (!$('#loginId').val()) {
+			$('#loginIdMsg').html('登录名不能空');
+			result = false;
+		} else {
+			$('#loginIdMsg').html('');
+		}
+
+		if (!$('#name').val()) {
+			$('#nameMsg').html('姓名不能空');
+			result = false;
+		} else {
+			if(!isName($('#name').val())){
+				$('#nameMsg').html('姓名不合法');
+				result = false;
+			}else{
+				$('#nameMsg').html('');
+			}
+		}
+
+		if (!$('#mobile').val()) {
+			$('#mobileMsg').html('手机不能空');
+			result = false;
+		} else {
+			if(!isPhone($('#mobile').val())){
+				$('#mobileMsg').html('手机不合法');
+				result = false;
+			}else{
+				$('#mobileMsg').html('');
+			}
+			
+		}
+
+		if (!$("[name='valid']:checked").val()) {
+			$('#validMsg').html('是否有效不能空');
+			result = false;
+		} else {
+			$('#validMsg').html('');
+		}
+
+		return result;
+	}
+
+	//删除请求
+	function deletes(ids) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/user/delete}]]",
+			data : {
+				'id' : ids
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+	}
+
+	//获取单个信息
+	function getData(id) {
+		$.ajax({
+			url : "[[@{/user/getData}]]",
+			data : {
+				'id' : id
+			},
+			success : function(response) {
+				if (response.success) {
+					$('#id').val(response.obj.id);
+					$('#name').val(response.obj.name);
+					s = "[name=valid][value=" + response.obj.valid.toString()
+							+ "]"
+					$(s).prop("checked", 'checked');
+					$('#loginId').val(response.obj.loginId);
+					$('#mobile').val(response.obj.mobile);
+					$('#type').val(response.obj.type);
+					$('#dpt').val(response.obj.dpt);
+				}
+			}
+		});
+	}
+
+	//增加或编辑请求
+	function createOrUpdate() {
+		if (!validate())
+			return;
+		$.ajax({
+			method : 'post',
+			url : "[[@{/user/createOrUpdate}]]",
+			data : $('#form1').serialize(),
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+
+	}
+
+	//按钮事件
+	$(function() {
+		//全部选中按钮
+		$('#selectAll').click(function() {
+			$("input[type='checkbox']").each(function() {
+				if ($(this).prop('checked')) {
+					$('#selectAll').prop("checked", false);
+					$(this).prop('checked', false);
+
+				} else {
+					$('#selectAll').prop("checked", true);
+					$(this).prop('checked', true);
+				}
+			});
+		});
+
+		//顶部增加按钮
+		$('#btnAdd').bind('click', function() {
+			$('#winTitle').html('新增');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+		});
+
+		//顶部编辑按钮
+		$('#btnUpdate').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要编辑的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能编辑一个条目');
+				return false;
+			}
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $("input[type='checkbox']:checked").val();
+			getData(id); //获取数据
+		});
+
+		//顶部删除按钮
+		$('#btnDelete').bind('click', function() {
+			var ids = "";
+			$("input:checkbox[name=id]:checked").each(function(i) {
+				if (0 == i) {
+					ids = $(this).val();
+				} else {
+					ids += ("," + $(this).val());
+				}
+			});	
+			if(ids == ""){
+				alert('请选择要删除的条目');
+				return;
+			}
+			var result = confirm('将要删除<' + ids + '>是否继续?');
+			if (!result) return;
+			deletes(ids);
+		});
+
+		//右侧编辑按钮
+		$('.rightUpdate').bind('click', function() {
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			getData(id); //获取数据
+
+		});
+
+		//右侧删除按钮
+		$('.rightDelete').bind('click', function() {
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			var name = $(this).parent().parent().children('td:eq(2)').html();
+			var result = confirm('将要删除<' + name + '>是否继续?');
+			if (!result) return;
+			deletes(id);
+
+		});
+
+		//保存按钮
+		$('#btnSave').click(function() {
+			createOrUpdate(); //更新
+		});
+
+		//搜索按钮
+		$('#btnSearch').click(function() {
+			$("#pram").val($("#search").val());
+			$("#f1").submit();
+		});	
+		
+		$('#restPwd').click(function() {
+			var ids = "";
+			$("input:checkbox[name=id]:checked").each(function(i) {
+				if (0 == i) {
+					ids = $(this).val();
+				} else {
+					ids += ("," + $(this).val());
+				}
+			});	
+			if(ids == ""){
+				alert('请选择要操作的条目');
+				return;
+			}
+			//var name = $(this).parent().parent().children('td:eq(1)').html();
+			var result = confirm('将要更改<' + ids + '>的密码是否继续?');
+			if (!result) return;
+			$('#id1').val(ids);
+			$('#winPwd').modal({});
+		});
+		
+		$('#btnResetPwd').click(function(){
+			if (!validatePwd()) return;
+			
+			$.ajax({
+				method: 'post',
+				url: "[[@{/user/resetPwd}]]",
+				data: $('#form2').serialize(),
+				success: function(obj) {
+					alert(obj.msg);
+					if (obj.success) window.location = window.location;
+				}
+			});
+		});
+		
+	});
+</script>
+</head>
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron" style="background: #F8F8FF;border:1px solid #F5F5F5 ;color:#4682B4">
+			<h3>操作员</h3>
+			<p>负责录入数据</p>
+		</div>
+		<div class="panel">
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnAdd">
+				<span class="glyphicon glyphicon-plus"></span> 增加
+			</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnUpdate">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnDelete">
+				<span class="glyphicon glyphicon-remove"></span> 删除
+			</button>
+			
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="restPwd">
+				修改密码
+			</button>
+
+			<form style="float: right; position: relative; width: 23%" id="f1"
+				th:action="@{/user/list1}" method="POST">
+				
+				<!-- 传参 -->
+				<input type="hidden" id="page" name="page" th:value="${page}">
+				<input type="hidden" id="size" name="size" th:value="${size}">
+				<input type="hidden" id="pram" name="pram" th:value="${pram}">
+			</form>
+		</div>
+		<div class="panel panel-default">
+			<table class="table">
+				<tr>
+					<th style="text-align: center"><input type="checkbox"
+						id="selectAll" title="全选"></th>
+					<th style="text-align: center">编号</th>
+					<th style="text-align: left">登录名</th>
+					<th style="text-align: center">姓名</th>
+					<th style="text-align: center">手机</th>
+					<th style="text-align: center">角色</th>
+					<th style="text-align: center">是否有效</th>
+					<th style="text-align: center">操作</th>
+				</tr>
+
+				<th:block th:each="user, it : ${list}">
+					<tr>
+						<td style="text-align: center">
+							<input type="checkbox" th:value="${user.id}" th:id="|cb${user.id}|" th:name="id" />
+							<input type="hidden" th:value="${user.id}" th:name="|id${user.id}|" /></td>
+						<td style="text-align: center" th:text="${user.id}">1</td>
+						<td style="text-align: left" th:text="${user.loginId}">liaohai</td>
+						<td style="text-align: center" th:text="${user.name}">廖海</td>
+						<td style="text-align: center" th:text="${user.mobile}">13419211668</td>
+						<td style="text-align: center" th:if="${user.type} < 3"
+							th:text="${user.type} == 1 ? '操作员' : '业务主管'"></td>
+						<td style="text-align: center" th:if="${user.type} > 2"
+							th:text="系统管理员"></td>
+						<td style="text-align: center"
+							th:text="${user.valid} == 1 ? '有效' : '无效'"></td>
+						<td style="text-align: center">
+						 	<span
+							class="glyphicon glyphicon-pencil rightUpdate text-success"></span> 
+							<span
+							class="glyphicon glyphicon-remove rightDelete text-info"></span>
+						</td>
+					</tr>
+				</th:block>
+
+			</table>
+		</div>
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+
+	<!-- /container -->
+	<body th:replace="/layout/bootstrap :: bootstrapJs" />
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="win">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="winTitle">新增</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="form1">
+						<!-- id -->
+						<input type="hidden" id="id" name="id" />
+	
+						<div class="form-group">
+							<label for=loginId><span style="color:red">* </span>登录名(不超过12个字符)：</label> <input type="text"
+								class="form-control" id="loginId" name="loginId"
+								placeholder="登录名"> <span id="loginIdMsg"
+								class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="name"><span style="color:red">* </span>姓名(不超过10个字符)：</label> <input type="text"
+								class="form-control" id="name" name="name" placeholder="姓名">
+							<span id="nameMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="mobile"><span style="color:red">* </span>手机(不超过11个字符)：</label> 
+							<input class="form-control" id="mobile" name="mobile" placeholder="手机">
+							<span id="mobileMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="mobile"><span style="color:red">* </span>角色：</label> <select id="type" name="type"
+								class="form-control">
+								<option value="1">操作员</option>
+							</select>
+						</div>
+	
+						<div class="form-group">
+							<div class="checkbox">
+								<label> <input type="radio" id="valid1" name="valid"
+									value="1" />有效
+								</label> <label> <input type="radio" id="valid2" name="valid"
+									value="0" />无效
+								</label>
+							</div>
+							<span id="validMsg" class="help-block"></span>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+		<div class="modal fade" tabindex="-1" role="dialog" id="winPwd">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="winTitle">修改密码</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="form2">
+						<div class="form-group">
+							<label for="pwd">密码：</label>
+							<input type="password" class="form-control" id="pwd" name="pwd" placeholder="密码">
+							<span id="pwdMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="pwd1">确认密码：</label>
+							<input type="password" class="form-control" id="pwd1" name="pwd1" placeholder="密码">
+							<span id="pwd1Msg" class="help-block"></span>
+						</div>
+						<input type="hidden" id="id1" name="id1" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="btnResetPwd">修改密码</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<!-- /.modal -->
+	<div th:replace="/layout/sets :: copy1"></div>
+	<div th:replace="/layout/sets :: copy2"></div>
+	<div th:replace="/layout/sets :: copy3"></div>
+	<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

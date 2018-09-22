@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        td{
+            display:none;
+        }
+    </style>
+    <script th:inline="javascript">
+        $(function(){
+            //$.each($("#myTable td"), function(i){ if(i > 0){ this.style.display = 'none'; } });
+            var list = [[${fields}]];
+            for(var i=0;i<list.length;i++){
+                var id = "#"+list[i];
+                $(id).css("display","block");
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <h1>其他个人精准扶贫贷款</h1>
+    <form class="layui-form" action="/qtgrjzfpdkHistory/saveSingle" method="post">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <table class="layui-table">
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px;">基本情况</td>
+                    </tr>
+                    <tr>
+                        <td id="name">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款人姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="cardId">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款人身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="cardId" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="address">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">常驻地址</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="address" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="telephone">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">联系电话</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="telephone" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="agreementNo">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款合同编号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="agreementNo" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="daiKuanJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="daiKuanJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanQiXian">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款期限</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanQiXian"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="daiKuanDate"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daoQiDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">到期日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="daoQiDate"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanLiLv">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款利率</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="daiKuanLiLv" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="daiKuanZhongLei">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款种类</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanZhongLei" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanFangShi">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款方式</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanFangShi" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanYongTu">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款用途</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanYongTu" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shiYongDiYu">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款使用地域</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="shiYongDiYu" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chanYeLeiBie">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">产业类别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chanYeLeiBie" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="fuPinDaiKuanLeiBie">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">其他个人精准扶贫贷款类别</label>
+                                <div class="layui-input-block">
+                                    <select name="fuPinDaiKuanLeiBie">
+                                        <option value="">--请选择--</option>
+                                        <option value="新型农业经营主体精准扶贫贷款">新型农业经营主体精准扶贫贷款</option>
+                                        <option value="其他类型个人精准扶贫贷款">其他类型个人精准扶贫贷款</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td id="zhuTiDaiKuanLeiBie">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">新型农业经营主体精准扶贫贷款类别</label>
+                                <div class="layui-input-block">
+                                    <select name="zhuTiDaiKuanLeiBie">
+                                        <option value="">--请选择--</option>
+                                        <option value="家庭农场贷款">家庭农场贷款</option>
+                                        <option value="农业专业大户贷款">农业专业大户贷款</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanJinRongJiGou">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款金融机构</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanJinRongJiGou" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="touFangDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">投放日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="touFangDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="touFangJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">投放金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="touFangJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="leiJiTouFangJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">累计投放金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="leiJiTouFangJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="weiTouFangYuE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">未投放贷款余额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="weiTouFangYuE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="changHuanJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">偿还贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="changHuanJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="changHuanDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">偿还贷款时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="changHuanDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="leiJiChangHuanJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">累计偿还贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="leiJiChangHuanJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="weiChangHuanYuE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">未偿还贷款余额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="weiChangHuanYuE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="yuQiJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款逾期金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="yuQiJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="yuQiDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">贷款逾期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="yuQiDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qianXiDate">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">欠息时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="qianXiDate" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qianXiJinE">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">欠息金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qianXiJinE" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="liYiLianJieFangShi">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">利益联结方式</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="liYiLianJieFangShi" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiDongPkhMingDan">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">带动贫困户名单</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiDongPkhMingDan" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiDongPkRenKouShu">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">带动贫困人口数</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="daiDongPkRenKouShu" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="zhiJieDaiDongXiaoYi">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">直接带动效益</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="zhiJieDaiDongXiaoYi" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="note">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="note" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="display: block">带动贫困户名单</td>
+                    </tr>
+                    <tr>
+                        <td id="huZhuName">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">户主姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="huZhuName" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="huZhuCardId">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="huZhuCardId" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="familyMembers">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">家庭人口</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="familyMembers" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="float:right;">
+                <button class="layui-btn layui-layer-btn0" type="reset">重置</button>
+                <button class="layui-btn" lay-submit lay-filter="save">录入</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        //监听提交
+        form.on('submit(save)', function(data){
+            layer.msg("正在录入...");
+//            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+//            parent.layer.close(index); // 关闭layer
+
+            //roleId在这里没多少用
+            $.ajax({
+                type: 'POST',
+                url:'/qtgrjzfpdkHistory/saveSingle',
+                //dataType:'json',
+                data: data.field,
+                async: true,
+                success: function (result) {
+                    alert(result);
+                    if (result=='ok') {
+                        layer.msg('success:录入成功', {icon: 1, time:2000});
+//                        setTimeout(function(){
+//                            top.layer.closeAll('iframe');
+//                            //刷新父亲的页面
+//                            parent.refreshIframe();
+//                        },800);
+                    } else {
+                        consol.alert(result);
+                        layer.msg('eles:录入失败！', {icon: 2, time:1000});
+                    }
+                },
+                error:function(){
+                    layer.msg('eles:录入失败！', {icon: 2, time:1000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>金融扶贫</title>
+        <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+        <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+        <script src="/static/js/jquery2.1.1.min.js" charset="utf-8"></script>
+        <style>
+            /*.buju{*/
+                /*display: flex;*/
+                /*flex-direction: row;*/
+            /*}*/
+            /*li{*/
+                /*width:200px;*/
+            /*}*/
+            body{
+                min-width: 1050px;
+                min-height: 550px;
+            }
+            /*#headerDiv{*/
+            /*}*/
+            #container{
+                min-width: 820px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--<div class="layui-fluid">-->
+        <!--</div>-->
+        <div class="layui-layout-admin">
+            <!--头部-->
+            <div class="layui-header layui-fluid" id="headerDiv">
+                <!--logo-->
+                <div class="layui-logo"><img src="/static/layui/images/face/Logo3.png" th:src="@{/static/layui/images/face/Logo3.png}" class="" style="width:200px;height:60px;"></div>
+                <!--导航栏左边-->
+                <ul class="layui-nav layui-layout-left">
+                    <li class="layui-nav-item"><a href="javascript:void(0)">金融扶贫</a></li>
+                    <li class="layui-nav-item"><a href="javascript:void(0)">基础信息采集</a></li>
+                    <li class="layui-nav-item"><a href="javascript:void(0)">信息管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:void(0)">信用评级</a></li>
+                    <li class="layui-nav-item"><a href="javascript:void(0)">融资对接</a></li>
+                    <li class="layui-nav-item"><a href="javascript:void(0)">新闻管理</a></li>
+                    <!--二级菜单-->
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">其它</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">邮件管理</a></dd>
+                            <dd><a href="javascript:;">消息管理</a></dd>
+                            <dd><a href="javascript:;">授权管理</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+                <!--导航栏右边-->
+                <ul class="layui-nav layui-layout-right">
+                        <!--<li class="layui-nav-item">
+                            <div class="layui-input-block" style="float: left; position: relative;">
+                                <input style="width: auto;" type="text" id="select_orderId" name="select_orderId" lay-verify="required" placeholder="请输入查询关键字" autocomplete="off" class="layui-input">
+                            </div>
+                            <button class="layui-btn" lay-submit="" id="searchBtn" data-type="getInfo" style="float: left;">搜索</button>
+                            th:text="${adminName.loginName}"
+                        </li>-->
+                    <li class="layui-nav-item">
+                        <a href=""><div>xxxxxxx</div></a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <span><a href="/logout" th:href="@{/logout}">退出</a></span>
+                    </li>
+                </ul>
+            </div>
+            <!--左边的导航栏-->
+            <div class="layui-nav-tree layui-nav-side layui-bg-black layui-fluid">
+                <div class="layui-side-scroll" style="width:300px;">
+                    <ul class="layui-nav layui-nav-tree layui-bg-black" lay-filter="myNav" style="margin-top:60px;">
+                        <li id="checkTag" class="layui-nav-item">
+                            <a href="javascript:;">审核</a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="/fpxexdHistory/checkFpxexd" target="content">扶贫小额贷款审核</a></dd>
+                                <dd><a href="/qtgrjzfpdkHistory/historyBaseMessage" th:href="@{/qtgrjzfpdkHistory/historyBaseMessage}" target="content">其他个人精准扶贫贷款审核</a></dd>
+                                <dd><a href="/xmjzfp/xmjzfpSH" target="content">项目精准扶贫审核</a></dd>
+                            </dl>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">金融精准扶贫贷款</a>
+                            <dl class="layui-nav-child">
+                                <li class="layui-nav-item">
+                                    <a href="javascript:;">个人精准扶贫</a>
+                                    <dl class="layui-nav-child">
+                                        <li class="layui-nav-item">
+                                            <a href="/baseMessage;" th:href="@{/fpxexd/baseMessage}" target="content">建档立卡贫困人口贷款</a>
+                                        </li>
+                                        <li class="layui-nav-item">
+                                            <a href="/qtgrjzfpdk/baseMessage" th:href="@{/qtgrjzfpdk/baseMessage}" target="content">其他个人精准扶贫贷款</a>
+                                        </li>
+                                    </dl>
+                                </li>
+                                <li class="layui-nav-item">
+                                    <a href="/cyjzfpdk/cyjzfpdk" target="content">产业精准扶贫</a>
+                                </li>
+                                <li class="layui-nav-item">
+                                    <a href="/xmjzfp/xmjzfp" target="content">项目精准扶贫</a>
+                                </li>
+                            </dl>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">保险扶贫</a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="/fpbx/baseMessage" th:href="@{/fpbx/baseMessage}" target="content">扶贫保</a></dd>
+                                <dd><a href="javascript:;">住宅地震巨灾保险</a></dd>
+                                <dd><a href="javascript:;">政策性农业保险</a></dd>
+                                <dd><a href="javascript:;">特色农业保险</a></dd>
+                                <dd><a href="javascript:;">其他</a></dd>
+                            </dl>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">农村信用体系建设</a>
+                            <dl class="layui-nav-child">
+                            <li><a href="javascript:;">信用户</a></li>
+                            <li><a href="javascript:;">信用村</a></li>
+                            <li><a href="javascript:;">信用乡（镇）</a></li>
+
+                            <li class="layui-nav-item">
+                                <a href="javascript:;">诚信红名单名单</a>
+                                    <dl class="layui-nav-child">
+                                        <li class="layui-nav-item">
+                                            <a href="" target="content">企业诚信红名单</a>
+                                        </li>
+                                    </dl>
+                            </li>
+                            <li class="layui-nav-item">
+                                <a href="javascript:;">失信黑名单</a>
+                                <dl class="layui-nav-child">
+                                    <li class="layui-nav-item">
+                                        <a href="" target="content">个人失信黑名单</a>
+                                    </li>
+                                    <li class="layui-nav-item">
+                                        <a href="javascript:;">法人失信黑名单</a>
+                                    </li>
+                                </dl>
+                            </li>
+                            </dl>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">农村金融综合服务（站）点</a>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">系统管理</a>
+                            <dl class="layui-nav-child">
+                                <dd><a th:href="@{/user/user}" target="content">帐号管理</a></dd>
+                                <dd><a th:href="@{/role/role}" target="content">角色管理</a></dd>
+                                <dd><a th:href="@{/permissions/auth}" target="content">权限管理</a></dd>
+                            </dl>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="/pkfInformation" target="content" th:href="@{/pkfInformation}">贫困户基础数据管理</a>
+                        </li>
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">政策文件</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--中间主体-->
+            <div class="layui-body layui-fluid" id="container">
+                <!--&lt;!&ndash;导航栏&ndash;&gt;-->
+                    <!--<ul class="layui-nav layui-bg-gray" lay-filter="topNav">-->
+                        <!--<li class="layui-nav-item" id="nav1" lay-filter="nav1"><a href="javascript:void(0)" style="color:#000;font-size:16px;">金融扶贫</a></li>-->
+                        <!--<li class="layui-nav-item" id="nav2"><a href="javascript:void(0)" style="color:#000;font-size:16px;">金融扶贫2</a></li>-->
+                        <!--<li class="layui-nav-item" id="nav3"><a href="javascript:void(0)" style="color:#000;font-size:16px;">金融扶贫3</a></li>-->
+                    <!--</ul>-->
+                <!--内容-->
+                <div class="public-ifame-content">
+                    <iframe name="content" th:src="main2.html" src="main2.html" frameborder="0" id="mainframe" scrolling="yes" marginheight="0" marginwidth="0" width="100%" height="100%"></iframe><!-- style="height:840px;"-->
+                </div>
+            </div>
+
+            <!--底部-->
+            <div class="layui-footer layui-bg-gray layui-fluid">
+                <center>广元开韵版权所有&copy;2018</center>
+            </div>
+        </div>
+        <!--导航栏鼠标放上去效果-->
+        <script>
+
+            var widthSet = function () {
+                $("#container").css("margin","0px");
+                var w = $(window).width() - $("#container").offset().left - 30;
+                if (w <= 820){
+                    $("#container").width(820);
+                }else {
+                    $("#container").width(w);
+                }
+
+                $("#container").css({"top":0,"padding":'10px 10px 0px 10px'});
+                var h = $(window).height() - 15 - 60;
+                if (h <= 475){
+                    $("#mainframe").height(475);
+                }else {
+                    $("#mainframe").height(h);
+                }
+            };
+            widthSet();
+            $(window).resize(function () {
+                widthSet();
+                if (layui.form) {
+                    layui.form.render();
+                }
+            });
+
+            layui.use('layer');
+
+//            console.log($(window).width())
+//            console.log($("#container").offset().left)
+            //JavaScript代码区域
+            layui.use('element', function(){
+                var element = layui.element;
+                });
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,94 @@
+<html xmlns:th="http://www.thymeleaf.org">
+      <nav class="navbar" th:fragment="copy" style="margin-top:0;background: #3399cc; color: #fff">
+        <div class="container-fluid">
+          <div class="navbar-header"  >
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{/index}">
+	            <span style="color:#fff;">
+		            <img th:src="@{/images/logo.svg}" onerror="this.src=[[@{/images/logo.png}]]" style="width:50px;height:50px;margin-top:-15px">
+		     		<span th:text="${session.cfg.projectName}" style="float:right;margin-top:1px;"></span>
+				</span>
+	        </a>
+        </div>
+          
+         <ul class="nav navbar-nav navbar-right"> 
+            <li><a class="myHover dropdown-toggle" href="#" style="color:#eee" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-user" style="color:#eee" ></span>&nbsp;<span th:text="${session.currentUser.loginId}" ></span></a></li> 
+            <li>
+             <a class="myHover" style="color:#eee" th:href="@{/loginOut}"><span class="glyphicon glyphicon-off" style="color:#eee"></span> 注销</a></li> 
+         </ul> 
+          
+          <div id="navbar" class="navbar-collapse collapse" >
+				<ul class="nav navbar-nav" >
+					<li class="dropdown"><a th:href="@{/index}" style="color:#eee" class="myHover">首页</a></li>
+					<li class="dropdown">
+						<a style="color:#eee" href="#" class="myHover dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >数据采集 <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/auditPerson/list}" >内审人员数据</a></li>
+							 <li role="presentation" class="divider">
+							<li><a th:href="@{/auditProject/list}">审计项目数据</a></li>
+						</ul>
+	            	</li>
+	            		<li>
+	              		<li class="dropdown">
+		              	  	<a href="#" class="myHover dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:#eee">统计分析<span class="caret"></span></a>
+			              	<ul class="dropdown-menu">
+				                <li><a th:href="@{/auditPersonReport/list}">内审机构和人员情况统计表</a></li>
+				                 <li role="presentation" class="divider">
+				                <li><a th:href="@{/projectDevelopment/list}">内审项目开展情况统计表</a></li>
+				                 <li role="presentation" class="divider">
+				                <li><a th:href="@{/basicWork/list}">内审基础工作情况统计表</a></li>
+				                 <li role="presentation" class="divider">
+				                <li><a th:href="@{/foundProblem/list}">审计发现问题情况统计表</a></li>
+				                 <li role="presentation" class="divider">
+				                 <li><a th:href="@{/resultsUsing/list}">审计成果运用表</a></li>  
+				                <li role="presentation" class="divider">
+				                 <li><a th:href="@{/auditProjectReport/list}">年度审计项目一览表</a></li>				                  
+							</ul>
+						</li>
+					<li>
+					 
+		            <li>
+		              	<li class="dropdown" id="user" th:if="${session.currentUser.type} >= 2">
+			              	<a href="#" class="myHover dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:#eee">用户管理<span class="caret"></span></a>
+				              <ul class="dropdown-menu">
+					               <li><a th:href="@{/user/list1}" th:if="${session.currentUser.type} == 2">操作员</a></li>
+					               <li><a th:href="@{/user/list2}" th:if="${session.currentUser.type} > 2">业务主管</a></li>	
+					               <li role="presentation" class="divider" th:if="${session.currentUser.type} > 2">
+					               <li><a th:href="@{/user/list3}" th:if="${session.currentUser.type} > 2">系统管理员</a></li>					              
+							</ul>
+						</li>
+					<li>
+					
+					 <li>
+		              	<li class="dropdown" id="user" th:if="${session.currentUser.type} >= 2">
+			              	<a href="#" class="myHover dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:#eee">系统设置<span class="caret"></span></a>
+				              <ul class="dropdown-menu">
+					               <li><a href="#" data-toggle="modal" data-target="#nameModal" th:if="${session.currentUser.type} > 2">单位设置</a></li>	
+					               <li role="presentation" class="divider" th:if="${session.currentUser.type} > 2">
+					               <li><a th:href="@{/sysConfig/list}">系统参数设置</a></li>			              
+							</ul>
+						</li>
+					<li>
+					
+					  <li>
+		              	<li class="dropdown" id="user">
+			              	<a href="#" class="myHover dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:#eee">个人中心<span class="caret"></span></a>
+				              <ul class="dropdown-menu">
+				               	  <li><a href="#" data-toggle="modal" data-target="#myModal" class="self">个人资料</a></li>
+					              <li role="presentation" class="divider">
+					              <li><a href="#" data-toggle="modal" data-target="#pwdModal">密码修改</a></li>					            
+							 </ul>
+						</li>
+					<li>
+					
+             	</li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+</html>

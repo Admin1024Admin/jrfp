@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <script>
+        $(function(){
+            var msg = $("#msg").text();
+            if(msg!=null&&msg!=""){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.msg(msg);
+                });
+            };
+        })
+    </script>
+</head>
+<body>
+    <div id="msg" th:text="${Msg}" style="visibility: hidden"></div>
+    <div class="layui-container">
+        <form class="layui-form" action="/updatePkfPjsx" method="post">
+            <!--隐藏控件-->
+            <!--uid-->
+            <input type="hidden" name="uid" th:value="${pkfPjsx.uid}">
+            <h2>贫困户[[${pkfPjsx.beiBaoRen}]]信息修改</h2>
+            <table class="layui-table">
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">乡镇</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="xiangZhen" autocomplete="off" class="layui-input" th:value="${pkfPjsx.xiangZhen}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">村组</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="chunZu"  autocomplete="off" class="layui-input" th:value="${pkfPjsx.chunZu}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">户主姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="huZhu" autocomplete="off" class="layui-input" th:value="${pkfPjsx.huZhu}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">贷款人姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="daiKuanRen" autocomplete="off" class="layui-input" th:value="${pkfPjsx.daiKuanRen}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">证件号码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cardId" autocomplete="off" class="layui-input" th:value="${pkfPjsx.cardId}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">健康状况</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="healthState" autocomplete="off" class="layui-input" th:value="${pkfPjsx.healthState}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文化程度</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="wenHuaChengDu"  autocomplete="off" class="layui-input" th:value="${pkfPjsx.wenHuaChengDu}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">劳动能力</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="laoDongNengLi"  autocomplete="off" class="layui-input" th:value="${pkfPjsx.laoDongNengLi}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">信用评定等级</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="givenStars" autocomplete="off" class="layui-input" th:value="${pkfPjsx.givenStars}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">授信额度</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="shouXinEDu" autocomplete="off" class="layui-input" th:value="${pkfPjsx.shouXinEDu}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">授信时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="shouXinDate" autocomplete="off" class="layui-input" th:value="${pkfPjsx.shouXinDate}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="contactPhone"  autocomplete="off" class="layui-input" th:value="${pkfPjsx.contactPhone}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="note"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.note}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">填报单位</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tianBaoDanWei"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.tianBaoDanWei}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">填表人</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tianBiaoRen"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.tianBiaoRen}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">填表人联系</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tianBiaoRenLianXi"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.tianBiaoRenLianXi}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">审核人</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="shenHeRen"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.shenHeRen}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">填表时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tianBiaoDate"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.tianBiaoDate}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">导入时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="importDate"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.importDate}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">note1</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="note1"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.note1}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">note2</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="note2"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.note2}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">note3</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="note3"   autocomplete="off" class="layui-input" th:value="${pkfPjsx.note3}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即修改</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">还原</button>
+                                <a class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">取消</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+        <script>
+            //Demo
+            layui.use('form', function(){
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(formDemo)', function(data){
+                    layer.msg(JSON.stringify(data.field));
+                    return true;
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>金融扶贫</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        table > th {
+            align: center;
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" action="">
+<table class="layui-table" lay-even>
+    <thead>
+    <tr>
+        <th>以前数据:</th>
+        <th>现在数据:</th>
+    </tr>
+    </thead>
+    <tbody>
+        <!--只显示修改的属性
+        <tr th:each="data:${diff}">
+            <td th:hidden="${data.nickName} eq '序号'?hidden">
+                <div>
+                    <label th:text="${data.nickName}" class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input th:type="${data.isDate?'date':'text'}"
+                               th:value="${data.isDate?#dates.format(data.old,'yyyy-MM-dd'):data.old}"
+                               autocomplete="off" class="layui-input" style="width: 200px;">
+                    </div>
+                </div>
+            </td>
+            <td th:hidden="${data.nickName} eq '序号'?hidden">
+                <div>
+                    <label th:text="${data.nickName}" class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input th:type="${data.isDate?'date':'text'}" th:name="${data.name}"
+                               th:value="${data.isDate?#dates.format(data.new,'yyyy-MM-dd'):data.new}"
+                               autocomplete="off"
+                               class="layui-input" style="width: 200px;">
+                    </div>
+                </div>
+            </td>
+        </tr>-->
+
+
+
+
+
+        <input type="hidden" name="no" th:value="${fpxexd.no}"/>
+        <tr th:style="${#lists.contains(diff,'xiang')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">乡镇</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.xiang}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">乡镇</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="xiang" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.xiang}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr  th:style="${#lists.contains(diff,'chun')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">行政村</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.chun}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">行政村</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="chun" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.chun}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'zu')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">组别</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.zu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">组别</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="zu" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.zu}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'name')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">户主姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.name}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">户主姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.name}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'cardId')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.cardId}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="cardId" autocomplete="off" class="layui-input" th:value="${fpxexd.cardId}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'members')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">家庭人口数</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.members}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">家庭人口数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="members" autocomplete="off" class="layui-input" th:value="${fpxexd.members}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'daiKuanRenXingMing')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.daiKuanRenXingMing}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanRenXingMing" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.daiKuanRenXingMing}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'daiKuanRenCardId')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款人身份证</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.daiKuanRenCardId}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款人身份证</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanRenCardId" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.daiKuanRenCardId}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'familyRelation')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">与户主关系</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.familyRelation}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">与户主关系</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="familyRelation"  autocomplete="off" class="layui-input" th:value="${fpxexd.familyRelation}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'tuoPinState')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">脱贫属性</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.tuoPinState}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">脱贫属性</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="tuoPinState" autocomplete="off" class="layui-input" th:value="${fpxexd.tuoPinState}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'yuanYouYuE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.yuanYouYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="yuanYouYuE" autocomplete="off" class="layui-input" th:value="${fpxexd.yuanYouYuE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'yuanYouIsYuQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有贷款是否逾期</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.yuanYouIsYuQi}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有贷款是否逾期</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="yuanYouIsYuQi" autocomplete="off" class="layui-input" th:value="${fpxexd.yuanYouIsYuQi}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'yuanYouYuQiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.yuanYouYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="yuanYouYuQiJinE" autocomplete="off" class="layui-input" th:value="${fpxexd.yuanYouYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'yuanYouYuQiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.yuanYouYuQiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="yuanYouYuQiShiJian" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.yuanYouYuQiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'yuanYouQianXiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.yuanYouQianXiJinE}">
+                    </div>
+                </div>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="yuanYouQianXiJinE" autocomplete="off" class="layui-input" th:value="${fpxexd.yuanYouQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'yuanYouQianXiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.yuanYouQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原有欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="yuanYouQianXiShiJian" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.yuanYouQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPingivenStars')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">信用等级评定</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPingivenStars}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">信用等级评定</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPingivenStars" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPingivenStars}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinshouXinEDu')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">授信额度</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinshouXinEDu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">授信额度</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinshouXinEDu" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinshouXinEDu}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinshouXinJiGou')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">授信金融机构</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinshouXinJiGou}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">授信金融机构</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPinshouXinJiGou" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinshouXinJiGou}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinshouxinData')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">授信时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.fuPinshouxinData,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">授信时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="fuPinshouxinData" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.fuPinshouxinData,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinXiaoDaidaiKuanJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinXiaoDaidaiKuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinXiaoDaidaiKuanJinE" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinXiaoDaidaiKuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPindaiKuanQiXian')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPindaiKuanQiXian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPindaiKuanQiXian" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPindaiKuanQiXian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinfangKuanRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.fuPinfangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="fuPinfangKuanRiQi" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.fuPinfangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPindaoQiRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">到期日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.fuPindaoQiRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">到期日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="fuPindaoQiRiQi" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.fuPindaoQiRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinXiaoDaiDaiKuanLiLv')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinXiaoDaiDaiKuanLiLv}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinXiaoDaiDaiKuanLiLv" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinXiaoDaiDaiKuanLiLv}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPindaiKuanJiGou')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金融机构</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPindaiKuanJiGou}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金融机构</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPindaiKuanJiGou" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPindaiKuanJiGou}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinleiJiTieXi')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">累计贴息金额(元)</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinleiJiTieXi}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">累计贴息金额(元)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinleiJiTieXi" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinleiJiTieXi}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinchangHuanDaiKuanJInE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">偿还贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinchangHuanDaiKuanJInE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">偿还贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinchangHuanDaiKuanJInE" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinchangHuanDaiKuanJInE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinhuanKuanShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.fuPinhuanKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="fuPinhuanKuanShiJian" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.fuPinhuanKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPindaiKuanYuE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款余额（万元)</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPindaiKuanYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款余额（万元)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPindaiKuanYuE" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPindaiKuanYuE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinyuQiDaiKuanJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">逾期贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinyuQiDaiKuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">逾期贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinyuQiDaiKuanJinE" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinyuQiDaiKuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinyuQiDaiKuanShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinyuQiDaiKuanShiJian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPinyuQiDaiKuanShiJian" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinyuQiDaiKuanShiJian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinqianXiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">欠息金额(元)</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinqianXiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">欠息金额(元)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="fuPinqianXiJinE" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinqianXiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinqianXiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexdOld.fuPinqianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="fuPinqianXiShiJian" autocomplete="off" class="layui-input" th:value="${#dates.format(fpxexd.fuPinqianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinYingDaiWeiDaiShiBie')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">应贷未贷识别</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinYingDaiWeiDaiShiBie}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">应贷未贷识别</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPinYingDaiWeiDaiShiBie" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinYingDaiWeiDaiShiBie}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'fuPinDaiKuanYongTu')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.fuPinDaiKuanYongTu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fuPinDaiKuanYongTu" autocomplete="off" class="layui-input" th:value="${fpxexd.fuPinDaiKuanYongTu}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.chuangYeJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="chuangYeJinE" autocomplete="off" class="layui-input" th:value="${fpxexd.chuangYeJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeQiXian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="layui-input" th:value="${fpxexdOld.chuangYeQiXian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="chuangYeQiXian" class="layui-input" th:value="${fpxexd.chuangYeQiXian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeFangKuanRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.chuangYeFangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="chuangYeFangKuanRiQi" class="layui-input" th:value="${#dates.format(fpxexd.chuangYeFangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeDaoQiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">到期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.chuangYeDaoQiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">到期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="chuangYeDaoQiShiJian" class="layui-input" th:value="${#dates.format(fpxexd.chuangYeDaoQiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeLiLv')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.chuangYeLiLv}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="chuangYeLiLv" class="layui-input" th:value="${fpxexd.chuangYeLiLv}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeChangHuanJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.chuangYeChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="chuangYeChangHuanJinE" class="layui-input" th:value="${fpxexd.chuangYeChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'changYeHuangKuanShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.changYeHuangKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="changYeHuangKuanShiJian" class="layui-input" th:value="${#dates.format(fpxexd.changYeHuangKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeYuE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" class="layui-input" th:value="${fpxexdOld.chuangYeYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="chuangYeYuE" class="layui-input" th:value="${fpxexd.chuangYeYuE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeYuQiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.chuangYeYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="chuangYeYuQiJinE" class="layui-input" th:value="${fpxexd.chuangYeYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeYuQiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${fpxexdOld.chuangYeYuQiShiJian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="chuangYeYuQiShiJian" class="layui-input" th:value="${fpxexd.chuangYeYuQiShiJian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeQianXiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.chuangYeQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="chuangYeQianXiJinE" class="layui-input" th:value="${fpxexd.chuangYeQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeQianXiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.chuangYeQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="chuangYeQianXiShiJian" class="layui-input" th:value="${#dates.format(fpxexd.chuangYeQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'chuangYeYongTu')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">创业用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="layui-input" th:value="${fpxexdOld.chuangYeYongTu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">创业用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="chuangYeYongTu" class="layui-input" th:value="${fpxexd.chuangYeYongTu}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.shengYuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="shengYuanJinE" class="layui-input" th:value="${fpxexd.shengYuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanQiXian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="layui-input" th:value="${fpxexdOld.shengYuanQiXian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="shengYuanQiXian" class="layui-input" th:value="${fpxexd.shengYuanQiXian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanFangKuanRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.shengYuanFangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="shengYuanFangKuanRiQi" class="layui-input" th:value="${#dates.format(fpxexd.shengYuanFangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYaunDaoQiRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">到期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.shengYaunDaoQiRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">到期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="shengYaunDaoQiRiQi" class="layui-input" th:value="${#dates.format(fpxexd.shengYaunDaoQiRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYaunLiLv')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.shengYaunLiLv}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="shengYaunLiLv" class="layui-input" th:value="${fpxexd.shengYaunLiLv}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYaunChangHuanJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.shengYaunChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="shengYaunChangHuanJinE" class="layui-input" th:value="${fpxexd.shengYaunChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanHuanKuanShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.shengYuanHuanKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="shengYuanHuanKuanShiJian" class="layui-input" th:value="${#dates.format(fpxexd.shengYuanHuanKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanYuE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.shengYuanYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="shengYuanYuE" class="layui-input" th:value="${fpxexd.shengYuanYuE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanYuQiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.shengYuanYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="shengYuanYuQiJinE" class="layui-input" th:value="${fpxexd.shengYuanYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanYuQiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${fpxexdOld.shengYuanYuQiShiJian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="shengYuanYuQiShiJian" class="layui-input" th:value="${fpxexd.shengYuanYuQiShiJian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanQianXiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.shengYuanQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="shengYuanQianXiJinE" class="layui-input" th:value="${fpxexd.shengYuanQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'shengYuanQianXiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.shengYuanQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="shengYuanQianXiShiJian" class="layui-input" th:value="${#dates.format(fpxexd.shengYuanQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.qiTaJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qiTaJinE" class="layui-input" th:value="${fpxexd.qiTaJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaQiXian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="layui-input" th:value="${fpxexdOld.qiTaQiXian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="qiTaQiXian" class="layui-input" th:value="${fpxexd.qiTaQiXian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaFangKuanRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.qiTaFangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">放款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="qiTaFangKuanRiQi" class="layui-input" th:value="${#dates.format(fpxexd.qiTaFangKuanRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaDaoQiRiQi')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">到期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.qiTaDaoQiRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">到期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="qiTaDaoQiRiQi" class="layui-input" th:value="${#dates.format(fpxexd.qiTaDaoQiRiQi,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaLiLv')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.qiTaLiLv}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qiTaLiLv" class="layui-input" th:value="${fpxexd.qiTaLiLv}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaChangHuanJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.qiTaChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qiTaChangHuanJinE" class="layui-input" th:value="${fpxexd.qiTaChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaChangHuangKuanShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.qiTaChangHuangKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">还款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="qiTaChangHuangKuanShiJian" class="layui-input" th:value="${#dates.format(fpxexd.qiTaChangHuangKuanShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaYuE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.qiTaYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qiTaYuE" class="layui-input" th:value="${fpxexd.qiTaYuE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaYuQiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.qiTaYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qiTaYuQiJinE" class="layui-input" th:value="${fpxexd.qiTaYuQiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaYuQiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${fpxexdOld.qiTaYuQiShiJian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="qiTaYuQiShiJian" class="layui-input" th:value="${fpxexd.qiTaYuQiShiJian}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaQianXiJinE')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" disabled class="layui-input" th:value="${fpxexdOld.qiTaQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qiTaQianXiJinE" class="layui-input" th:value="${fpxexd.qiTaQianXiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaQianXiShiJian')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" disabled class="layui-input" th:value="${#dates.format(fpxexdOld.qiTaQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="qiTaQianXiShiJian" class="layui-input" th:value="${#dates.format(fpxexd.qiTaQianXiShiJian,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'qiTaYongTu')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">创业用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="layui-input" th:value="${fpxexdOld.qiTaYongTu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">创业用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="qiTaYongTu" class="layui-input" th:value="${fpxexd.qiTaYongTu}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'note')}?'color:red'">
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled class="layui-input" th:value="${fpxexdOld.note}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item" style="width:300px;">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="note" class="layui-input" th:value="${fpxexd.note}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'checkStatus')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">审核状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" disabled th:checked="${fpxexd.checkStatus} eq '通过'" value="通过" title="通过">
+                        <input type="radio" disabled th:checked="${fpxexd.checkStatus} eq '未通过'" value="未通过" title="未通过">
+                        <input type="radio" disabled th:checked="${fpxexd.checkStatus} eq '未审核'" value="未审核" title="未审核">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">审核状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="checkStatus" value="通过" title="通过" checked>
+                        <input type="radio" name="checkStatus" value="未通过" title="未通过">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr th:style="${#lists.contains(diff,'reason')}?'color:red'">
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">拒绝理由</label>
+                    <div class="layui-input-block">
+                        <input type="text" disabled autocomplete="off" class="layui-input" th:value="${fpxexdOld.reason}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">拒绝理由</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="reason" required autocomplete="off" class="layui-input" th:value="${fpxexd.reason}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="5" style="text-align: center">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="update">立即修改</button>
+                        <a type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">取消</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+</form>
+
+
+<script>
+    //Demo
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        //监听提交
+        form.on('submit(update)', function (data) {
+            layer.msg('正在修改...', {icon: 1, time: 2000});
+            $.ajax({
+                type: 'post',
+                url: '/fpxexdHistory/saveOne',
+                //dataType:'json',
+                data: data.field,
+                async: true,
+                success: function (result) {
+                    if (result == 'ok') {
+                        layer.msg('success:修改成功', {icon: 1, time: 1500,shade: [0.1, '#393D49']});
+                        setTimeout(function () {
+                            window.location.href = '/fpxexdHistory/checkFpxexd';
+                        },1300);
+                    } else {
+                        console.log(result);
+                        layer.msg('eles:修改失败！', {icon: 2, time: 1000});
+                    }
+                },
+                error: function () {
+                    layer.msg('eles:修改失败！', {icon: 2, time: 1000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

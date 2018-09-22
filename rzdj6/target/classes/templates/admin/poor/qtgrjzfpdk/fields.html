@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        tr{
+            width:200px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <form class="layui-form" action="/qtgrjzfpdk/chooseFieldExportQtgrjzfpdk" method="post">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <table id="tb">
+                    <tr>
+                        <td><input type="checkbox" name="name" title="贷款人姓名" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="cardId" title="贷款人身份证号" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="address" title="常驻地址" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="telephone" title="联系电话" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="agreementNo" title="贷款合同编号" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="daiKuanJinE" title="贷款金额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiKuanQiXian" title="贷款期限" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiKuanDate" title="贷款日期" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daoQiDate" title="到期日期" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiKuanLiLv" title="贷款利率" lay-skin="primary" checked></td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkbox" name="daiKuanZhongLei" title="贷款种类" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiKuanFangShi" title="贷款方式" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiKuanYongTu" title="贷款用途" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="shiYongDiYu" title="贷款使用地域" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="chanYeLeiBie" title="产业类别" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="fuPinDaiKuanLeiBie" title="其他个人精准扶贫贷款类别" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="zhuTiDaiKuanLeiBie" title="新型农业经营主体精准扶贫贷款类别" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiKuanJinRongJiGou" title="贷款金融机构" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="touFangDate" title="投放日期" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="touFangJinE" title="投放金额" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="leiJiTouFangJinE" title="累计投放金额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="weiTouFangYuE" title="未投放贷款余额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="changHuanJinE" title="偿还贷款金额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="changHuanDate" title="偿还贷款时间" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="leiJiChangHuanJinE" title="累计偿还贷款金额" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="weiChangHuanYuE" title="未偿还贷款余额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="yuQiJinE" title="贷款逾期金额(元)" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="yuQiDate" title="贷款逾期时间" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="qianXiDate" title="欠息时间" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="qianXiJinE" title="欠息金额" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="liYiLianJieFangShi" title="利益联结方式" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiDongPkhMingDan" title="带动贫困户名单" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daiDongPkRenKouShu" title="带动贫困人口数" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="zhiJieDaiDongXiaoYi" title="直接带动效益" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="note" title="备注" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><h1>带动贫困户名单</h1></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="agreementNo" title="贷款合同编号" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="huZhuName" title="户主姓名" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="huZhuCardId" title="身份证号" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="familyMembers" title="家庭人口" lay-skin="primary" checked></td>
+                    </tr>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="float:right;">
+                <button class="layui-btn layui-layer-btn0" type="button" id="selectAll">全选</button>
+                <button class="layui-btn layui-layer-btn0" type="button" id="unSelect">全不选</button>
+                <button class="layui-btn layui-layer-btn0" type="button" id="reverseSelect">反选</button>
+                <button class="layui-btn" lay-submit lay-filter="daochu">确认</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    //Demo
+    layui.use(['form','element'], function(){
+        var form = layui.form;
+        var element = layui.element;
+        //监听提交
+        form.on('submit(daochu)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            layer.msg("正在下载...请稍等...");
+//            var index=parent.layer.getFrameIndex(window.name);
+//            parent.layer.close(index);
+            return true;
+        });
+        //全局选择
+        $("#selectAll").click(function(){//全选
+            $("#tb input[type='checkbox']").prop("checked",true);
+            form.render('checkbox');
+        })
+
+        $("#reverseSelect").click(function(){//反选
+            $("#tb input[type='checkbox']").each(function(){
+                if($(this).prop("checked")){
+                    $(this).prop("checked",false);
+                }else{
+                    $(this).prop("checked",true);
+                }
+            })
+            form.render('checkbox');
+        })
+
+        $("#unSelect").click(function(){//不选
+            $("#tb input[type='checkbox']").prop("checked",false);
+            form.render("checkbox");
+        })
+    });
+</script>
+</body>
+</html>  300

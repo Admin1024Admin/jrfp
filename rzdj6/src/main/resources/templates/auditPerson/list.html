@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="|${session.cfg.projectName} - 内审人员管理|"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<head th:replace="/layout/bootstrap :: bootstrapDate" />
+<script>
+	//分页控制
+	var page = "[[${page}]]"; //表中最大数
+	var count = "[[${count}]]"; //表中最大数
+	var size = "[[${size}]]"; //每页显示多少条
+	var pageCount = Math.round((count/size) + 0.5);
+	
+	function next(page){
+		var page = parseInt(page);
+		if((page < 1) | (page > pageCount)){
+			return;
+		}
+		$("#page").val(page);
+		$("#f1").submit();
+	}
+
+	// 验证中文名称
+	function isName(name) {
+	    var pattern = /^[\u4E00-\u9FA5]{1,6}$/;
+	    return pattern.test(name);
+	}
+	
+	// 验证手机号
+	function isPhone(phone) {  
+	    var pattern = /^1[34578]\d{9}$/;  
+	    return pattern.test(phone);  
+	}
+
+	function validate() {
+		var result = true;
+		if (!$('#name').val()) {
+			$('#nameMsg').html('姓名不能空');
+			result = false;
+		} else {
+			if(!isName($('#name').val())){
+				$('#nameMsg').html('姓名不合法');
+				result = false;
+			}
+			else if($('#name').val().length > 6){
+				$('#nameMsg').html('姓名长度不能超过6个字符');
+				result = false;
+			} else{
+				$('#nameMsg').html('');
+			}
+		}
+
+		if (!$('#mobile').val()) {
+			$('#mobileMsg').html('手机号不能空');
+			result = false;
+		} else {
+			if(!isPhone($('#mobile').val())){
+				$('#mobileMsg').html('手机号不合法');
+				result = false;			
+			}else{
+				$('#mobileMsg').html('');
+			}
+		}
+		if (!$('#birthday').val() || $('#birthday').val() == "") {
+			$('#birthdayMSG').html('出生日期不能空');
+			result = false;
+		} else {
+			$('#birthdayMSG').html('');
+		}
+
+		return result;
+	}
+
+	//删除请求
+	function deletes(ids) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/auditPerson/delete}]]",
+			data : {
+				'id' : ids
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+	}
+
+	//获取单个信息
+	function getData(id) {
+		$.ajax({
+			url : "[[@{/auditPerson/getData}]]",
+			data : {
+				'id' : id
+			},
+			success : function(response) {
+				if (response.success) {
+					$('#id').val(response.obj.id);
+					$('#name').val(response.obj.name);
+					$('#mobile').val(response.obj.mobile);
+					$('#sex').val(response.obj.sex);
+					//$('#age').val(response.obj.age);
+					$('#jobTitle').val(response.obj.jobTitle);
+					$('#jobType').val(response.obj.jobType);
+					$('#certificate').val(response.obj.certificate);
+					$('#diploma').val(response.obj.diploma);
+					$(".datepicker").datepicker("setDate", response.obj.birthday);//设置
+				}
+			}
+		});
+	}
+
+	//增加或编辑请求
+	function createOrUpdate() {
+		if(!validate()) return;
+		$.ajax({
+			method : 'post',
+			url : "[[@{/auditPerson/createOrUpdate}]]",
+			data : $('#form1').serialize(),
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			},
+			error : function() {
+				alert("请求失败");
+			}
+
+		});
+
+	}
+	
+	//按钮事件
+	$(function() {
+		//全部选中按钮
+		$('#selectAll').click(function() {
+			$("input[type='checkbox']").each(function() {
+				if ($(this).prop('checked')) {
+					$('#selectAll').prop("checked", false);
+					$(this).prop('checked', false);
+
+				} else {
+					$('#selectAll').prop("checked", true);
+					$(this).prop('checked', true);
+				}
+			});
+		});
+
+		//顶部增加按钮
+		$('#btnAdd').bind('click', function() {
+			$('#winTitle').html('新增');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+		});
+
+		//顶部编辑按钮
+		$('#btnUpdate').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要编辑的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能编辑一个条目');
+				return false;
+			}
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $("input[type='checkbox']:checked").val();
+			getData(id); //获取数据
+		});
+
+		//顶部删除按钮
+		$('#btnDelete').bind('click', function() {
+			var ids = "";
+			$("input:checkbox[name=id]:checked").each(function(i) {
+				if (0 == i) {
+					ids = $(this).val();
+				} else {
+					ids += ("," + $(this).val());
+				}
+			});
+			if (ids == "") {
+				alert('请选择要删除的条目');
+				return;
+			}
+			var result = confirm('将要删除<' + ids + '>是否继续?');
+			if (!result)
+				return;
+			deletes(ids);
+		});
+
+		//右侧编辑按钮
+		$('.rightUpdate').bind('click', function() {
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			getData(id); //获取数据
+
+		});
+
+		//右侧删除按钮
+		$('.rightDelete').bind('click', function() {
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			var name = $(this).parent().parent().children('td:eq(2)').html();
+			var result = confirm('将要删除<' + name + '>是否继续?');
+			if (!result)
+				return;
+			deletes(id);
+
+		});
+
+		//保存按钮
+		$('#btnSave').click(function() {
+			createOrUpdate();
+		});
+
+		//搜索按钮
+		$('#btnSearch').click(function() {
+			$("#pram").val($("#search").val());
+			$("#f1").submit();
+		});
+		
+		var diploma = $("#diploma");
+		var jobType = $("#jobType");
+		var jobTitle = $("#jobTitle");
+		var certificate = $("#certificate");
+		//读取配置
+		$.ajax({
+			url : "[[@{/sysConfig/getKey}]]",
+			data : {
+				'itemType' : "内审人员",
+				'itemKey' : "学历"
+			},
+			success : function(res) {
+				if (res.success) {
+					diploma.empty();
+					for(var i = 0; i<res.res.length; i++){
+						//alert(res.res[i].itemValue)
+						var option = $("<option>").text(res.res[i].itemValue).val(res.res[i].itemValue);
+						diploma.append(option);
+					}
+				}
+			},
+			error: function(){
+				alert("false");	
+			}
+		});
+		
+		$.ajax({
+			url : "[[@{/sysConfig/getKey}]]",
+			data : {
+				'itemType' : "内审人员",
+				'itemKey' : "职务类型"
+			},
+			success : function(res) {
+				if (res.success) {
+					jobType.empty();
+					for(var i = 0; i<res.res.length; i++){
+						//alert(res.res[i].itemValue)
+						var option = $("<option>").text(res.res[i].itemValue).val(res.res[i].itemValue);
+						jobType.append(option);
+					}
+				}
+			},
+			error: function(){
+				//alert("false");	
+			}
+		});
+		
+		$.ajax({
+			url : "[[@{/sysConfig/getKey}]]",
+			data : {
+				'itemType' : "内审人员",
+				'itemKey' : "职称"
+			},
+			success : function(res) {
+				if (res.success) {
+					jobTitle.empty();
+					for(var i = 0; i<res.res.length; i++){
+						//alert(res.res[i].itemValue)
+						var option = $("<option>").text(res.res[i].itemValue).val(res.res[i].itemValue);
+						jobTitle.append(option);
+					}
+				}
+			},
+			error: function(){
+				alert("false");	
+			}
+		});
+		
+		$.ajax({
+			url : "[[@{/sysConfig/getKey}]]",
+			data : {
+				'itemType' : "内审人员",
+				'itemKey' : "职业资格"
+			},
+			success : function(res) {
+				if (res.success) {
+					certificate.empty();
+					for(var i = 0; i<res.res.length; i++){
+						//alert(res.res[i].itemValue)
+						var option = $("<option>").text(res.res[i].itemValue).val(res.res[i].itemValue);
+						certificate.append(option);
+					}
+				}
+			},
+			error: function(){
+				alert("false");	
+			}
+		});
+		
+		//日期格式化
+		$(".datepicker").datepicker({
+            language: "zh-CN",
+            autoclose: true,//选中之后自动隐藏日期选择框
+            clearBtn: true,//清除按钮
+            todayBtn: true,//今日按钮
+            format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+        });
+		
+		
+		//if(count <= 20){
+		//	$("#pagebar").hide();
+		//}
+		
+		//下一页
+		$('#page1').click(function() {
+			next(parseInt(page)-1);
+		});
+		
+		//上一页
+		$('#page2').click(function() {
+			//alert(page);
+			next(parseInt(page)+1);
+		});
+
+	});
+</script>
+</head>
+
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron"
+			style="background: #F8F8FF; border: 1px solid #F5F5F5; color: #4682B4">
+			<h3>内审人员管理</h3>
+			<p>内审人员的增、删、改、查</p>
+		</div>
+		<div class="panel" th:if="${session.currentUser.type < 3}">
+			<button th:if="${session.currentUser.type < 3}" type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnAdd">
+				<span class="glyphicon glyphicon-plus"></span> 增加
+			</button>
+			<button th:if="${session.currentUser.type < 3}" type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnUpdate">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			<button th:if="${session.currentUser.type < 3}" type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnDelete">
+				<span class="glyphicon glyphicon-remove"></span> 删除
+			</button>
+
+			<form style="float: right; position: relative; width: 40%" id="f1"
+				th:action="@{/auditPerson/list}" method="POST">
+					
+				<button type="button" class="btn btn-primary" data-toggle="modal"
+					id="btnSearch" style="width: 12%; float: right; margin-left: 1%">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+				
+				<input type="text" class="form-control" id="value" name="value"
+					placeholder="在此输入关键词" style="width: 47%; float: right">
+				
+				<select id="key" name="key" class="form-control" style="float:right;width:23%;margin-right:5px;">
+					<option value="id">编号</option>
+					<option value="name">姓名</option>
+					<option value="sex">性别</option>
+					<option value="diploma">学历</option>
+					<option value="jobType">职务类型</option>
+					<option value="jobTitle">职称</option>
+					<option value="certificate">资格证书</option>
+					<option value="mobile">手机</option>
+				</select>
+		
+				<!-- 传参 -->
+				<input type="hidden" id="page" name="page" th:value="${page}">
+				<input type="hidden" id="size" name="size" th:value="${size}">
+				<input type="hidden" id="key" name="key" th:value="${key}">
+				<input type="hidden" id="value" name="value" th:value="${value}">
+				
+			</form>
+		</div>
+		<div class="panel panel-default">
+			<table class="table">
+				<tr>
+					<th style="text-align: center"><input type="checkbox"
+						id="selectAll" title="全选"></th>
+					<th style="text-align: center">编号</th>
+					<th style="text-align: center">姓名</th>
+					<th style="text-align: center">性别</th>
+					<th style="text-align: center">出生日期</th>
+					<th style="text-align: center">学历</th>
+					<th style="text-align: center">职务类型</th>
+					<th style="text-align: center">职称</th>
+					<th style="text-align: center">资格证书</th>
+					<th style="text-align: center">手机</th>
+					<th style="text-align: center">操作</th>
+				</tr>
+
+				<th:block th:each="auditPerson, it : ${list}">
+					<tr>
+						<td style="text-align: center"><input type="checkbox"
+							th:value="${auditPerson.id}" th:id="|cb${auditPerson.id}|"
+							th:name="id" /> <input type="hidden"
+							th:value="${auditPerson.id}" th:name="|id${auditPerson.id}|" />
+						</td>
+						<td style="text-align: center" th:text="${auditPerson.id}"></td>
+						<td style="text-align: center" th:text="${auditPerson.name}"></td>
+						<td style="text-align: center" th:text="${auditPerson.sex}"></td>
+						<td style="text-align: center" th:text="${#dates.format(auditPerson.birthday,'yyyy-MM-dd')}"></td>
+						<td style="text-align: center" th:text="${auditPerson.diploma}">
+						</td>
+						<td style="text-align: center" th:text="${auditPerson.jobType}">
+						</td>
+						<td style="text-align: center" th:text="${auditPerson.jobTitle}">
+						</td>
+						<td style="text-align: center" th:text="${auditPerson.certificate}">
+						</td>
+						<td style="text-align: center" th:text="${auditPerson.mobile}"></td>
+
+						<td style="text-align: center">
+							<span th:if="${session.currentUser.type < 3}"
+							class="glyphicon glyphicon-pencil rightUpdate text-success"
+							>
+							</span>
+							 <span th:if="${session.currentUser.type < 3}"
+							class="glyphicon glyphicon-remove rightDelete text-info"
+							></span>
+						</td>
+					</tr>
+				</th:block>
+			</table>
+		</div>
+		
+		<div class="panel panel-default" style="height:55px;margin-top:-10px" id="pagebar">
+			<ul class="pagination" style="margin-left:46%;margin-top:9px">
+				<li><a href="javascript:void(0)" id="page1">&laquo;</a></li>
+				<li class="active"><a href="#" th:text="${page}"></a></li>
+				<li><a href="javascript:void(0)" id="page2">&raquo;</a></li>
+			</ul>
+		</div>
+		
+		<div th:replace="/layout/bootstrap :: bottom" />
+	
+	</div>
+
+<!-- /container -->
+<div class="modal fade" tabindex="-1" role="dialog" id="win">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="winTitle">新增</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form" id="form1">
+					<!-- id -->
+					<input type="hidden" id="id" name="id" />
+
+					<div class="form-group">
+						<label for="name"><span style="color:red">* </span>姓名(长度不超过6个字符)：</label> <input type="text"
+							class="form-control" id="name" name="name" placeholder="姓名">
+						<span id="nameMsg" class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="sex"><span style="color:red">* </span>性别：</label> <select id="sex" name="sex"
+							class="form-control">
+							<option value="男">男</option>
+							<option value="女">女</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<div class="form-group">
+							<label for="age"><span style="color:red">* </span>出生日期：</label> 
+							<input type="text"
+								class="form-control datepicker" id="birthday" name="birthday" placeholder="   请选择日期">
+							<span id="birthdayMSG" class="help-block"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="diploma"><span style="color:red">* </span>学历：</label>
+						 <select id="diploma"
+							name="diploma" class="form-control">
+							<option value="1">本科</option>
+							<option value="2">硕士</option>
+							<option value="3">博士</option>
+							<option value="4">其他</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="jobType"><span style="color:red">* </span>职务类型：</label> 
+						<select id="jobType"
+							name="jobType" class="form-control">
+							<option value="1">兼职</option>
+							<option value="2">专职</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="jobTitle"><span style="color:red">* </span>职称：</label> 
+						<select id="jobTitle"
+							name="jobTitle" class="form-control">
+							<option value="1">初级职称</option>
+							<option value="2">中级职称</option>
+							<option value="3">高级职称</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="certificate"><span style="color:red">* </span>资格证书：</label> 
+						<select id="certificate"
+							name="certificate" class="form-control">
+							<option value="1">CIA</option>
+							<option value="2">CPA</option>
+							<option value="3">其他</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="mobile"><span style="color:red">* </span>手机(长度不超过11个字符)：</label> <input type="number"
+							class="form-control" id="mobile" name="mobile" placeholder="手机">
+						<span id="mobileMsg" class="help-block"></span>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+<body th:replace="/layout/bootstrap :: bootstrapJs" />
+<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

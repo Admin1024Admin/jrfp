@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        .buju{
+            display: flex;
+            flex-direction: row;
+        }
+    </style>
+    <script>
+        $(function(){
+//            getChun();
+            //用来判断
+            var isShow = false;
+            $("#ChaXunMianBan").hide();
+            //查询按钮点击事件
+            $("#chaxun").click(function(){
+                isShow = !isShow;
+                if(isShow){
+                    $("#ChaXunMianBan").show();
+                }else{
+                    $("#ChaXunMianBan").hide();
+                }
+            });
+            //查询按钮点击事件
+            $("#dc").click(function(){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        area: ['800px', '370px'],
+                        anim: 6,
+                        type: 2,
+                        title:"请选择需要导出的字段",
+                        fixed:false,
+                        resize:false,
+                        scrollbar:false,
+                        move:false,
+                        content:$("#tanchu").text() //  '/field'  //这 里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        ,btn: ['取消']
+                        ,yes: function(index, layero){
+                            layer.closeAll();
+                        },
+                        zIndex: layer.zIndex, //重点1
+                        success: function(layero){
+                            layer.setTop(layero); //重点2
+                        }
+                    });
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row">
+            <!--工具栏-->
+            <div class="layui-card" style="height:50px;margin-top:10px;">
+                    <button class="layui-btn" id="chaxun">查询</button>
+                    <button class="layui-btn layui-btn-normal" id="daochu">导出全部数据</button>
+                    <button class="layui-btn layui-btn-danger" id="exception">异常数据导出</button>
+                     <button class="layui-btn layui-btn-danger" id="exception">统计</button>
+            </div>
+            <div class="layui-card" id="ChaXunMianBan">
+                <form class="layui-form" action="/jrfpChooseWhere" method="post" id="#myform">
+                    <!--乡镇，村，社，姓名-->
+                    <div class="layui-form-item">
+                        <div class="layui-inline buju">
+                            <div>
+                                <label class="layui-form-label">乡镇</label>
+                                <div class="layui-input-block">
+                                    <select name="xiangZheng" lay-search style="width: 200px;">
+                                        <option value="">--请选择--</option>
+                                        <option value="文安乡">文安乡</option>
+                                        <option value="大滩镇">大滩镇</option>
+                                        <option value="青林乡">青林乡</option>
+                                        <option value="朝天镇">朝天镇</option>
+                                        <option value="小安乡">小安乡</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">村</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chun" placeholder="请输入查询的村" autocomplete="off" class="layui-input" style="width: 200px;">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">社</label>
+                                <div class="layui-input-block">
+                                    <select name="she" lay-search style="width: 200px;">
+                                        <option value="">--请选择--</option>
+                                        <option value="黄柏村1组">黄柏村1组</option>
+                                        <option value="银光村2组">银光村2组</option>
+                                        <option value="银光3组">银光3组</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">名字</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" placeholder="请输入查询的名字" autocomplete="off" class="layui-input" style="width: 200px;">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="cardId" placeholder="请输入查询的身份证号" autocomplete="off" class="layui-input" style="width: 210px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn">查询</button>
+                            <button type="button" class="layui-btn layui-bg-blue" id="dc">导出</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/demo/table/user/'}"-->
+            <table class="layui-hide" id="mytable" lay-filter="test"></table>
+            <div id="page"></div>
+        </div>
+    </div>
+    <script>
+        //Demo
+        layui.use('form', function(){
+            var form = layui.form;
+        });
+    </script>
+</body>
+</html>

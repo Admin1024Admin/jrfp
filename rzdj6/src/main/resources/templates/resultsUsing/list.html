@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="|${session.cfg.projectName} - 审计成果运用表|"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<script>
+	//审核
+	function audit(id, flag) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/resultsUsing/audit}]]",
+			data : {
+				'id' : id,
+				'flag' : flag
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			},
+			error : function() {
+				alert('no');
+			}
+		});
+	}
+
+	$(function() {
+		//动态添加生成的列表
+		var currentDate = new Date();
+		var year = $("#year");
+		year.empty();
+		for (var i = currentDate.getFullYear(); i > currentDate.getFullYear()-5; i--) {
+			var option = $("<option>").text(i + "年度").val(i);
+			year.append(option);
+		}
+
+		
+		//生成报表
+		$('#btnBirth').bind('click', function() {
+			var year = $("#year").val();
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/resultsUsing/birth}]]",
+				data : {
+					'year':year
+				},
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success)
+						window.location = window.location;
+				},
+				error : function() {
+					alert('请求失败');
+				}
+			});
+		});
+		
+		//预览
+		$('.btnFind').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要编辑的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能编辑一个条目');
+				return false;
+			}
+			var id = $("input[type='checkbox']:checked").val();
+			
+			var url = '[[@{/resultsUsing/report}]]';
+			url += '?id=' + id;
+			window.open(url);
+	
+		});
+		
+		//提交
+		$('#btnSubmit').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要编辑的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能编辑一个条目');
+				return false;
+			}
+			var id = $("input[type='checkbox']:checked").val();
+			
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/resultsUsing/submit}]]",
+				data : {
+					'id' : id
+				},
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success)
+						window.location = window.location;
+				}
+			});
+	
+		});
+
+		//审核通过
+		$('#flag1').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要审核的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能审核一个条目');
+				return false;
+			}
+			var id = $("input[type='checkbox']:checked").val();
+			var result = confirm('将要通过<' + id + '>是否继续?');
+			if (!result)
+				return;
+			audit(id, '1');
+
+		});
+
+		//审核不通过
+		$('#flag0').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要审核的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能审核一个条目');
+				return false;
+			}
+			var id = $("input[type='checkbox']:checked").val();
+			var result = confirm('将要不通过<' + id + '>是否继续?');
+			if (!result)
+				return;
+			audit(id, '0');
+
+		});
+
+		$('.glyphicon-remove').bind('click', function() {
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			var name = $(this).parent().parent().children('td:eq(3)').html();
+			var result = confirm('将要删除<' + name + '>是否继续?');
+			if (!result)
+				return;
+			deletes(id);
+
+		});
+
+	});
+	//删除请求
+	function deletes(ids) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/resultsUsing/delete}]]",
+			data : {
+				'id' : ids
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+	}
+</script>
+</head>
+<body>
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron" style="background: #F8F8FF;border:1px solid #F5F5F5 ;color:#4682B4">
+			<h3>审计成果运用表</h3>
+			<p>统计每年度审计结果运用</p>
+		</div>
+		<div class="panel form-inline" th:if="${session.currentUser.type} == 1">
+			<form method="post" id="birthForm">
+				<div class="form-group">
+					<select id="year" name="year" class="form-control" 
+						style="width: 147px">
+					</select>
+					<button th:if="${session.currentUser.type} == 1" type="button"
+						class="btn btn-success" data-toggle="modal" id="btnBirth">
+						<span class="glyphicon glyphicon-asterisk"></span> 生成
+					</button>
+				</div>
+			</form>
+		</div>
+		<div class="panel">
+			<button type="button" class="btn btn-primary btnFind" data-toggle="modal"
+				id="btnFind">
+				<span class="glyphicon glyphicon-zoom-in"></span> 查看
+			</button>
+			<button th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary btnFind" data-toggle="modal" id="btnUpdate">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			<button th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnSubmit">
+				<span class="glyphicon glyphicon-send"></span> 提交
+			</button>
+
+			<div class="btn-group">
+				<button th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-th-large"></span> 审核
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li id='flag1'><a href="javascript:void(0)">通过</a></li>
+					<li class="divider"></li>
+					<li id='flag0'><a href="javascript:void(0)">不通过</a></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="panel panel-default">
+			<table class="table table-hover">
+				<tr>
+					<th style="text-align: center"><input type="checkbox"
+						id="selectAll" title="全选"></th>
+					<th style="text-align: center">编号</th>
+					<th style="text-align: center">年度</th>
+					<th style="text-align: center">报表名称</th>
+					<th style="text-align: center">编辑人</th>
+					<th style="text-align: center">提交时间</th>
+					<th style="text-align: center">报表状态</th>
+					<th style="text-align: center">操作</th>
+				</tr>
+				
+			<th:block th:each="model, it : ${list}">
+				<tr>
+					<td style="text-align: center">
+						<input type="checkbox" th:value="${model.id}" th:id="|cb${model.id}|" th:name="id" />
+						<input type="hidden" th:value="${model.id}" th:name="|id${model.id}|" />
+					</td>
+					<td style="text-align: center" th:text="${model.id}">2017</td>
+					<td style="text-align: center" th:text="${model.year}">2017</td>
+					<td style="text-align: center" th:text="${model.name}">2017年度审计项目一览表</td>
+					<td style="text-align: center" th:text="${model.sumbitOne}">廖海</td>
+					<td style="text-align: center" th:text="${#dates.format(model.sumbitDate,'yyyy-MM-dd HH:mm:ss')}">2017-8-14</td>
+					<td style="text-align: center;color:green" th:if="${model.state} == 0">编辑</td>
+					<td style="text-align: center;color:green" th:if="${model.state} == 1">待审核</td>
+					<td style="text-align: center;color:green" th:if="${model.state} == 2">通过</td>
+					<td style="text-align: center;color:red" th:if="${model.state} == 3">不通过</td>
+					<td style="text-align: center" th:switch="${model.state}">
+						<span th:if="${session.currentUser.type==1}" th:case="0" class="glyphicon glyphicon-remove rightDelete text-info">
+						</span>
+						<span th:if="${session.currentUser.type==1}" th:case="3" class="glyphicon glyphicon-remove rightDelete text-info">
+						</span>
+						<span>
+						</span>
+					</td>
+				</tr>
+			</th:block>
+
+			</table>
+		</div>
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+
+	<!-- /container -->
+	<body th:replace="/layout/bootstrap :: bootstrapJs" />
+	<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

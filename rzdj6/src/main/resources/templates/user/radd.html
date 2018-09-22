@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>add_authority</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <script src="/static/js/jquery2.1.1.min.js" charset="utf-8"></script>
+    <style type="text/css">
+        #main{
+            margin-top: 10px;
+            width: 100%;
+            height: 100%;
+            /*background-color: #00F7DE;*/
+        }
+        .layui-form-item{
+            margin: auto;
+        }
+        #butS{
+            width: 180px;
+            margin: 0px auto;
+            position: relative;
+            top: 20px;
+        }
+        #butS *{
+            margin: 0px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"  lay-data="{align:'center'}">
+        <form class="layui-form" action="">
+            <div class="layui-form-item" hidden>
+                <label class="layui-form-label">ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="rid" name="rid" autocomplete="off" class="layui-input" value="0">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色中文名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="rcname" name="rcname" lay-verify="required" autocomplete="off" placeholder="请输入角色中文名" class="layui-input" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="rname" name="rname" lay-verify="required" autocomplete="off" placeholder="请输入角色名" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限分配</label>
+                <div class="layui-input-block" id="rolePer">
+                    <!--<input type="checkbox" name="like[read]" title="阅读" checked="">-->
+                </div>
+            </div>
+
+            <div class="layui-form-item" id="butS">
+                <div class="layui-input-block">
+                    <button id="submit_but" type="button" class="layui-btn" lay-submit lay-filter="sub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        window.onload = function () {
+
+            $.get("/role/getAllPer", function (result) {
+                var value = eval(result);
+//                console.log(value)
+                for(var i = 0; i < value.length; i++){
+                    $("#rolePer").append("<input type=\"checkbox\" name=\""+ value[i].pid +"\" title=\""+value[i].pname+"\">")
+                }
+
+                layui.form.render('checkbox');
+
+                $.get("/user/nowEdit", function (result) {
+                    var value = eval("["+result+"]")[0];
+//                console.log(value)
+                    if (value.rid !== 0) {
+                        $("#rid").val(value.rid);
+                        $("#rcname").val(value.rcname);
+                        $("#rname").val(value.rname);
+                        $.get("/role/getPer?rid="+value.rid, function (result1) {
+                            var value1 = eval(result1);
+                            console.log(value1)
+                            for(var i = 0; i < value1.length; i++){
+                                $("#rolePer input[name="+value1[i].pid+"]").attr("checked",true);
+                            }
+                            layui.form.render('checkbox');
+                        });
+                    }
+                });
+
+            });
+
+        }
+
+        var mySubmit = function () {
+            var ridVal = $("#rid").val();
+            var pidd = "";
+            $("#rolePer input:checked").each(function (ele) {
+                pidd += "," + $(this).attr("name");
+            });
+
+            $.post("/role/addOrUpdate",{
+                "rid" : ridVal === 0 ? '': ridVal,
+                "rcname" : $("#rcname").val() ,
+                "rname" : $("#rname").val()
+            },function(result){
+//                console.log(result)
+                $.post("/role/addOrUpdatePer",{
+                    "rid" : result,
+                    "pid" : pidd
+                },function(result1){
+
+                    var index1 = parent.layer.getFrameIndex(window.name);
+                    layer.msg(result1, {
+                        time: 2000, //2s后自动关闭
+                        btn: ['哦']
+                    },function (index) {
+
+                        layer.close(index);
+
+                        parent.layer.close(index1);
+                    });
+                });
+
+            });
+        };
+
+        layui.use('form', function(){
+            var form = layui.form;
+            form.on('submit(sub)', function(data){
+                mySubmit();
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+    </script>
+</body>
+</html>

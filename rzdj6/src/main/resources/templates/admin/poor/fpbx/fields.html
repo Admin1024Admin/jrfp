@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        tr{
+            width:200px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <form class="layui-form" action="/fpbx/chooseFieldExportFpbx" method="post">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <table id="tb">
+                    <tr>
+                        <td><input type="checkbox" name="xiang" title="乡（镇）" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="chun" title="行政村" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="zu" title="组别" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="huZhuName" title="户主姓名" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="familyMemberName" title="家庭成员姓名" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="cardId" title="身份证号" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="familyRelation" title="与户主关系" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="familyMemberCount" title="家庭人口" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="baoFeiZongE" title="总额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="baoFeiZiFu" title="其中：自付" lay-skin="primary" checked></td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkbox" name="baoFeiBuTie" title="其中：财政补贴" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="baoZhangJinE" title="保障金额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="baoZhangQiJian" title="保障期间" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="touBaoDate" title="投保时间" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="daoQiDate" title="到期时间" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="liPeiShiXiang" title="理赔事项" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="liPeiDate" title="理赔时间" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="liPeiJinE" title="理赔金额" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="liPeiShouYiRen" title="受益人" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="chengBaoJiGou" title="承办保险机构" lay-skin="primary" checked></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="touPinYear" title="脱贫年度" lay-skin="primary" checked></td>
+                        <td><input type="checkbox" name="note" title="备注" lay-skin="primary" checked></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="float:right;">
+                <button class="layui-btn layui-layer-btn0" type="button" id="selectAll">全选</button>
+                <button class="layui-btn layui-layer-btn0" type="button" id="unSelect">全不选</button>
+                <button class="layui-btn layui-layer-btn0" type="button" id="reverseSelect">反选</button>
+                <button class="layui-btn" lay-submit lay-filter="daochu">确认</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    //Demo
+    layui.use(['form','element'], function(){
+        var form = layui.form;
+        var element = layui.element;
+        //监听提交
+        form.on('submit(daochu)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            layer.msg("正在下载...请稍等...");
+//            var index=parent.layer.getFrameIndex(window.name);
+//            parent.layer.close(index);
+            return true;
+        });
+        //全局选择
+        $("#selectAll").click(function(){//全选
+            $("#tb input[type='checkbox']").prop("checked",true);
+            form.render('checkbox');
+        })
+
+        $("#reverseSelect").click(function(){//反选
+            $("#tb input[type='checkbox']").each(function(){
+                if($(this).prop("checked")){
+                    $(this).prop("checked",false);
+                }else{
+                    $(this).prop("checked",true);
+                }
+            })
+            form.render('checkbox');
+        })
+
+        $("#unSelect").click(function(){//不选
+            $("#tb input[type='checkbox']").prop("checked",false);
+            form.render("checkbox");
+        })
+    });
+</script>
+</body>
+</html>  300

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="''"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<script th:src="@{/js/excellentexport.js}"></script>
+<script th:src="@{/js/jquery-migrate-1.2.1.min.js}"></script>
+<script th:src="@{/js/jquery.jqprint-0.3.js}"></script>
+<style>
+	.edit{width:50px}
+	table{
+		border:1px solid #ccc !important;
+		border-collapse: collapse !important
+	}
+	table td{
+		border:1px solid #ccc !important;
+		vertical-align: middle !important;
+	}
+	
+</style>
+
+<style type="text/css" media="print">
+		
+</style>
+
+<script>
+	var id = "[[${model.id}]]";
+	var name = "[[${model.name}]]";
+	var state = "[[${model.state}]]";
+		
+	//审核
+	function audit(id, flag) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/auditPersonReport/audit}]]",
+			data : {
+				'id' : id,
+				'flag' : flag
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			},
+			error : function() {
+				alert('no');
+			}
+		});
+	}
+	
+	$(function() {
+		$('.find').show();
+		$('.find').css("visibility", "visible");
+		$('.edit').hide();
+		$('.edit').css("visibility", "hidden");
+
+		$("#btnEdit").bind('click', function() {
+			$('.find').hide();
+			$('.find').css("visibility", "hidden");
+			$('.edit').show();
+			$('.edit').css("visibility", "visible");
+		});
+
+		$("#btnSave").bind('click', function() {
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/auditPersonReport/save}]]",
+				data : $('#f1').serialize(),
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success) {
+						window.location = window.location;
+						$('.find').css("visibility", "visible");
+						$('.edit').css("visibility", "hidden");
+					}
+
+				},
+				error : function() {
+					alert('保存失败');
+				}
+			});
+
+		});
+		
+		//提交
+		$('#btnSubmit').bind('click', function() {
+			var result = confirm('将要提交<' + name + '>是否继续?提交后将不能编辑');
+			if (!result)
+				return;
+
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/auditPersonReport/submit}]]",
+				data : {
+					'id' : id,
+				},
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success)
+						window.location = window.location;
+				}
+			});
+
+		});
+		
+		//审核通过
+		$('#flag1').bind('click', function() {
+			audit(id, '1');
+		});
+
+		//审核不通过
+		$('#flag0').bind('click', function() {
+			audit(id, '0');
+		});
+		
+		//打印
+		$('#btnPrint').bind('click', function() {
+			if(state != 2){
+				alert("当前报表状态不允许打印，报表为通过状态下才能打印!");
+				return false;
+			}
+			$("#tables").jqprint();
+		});
+		
+		var x=document.getElementById('datatable').rows[0].cells;
+		x[0].vAlign="center";
+	});
+</script>
+</head>
+<body>
+	<div class="container" style="width:100%">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron"
+			style="background: #F8F8FF; border: 1px solid #F5F5F5;color:#666;height:140px">
+			<h3 th:text="'报表：'+${reportName}" style="margin-top:-14px;margin-left:-35px">2017年度人员情况统计表</h3>
+			<h3 th:switch="${model.state}" style="margin-left:-35px">状态：
+				<span style="color:red" th:case="0">编辑</span>
+				<span style="color:red" th:case="1">待审核</span>
+				<span style="color:red" th:case="2">通过</span>
+				<span style="color:red" th:case="3">不通过</span>
+			</h3>
+		</div>
+		<div class="panel" th:switch="${model.state}" >
+			<button th:case="0" th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnEdit">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			
+			<button th:case="3" th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnEdit">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			
+			<button th:case="2" th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" onclick="alert('当前状态不允许编辑')">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			
+			<button th:case="1" th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" onclick="alert('当前状态不允许编辑')">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			
+			<button th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnSave">
+				<span class="glyphicon glyphicon-send"></span> 保存
+			</button>
+			
+			<button th:if="${session.currentUser.type} == 1" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnSubmit">
+				<span class="glyphicon glyphicon-send"></span> 提交
+			</button>
+
+			<div class="btn-group">
+				<button th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-th-large"></span> 审核
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li id='flag1'><a href="javascript:void(0)">通过</a></li>
+					<li class="divider"></li>
+					<li id='flag0'><a href="javascript:void(0)">不通过</a></li>
+				</ul>
+			</div>
+			
+			<span th:switch="${model.state}">
+				<a th:case="2" href="javascript:void(0)"
+				th:if="${session.currentUser.type} == 2" role="button"
+				class="btn btn-primary" th:download="${model.name}"
+				onclick="return ExcellentExport.excel(this, 'datatable','Sheet Name Here')">
+				<span class="glyphicon glyphicon-folder-open"></span> 导出
+				</a>
+				<button th:case="1" onclick="alert('不能导出未通过的报表')"
+					th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary" data-toggle="modal">
+					<span class="glyphicon glyphicon-folder-open"></span> 导出
+				</button>
+				<button th:case="3" onclick="alert('不能导出未通过的报表')"
+					th:if="${session.currentUser.type} == 2" type="button"
+					class="btn btn-primary" data-toggle="modal">
+					<span class="glyphicon glyphicon-folder-open"></span> 导出
+				</button>
+			</span>
+
+			<button th:if="${session.currentUser.type} ==2" type="button"
+				class="btn btn-primary" data-toggle="modal" id="btnPrint">
+				<span class="glyphicon glyphicon-print"></span> 打印
+			</button>
+
+		</div>
+		<div class="panel panel-default" id="tables" style="border:none">
+			<div class="table-responsive" >
+				<table class="table table-bordered" id="datatable">
+					<caption><h3 style="text-align:center;color:#333">内审机构和人员情况统计表</h3>
+					<span style="float:left" th:text="'填报单位：'+${session.cfg.dptName}"></span>
+					<span style="float:right" th:text="'填报时间：'+${#dates.format(model.sumbitDate,'yyyy-MM-dd')}"></span>
+					</caption>
+					<form id="f1" name="f1" method="POST">
+						<input th:if="${session.currentUser.type} == 1" type="hidden" name="id" th:value="${model.id}">
+					
+					<tr>
+						<td style="text-align: center;">序号</th>
+						<td style="text-align: center;" colspan="3">1</th>
+						<td style="text-align: center;" colspan="4">2</th>
+						<td style="text-align: center;" colspan="2">3</th>
+						<td style="text-align: center;" colspan="5">4</th>
+						<td style="text-align: center;" colspan="3">5</th>
+						<td style="text-align: center;" colspan="3">6</th>
+						<td style="text-align: center;" colspan="3">7</th>
+					</tr>
+					<tr>
+						<td rowspan="3"  style="text-align: center; line-height: 55px;">单位</th>
+						<td colspan="3" style="text-align: center; line-height: 55px">机构数</th>
+						<td colspan="4" style="text-align: center; line-height: 55px">人数</th>
+						<td colspan="2" style="text-align: center; line-height: 55px">本年内审人员变动情况</th>
+						<td colspan="5" style="text-align: center; line-height: 55px">学历</th>
+						<td colspan="3" style="text-align: center; line-height: 55px">年龄</th>
+						<td colspan="3" style="text-align: center; line-height: 55px">职称</th>
+						<td colspan="3" style="text-align: center; line-height: 55px">职业资格</th>
+					</tr>
+					<tr>
+						<td rowspan="2" style="text-align: center">分支机构数</th>
+						<td colspan="2" style="text-align: center">内审机构数</th>
+						<td colspan="2" style="text-align: center">内审人员数</th>
+						<td rowspan="2" style="text-align: center">全行人员总数</th>
+						<td rowspan="2" style="text-align: center">占比</th>
+						<td rowspan="2" style="text-align: center">人员调入数</th>
+						<td rowspan="2" style="text-align: center">人员调出数</th>
+						<td rowspan="2" style="text-align: center">博士</th>
+						<td rowspan="2" style="text-align: center">硕士</th>
+						<td rowspan="2" style="text-align: center">本科</th>
+						<td rowspan="2" style="text-align: center">其他</th>
+						<td rowspan="2" style="text-align: center">本科以上占比</th>
+						<td rowspan="2" style="text-align: center">平均年龄</th>
+						<td rowspan="2" style="text-align: center">45岁以下人数</th>
+						<td rowspan="2" style="text-align: center">45岁以下占比</th>
+						<td rowspan="2" style="text-align: center">高级职称</th>
+						<td rowspan="2" style="text-align: center">中级职称</th>
+						<td rowspan="2" style="text-align: center">初级职称</th>
+						<td rowspan="2" style="text-align: center">CIA</th>
+						<td rowspan="2" style="text-align: center">CPA</th>
+						<td rowspan="2" style="text-align: center">其他职业资格</th>
+					</tr>
+
+					<tr>
+						<td style="text-align: center">专门机构</th>
+						<td style="text-align: center">合署办公</th>
+						<td style="text-align: center">专职</th>
+						<td style="text-align: center">兼职</th>
+					</tr>
+					
+					<tr>
+						<td style="text-align: center;">上海总部</th>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.fzjgs2==0?'':model.fzjgs2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.fzjgs2}" name="fzjgs2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zmjg2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zmjg2}" name="zmjg2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.hsbg2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.hsbg2}" name="hsbg2">
+						</td>
+						<td style="text-align: center;">
+						  <span class="find" th:text="${model.zhuanZhi2==0?'':model.zhuanZhi2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zhuanZhi2==0?'':model.zhuanZhi2}" name="zhuanZhi2">
+						</td>
+						<td style="text-align: center;">
+						  <span class="find" th:text="${model.jianZhi2==0?'':model.jianZhi2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.jianZhi2==0?'':model.jianZhi2}" name="jianZhi2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.ryzs2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.ryzs2}" name="ryzs2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zhanBi2==0?'':model.zhanBi2}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zhanBi2==0?'':model.zhanBi2}" name="zhanBi2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.rydrs2==0?'':model.rydrs2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.rydrs2==0?'':model.rydrs2}" name="rydrs2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.rydcs2==0?'':model.rydcs2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.rydcs2==0?'':model.rydcs2}" name="rydcs2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.boShi2==0?'':model.boShi2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.boShi2==0?'':model.boShi2}" name="boShi2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.shuoShi2==0?'':model.shuoShi2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.shuoShi2==0?'':model.shuoShi2}" name="shuoShi2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.benKe2==0?'':model.benKe2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.benKe2==0?'':model.benKe2}" name="benKe2">
+						</td>
+						
+						
+						
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.qiTa2==0?'':model.qiTa2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.qiTa2==0?'':model.qiTa2}" name="qiTa2">
+						</td>
+						<td style="text-align: center">
+						 <span class="find" th:text="${model.bkzb2}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.bkzb2}" name="bkzb2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.pjnl2==0?'':model.pjnl2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.pjnl2==0?'':model.pjnl2}" name="pjnl2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.yiXia2==0?'':model.yiXia2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.yiXia2==0?'':model.yiXia2}" name="yiXia2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.yiShang2==0?'':model.yiShang2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.yiShang2==0?'':model.yiShang2}" name="yiShang2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.gjzc2==0?'':model.gjzc2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.gjzc2==0?'':model.gjzc2}" name="gjzc2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zjzc2==0?'':model.zjzc2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zjzc2==0?'':model.zjzc2}" name="zjzc2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cjzc2==0?'':model.cjzc2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cjzc2==0?'':model.cjzc2}" name="cjzc2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cia2==0?'':model.cia2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cia2==0?'':model.cia2}" name="cia2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cpa2==0?'':model.cpa2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cpa2==0?'':model.cpa2}" name="cpa2">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.qtzg2==0?'':model.qtzg2}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.qtzg2==0?'':model.qtzg2}" name="qtzg2">
+						</td>			
+					</tr>
+					
+					<tr>
+						<td style="text-align: center;">省会中支</th>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.fzjgs3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.fzjgs3}" name="fzjgs3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zmjg3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zmjg3}" name="zmjg3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.hsbg3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.hsbg3}" name="hsbg3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zhuanZhi3==0?'':model.zhuanZhi3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zhuanZhi3==0?'':model.zhuanZhi3}" name="zhuanZhi3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.jianZhi3==0?'':model.jianZhi3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.jianZhi3==0?'':model.jianZhi3}" name="jianZhi3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.ryzs3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.ryzs3}" name="ryzs3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zhanBi3}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zhanBi3}" name="zhanBi3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.rydrs3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.rydrs3}" name="rydrs3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.rydcs3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.rydcs3}" name="rydcs3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.boShi3==0?'':model.boShi3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.boShi3==0?'':model.boShi3}" name="boShi3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.shuoShi3==0?'':model.shuoShi3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.shuoShi3==0?'':model.shuoShi3}" name="shuoShi3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.benKe3==0?'':model.benKe3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.benKe3==0?'':model.benKe3}" name="benKe3">
+						</td>
+						
+						
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.qiTa3==0?'':model.qiTa3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.qiTa3==0?'':model.qiTa3}" name="qiTa3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.pjnl3==0?'':model.pjnl3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.pjnl3==0?'':model.pjnl3}" name="pjnl3">
+						</td>
+						<td style="text-align: center">
+						 <span class="find" th:text="${model.bkzb3}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.bkzb3}" name="bkzb3">
+						</td>
+						
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.yiXia3==0?'':model.yiXia3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.yiXia3==0?'':model.yiXia3}" name="yiXia3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.yiShang3==0?'':model.yiShang3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.yiShang3==0?'':model.yiShang3}" name="yiShang3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.gjzc3==0?'':model.gjzc3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.gjzc3==0?'':model.gjzc3}" name="gjzc3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zjzc3==0?'':model.zjzc3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zjzc3==0?'':model.zjzc3}" name="zjzc3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cjzc3==0?'':model.cjzc3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cjzc3==0?'':model.cjzc3}" name="cjzc3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cia3==0?'':model.cia3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cia3==0?'':model.cia3}" name="cia3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cpa3==0?'':model.cpa3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cpa3==0?'':model.cpa3}" name="cpa3">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.qtzg3==0?'':model.qtzg3}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.qtzg3==0?'':model.qtzg3}" name="qtzg3">
+						</td>					
+					</tr>
+					<tr>							
+							<td style="text-align: center;">地市中支</th>
+							<td style="text-align: center">
+							 <span class="find" th:text="${model.fzjgs}" >10</span> 
+							  <input type="number" th:if="${session.currentUser.type} == 1" 
+								class="edit" value="10" style="width: 50px"
+								th:value="${model.fzjgs}" name="fzjgs">
+							</td>
+							<td style="text-align: center">
+								<span class="find"
+								th:text="${model.zmjg}">10</span> 
+								<input type="number" 
+								th:if="${session.currentUser.type} == 1" 
+								class="edit" value="10" style="width: 50px"
+								th:value="${model.zmjg}" name="zmjg"></td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.hsbg}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.hsbg}" name="hsbg">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.zhuanZhi==0?'':model.zhuanZhi}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.zhuanZhi==0?'':model.zhuanZhi}" name="zhuanZhi">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.jianZhi==0?'':model.jianZhi}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.jianZhi==0?'':model.jianZhi}" name="jianZhi">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.ryzs}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.ryzs}" name="ryzs">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.zhanBi}">10</span> <input type="text" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.zhanBi}" name="zhanBi">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.rydrs==0?'':model.rydrs}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.rydrs==0?'':model.rydrs}" name="rydrs">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.rydcs==0?'':model.rydcs}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.rydcs==0?'':model.rydcs}" name="rydcs">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.boShi==0?'':model.boShi}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.boShi==0?'':model.boShi}" name="boShi">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.shuoShi==0?'':model.shuoShi}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.shuoShi==0?'':model.shuoShi}" name="shuoShi">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.benKe==0?'':model.benKe}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.benKe==0?'':model.benKe}" name="benKe">
+							</td>
+							
+						
+							
+							<td style="text-align: center"><span class="find"
+								th:text="${model.qiTa==0?'':model.qiTa}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.qiTa==0?'':model.qiTa}" name="qiTa">
+							</td>
+							
+								<td style="text-align: center">
+						 <span class="find" th:text="${model.bkzb}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.bkzb}" name="bkzb">
+						</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.pjnl==0?'':model.pjnl}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.pjnl==0?'':model.pjnl}" name="pjnl">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.yiXia==0?'':model.yiXia}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.yiXia==0?'':model.yiXia}" name="yiXia">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.yiShang==0?'':model.yiShang}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.yiShang==0?'':model.yiShang}" name="yiShang">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.gjzc==0?'':model.gjzc}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.gjzc==0?'':model.gjzc}" name="gjzc">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.zjzc==0?'':model.zjzc}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.zjzc==0?'':model.zjzc}" name="zjzc">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.cjzc==0?'':model.cjzc}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.cjzc==0?'':model.cjzc}" name="cjzc">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.cia==0?'':model.cia}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.cia==0?'':model.cia}" name="cia">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.cpa==0?'':model.cpa}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.cpa==0?'':model.cpa}" name="cpa">
+							</td>
+							<td style="text-align: center"><span class="find"
+								th:text="${model.qtzg==0?'':model.qtzg}">10</span> <input type="number" 
+								th:if="${session.currentUser.type} == 1" class="edit" value="10"
+								style="width: 50px" th:value="${model.qtzg==0?'':model.qtzg}" name="qtzg">
+							</td>
+					 </tr>
+					 
+					 <tr>
+						<td style="text-align: center;">县支行</th>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.fzjgs4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.fzjgs4}" name="fzjgs4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zmjg4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zmjg4}" name="zmjg4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.hsbg4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.hsbg4}" name="hsbg4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zhuanZhi4==0?'':model.zhuanZhi4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zhuanZhi4==0?'':model.zhuanZhi4}" name="zhuanZhi4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.jianZhi4==0?'':model.jianZhi4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.jianZhi4==0?'':model.jianZhi4}" name="jianZhi4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.ryzs4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.ryzs4}" name="ryzs4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zhanBi4}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zhanBi4}" name="zhanBi4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.rydrs4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.rydrs4}" name="rydrs4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.rydcs4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.rydcs4}" name="rydcs4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.boShi4==0?'':model.boShi4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.boShi4==0?'':model.boShi4}" name="boShi4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.shuoShi4==0?'':model.shuoShi4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.shuoShi4==0?'':model.shuoShi4}" name="shuoShi4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.benKe4==0?'':model.benKe4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.benKe4==0?'':model.benKe4}" name="benKe4">
+						</td>
+						
+						
+						
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.qiTa4==0?'':model.qiTa4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.qiTa4==0?'':model.qiTa4}" name="qiTa4">
+						</td>
+						
+						<td style="text-align: center">
+						 <span class="find" th:text="${model.bkzb4}" >10</span> 
+						  <input class="edit" type="text" th:if="${session.currentUser.type}==1"
+					       th:value="${model.bkzb4}" name="bkzb4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.pjnl4==0?'':model.pjnl4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.pjnl4==0?'':model.pjnl4}" name="pjnl4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.yiXia4==0?'':model.yiXia4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.yiXia4==0?'':model.yiXia4}" name="yiXia4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.yiShang4==0?'':model.yiShang4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.yiShang4==0?'':model.yiShang4}" name="yiShang4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.gjzc4==0?'':model.gjzc4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.gjzc4==0?'':model.gjzc4}" name="gjzc4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.zjzc4==0?'':model.zjzc4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.zjzc4==0?'':model.zjzc4}" name="zjzc4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cjzc4==0?'':model.cjzc4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cjzc4==0?'':model.cjzc4}" name="cjzc4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cia4==0?'':model.cia4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cia4==0?'':model.cia4}" name="cia4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.cpa4==0?'':model.cpa4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.cpa4==0?'':model.cpa4}" name="cpa4">
+						</td>
+						<td style="text-align: center">
+						  <span class="find" th:text="${model.qtzg4==0?'':model.qtzg4}" >10</span> 
+						  <input class="edit" type="number" th:if="${session.currentUser.type}==1"
+					       th:value="${model.qtzg4==0?'':model.qtzg4}" name="qtzg4">
+						</td>			
+					</tr>
+					
+					<tr>
+						<td style="text-align: center;">合计</td>
+						<th:block th:each="userStat:${countList}">
+							<td style="text-align: center;" ><span th:text="${userStat==0?'':userStat}"></span></td>
+						</th:block>
+					</tr>
+
+					</form>
+				
+					<!-- 填表说明 -->
+				 </table>
+			</div>
+			<div class="panel panel-default" style="font-size:15px;margin-top:5px;border:none;color:red;" id="pagebar">
+				 <p><span style="margin-left:0px;">填表说明：1、填报数字为12月31日的时点数。2、分行营业管理部的数据在“地市中心支行”栏中统计。3、①占比是指内审人员（包括专职和兼职）与本级机构总人数之比；②CIA指注册内部审计师。③CPA指注册会计师。</span></p>
+		    </div>
+		</div>	
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+	<!-- /container -->
+<body th:replace="/layout/bootstrap :: bootstrapJs" />
+<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="bootstrapHead" th:remove="tag">
+<link rel="stylesheet" type="text/css" th:href="@{/css/myNavbar.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+<!-- <script type="text/javascript" th:src="@{/js/jquery1.12.4.min.js}"></script> -->
+<script type="text/javascript" th:src="@{/js/jquery2.1.1.min.js}"></script>
+</head>
+
+<head th:fragment="bootstrapDate" th:remove="tag">
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datepicker.min.css}" />
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap-datepicker.zh-CN.min.js}"></script>
+</head>
+
+<body th:fragment="bootstrapJs" th:remove="tag">
+	<script type="text/javascript"
+		th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+</body>
+
+<div th:fragment="bottom" class="panel panel-success">
+	<div class="panel-heading">
+		<h4 class="panel-title">&nbsp;</h4>
+		<h4 class="panel-title" style="text-align: center;color:#666;font-size:14px">
+			<p class="">版权所有：中国人民银行广元市中心支行  &nbsp;&nbsp;© 2017 gyyh.com</p>
+		</h4>
+		
+	</div>
+</div>
+
+<head th:fragment="bootstrapTree" th:remove="tag">
+<script type="text/javascript"
+	th:src="@{/bootstrap-treeview20161102/dist/bootstrap-treeview.min.js}"></script>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/bootstrap-treeview20161102/dist/bootstrap-treeview.min.css}">
+</head>
+</html>

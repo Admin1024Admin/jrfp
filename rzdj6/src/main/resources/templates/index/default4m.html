@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="|${session.cfg.projectName} - 首页|"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<style>
+	p{text-indent:30px}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron" style="background: #F8F8FF;border:1px solid #F5F5F5 ;color:#4682B4;height:50px;line-height:50px">
+			<h3 style="margin-top:-11px;margin-left:-35px">履行确认和咨询职能&nbsp;&nbsp;助推组织实现其目标</h3>
+		</div>
+		<!--<div class="panel panel-default">
+			<div style="width:97%;margin:0 auto;margin-top:20px;color:#666;line-height:23px">
+				 
+	             <p style="margin-top:20px;">
+	             	<img class="img-responsive " style="width:100%;height:560px;margin-bottom:20px;" th:src="@{/images/timg (1).jpg}" >
+	             </p> 
+	              
+	              <!--       
+	             <div style="margin-top:35px;margin-bottom:25px">
+	             	<img class="img-responsive" style="width:24%;height:200px;float:left;" th:src="@{/images/timg.jpg}" >
+	             	<img class="img-responsive" style="width:24%;height:200px;float:left;margin-left:10px" th:src="@{/images/timg.jpg}" >
+	             	<img class="img-responsive" style="width:24%;height:200px;float:left;margin-left:10px;margin-right:10px" th:src="@{/images/timg.jpg}" >
+	             	<img class="img-responsive" style="width:24%;height:200px;" th:src="@{/images/timg.jpg}" >
+	             </div>             
+	      
+			</div>
+		 </div> -->
+		<div class="panel panel-default" style="border:none;margin-top:-9px">
+			<!--  <div style="width:100%;margin:0 auto;margin-top:0px;color:#666;">				 
+	             <p style="margin-top:0px;">
+	             	<img class="img img-responsive img-rounded" style="width:100%;height:600px;margin-bottom:0px;" th:src="@{/images/timg (1).jpg}">
+	             </p> 
+			</div>-->
+			
+			<div id="myCarousel" class="carousel slide" style="width:100%;margin:0 auto;margin-top:0px;color:#666;">
+			    <!-- 轮播（Carousel）指标 -->
+			    <ol class="carousel-indicators">
+			        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			        <li data-target="#myCarousel" data-slide-to="1"></li>
+			        <li data-target="#myCarousel" data-slide-to="2"></li>
+			    </ol>   
+			    <!-- 轮播（Carousel）项目 -->
+			    <div class="carousel-inner">
+			        <div class="item active">
+			            <img th:src="@{/images/timg (1).jpg}" style="width:100%" src="/wp-content/uploads/2014/07/slide1.png" alt="First slide">
+			        </div>
+			        <div class="item">
+			            <img th:src="@{/images/timg (1).jpg}" style="width:100%" src="/wp-content/uploads/2014/07/slide2.png" alt="Second slide">
+			        </div>
+			        <div class="item">
+			            <img th:src="@{/images/timg (1).jpg}" style="width:100%" src="/wp-content/uploads/2014/07/slide3.png" alt="Third slide">
+			        </div>
+			    </div>
+			    <!-- 轮播（Carousel）导航 -->
+			    <a class="carousel-control left" href="#myCarousel" 
+			        data-slide="prev">&lsaquo;
+			    </a>
+			    <a class="carousel-control right" href="#myCarousel" 
+			        data-slide="next">&rsaquo;
+			    </a>
+			</div>
+		</div>
+		
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+	<!-- /container -->
+<body th:replace="/layout/bootstrap :: bootstrapJs" />
+<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

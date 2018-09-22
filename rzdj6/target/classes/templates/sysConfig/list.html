@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="|${session.cfg.projectName} - 系统配置数据|"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<script>
+	var type = [[${type}]];
+	//提交
+	function saveRow(tr) {
+		var id = tr.find('span').html();
+		var itemType = tr.find('select:eq(0)').val();
+		var itemKey = tr.find('select:eq(1)').val();
+		var itemValue = tr.find('input:eq(0)').val();
+		var remark = tr.find('input:eq(1)').val();
+		var sortOrder = tr.find('input:eq(2)').val();
+		var flag = 0;
+		$.ajax({
+			method : 'post',
+			data : {
+				id : id,
+				itemType : itemType,
+				itemKey : itemKey,
+				itemValue : itemValue,
+				remark : remark,
+				sortOrder : sortOrder
+			},
+			url : '[[@{/sysConfig/createOrUpdate}]]',
+			success : function(res) {
+				alert(res.msg);
+				refrush();
+			},
+			error : function(){
+				alert("更新数据失败,输入数据过大或数据异常");
+			}
+		});
+	}
+
+	//删除
+	function removeRow(tr) {
+		var id = tr.find('span').html();
+		var result = confirm('将要删除编号为"' + id + '"的数据，是否继续?');
+		if (!result)
+			return;
+		$.ajax({
+			method : 'post',
+			data : {
+				id : id
+			},
+			url : '[[@{/sysConfig/delete}]]',
+			success : function(res) {
+				alert(res.msg);
+				refrush();
+			}
+		});
+	}
+	
+	//增加
+	function add(){
+		$.ajax({
+			method : 'post',
+			url : '[[@{/sysConfig/add}]]',
+			data:{
+				type:type
+			},
+			success : function(res) {
+				alert(res.msg);
+				refrush();
+			}
+		});
+	}
+	
+	function refrush() {
+		if ($('#type').val()) {
+			window.location = '[[@{/sysConfig/list?typeId=}]]' + $('#type').val();
+		}
+		else {
+			window.location = '[[@{/sysConfig/list}]]';
+		}
+	}
+
+	$(function() {
+		$('.glyphicon-ok').bind('click', function() {
+			saveRow($(this).parent().parent());
+		});
+
+		$('.glyphicon-remove').bind('click', function() {
+			removeRow($(this).parent().parent());
+		});
+		
+		$("#btnAdd").bind('click',function(){
+			add();
+		});
+		
+		$('#type').bind('change', function(){				
+			refrush();
+		});
+
+
+	});
+</script>
+</head>
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron"
+			style="background: #F8F8FF; border: 1px solid #F5F5F5; color: #4682B4">
+			<h3>系统参数设置</h3>
+			<p>系统中录入数据的参数设置</p>
+		</div>
+		
+		<div class="panel">
+			<div class="form-group" style="float:left;margin-right:8px">
+				<select id="type" name="type" class="form-control" th:switch="${type}"
+					style="width: 147px">
+					<option th:case="1" value="1" selected="selected">内审人员</option>
+					<option th:case="2" value="2" selected="selected">审计项目</option>
+					<option th:if="${type} !=1" value="1">内审人员</option>
+					<option th:if="${type} !=2" value="2">审计项目</option>
+				</select>
+				
+			</div>
+			
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnAdd">
+				<span class="glyphicon glyphicon-plus"></span> 增加
+			</button>
+			
+		</div>
+		<div class="panel panel-default">
+			<form id="form1">
+				<table class="table">
+					<tr>
+						<th style="text-align: center">编号</th>
+						<th style="text-align: center;">类别</th>
+						<th style="text-align: center;">分类</th>
+						<th style="text-align: center;">值</th>
+						<th style="text-align: center;">备注</th>
+						<th style="text-align: center;">排序</th>
+						<th style="text-align: center;">操作</th>
+					</tr>
+					
+					<th:block th:each="model, it : ${list}">
+						<tr>
+							<td style="text-align: center">
+								<span th:text="${model.id}"></span>
+							</td>
+							<td style="text-align: center">
+								<select style="width:100%;height:26px" name="itemType">
+									<option th:value="${model.itemType}" th:text="${model.itemType}"></option>
+									<option th:if="${model.itemType} != '内审人员'">内审人员</option>
+									<option th:if="${model.itemType} != '审计项目'">审计项目</option>
+								</select>
+							</td>
+							<td style="text-align: center">
+								<select style="width:100%;height:26px" name="itemKey">
+									<option th:value="${model.itemKey}" th:text="${model.itemKey}"></option>
+									<option th:if="${model.itemKey} != '职称'">职称</option>
+									<option th:if="${model.itemKey} != '学历'">学历</option>
+									<option th:if="${model.itemKey} != '职务类型'">职务类型</option>
+									<option th:if="${model.itemKey} != '职业资格'">职业资格</option>
+									<option th:if="${model.itemKey} != '项目类型'">项目类型</option>
+								</select>
+							</td>
+							<td style="text-align: center">
+								<input style="text-align:center;" type="text" th:value="${model.itemValue}" />
+							</td>
+							<td style="text-align: center">
+								<input type="text" th:value="${model.remark}"  name="remark"/>
+							</td>
+							<td style="text-align: center">
+								<input style="text-align:center;width:50%" name="sortOrder" type="number" th:value="${model.sortOrder}" />
+							</td>
+							<td style="text-align: center">
+								<span class="glyphicon glyphicon-ok text-success"></span>
+								<span class="glyphicon glyphicon-remove text-info"></span>
+							</td>
+						</tr>
+					</th:block>
+				</table>
+			</form>
+		</div>
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+<body th:replace="/layout/bootstrap :: bootstrapJs" />
+<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

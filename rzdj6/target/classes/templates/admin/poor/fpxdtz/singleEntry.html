@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        td{
+            display:none;
+        }
+    </style>
+    <script th:inline="javascript">
+        $(function(){
+            //$.each($("#myTable td"), function(i){ if(i > 0){ this.style.display = 'none'; } });
+            var list = [[${fields}]];
+            for(var i=0;i<list.length;i++){
+                var id = "#"+list[i];
+                $(id).css("display","block");
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="layui-fluid">
+    <h1>扶贫小额贷款信息录取</h1>
+    <form class="layui-form" action="/fpxexd/saveSingle" method="post">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <table id="myTable">
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px; display: block">基本情况</td>
+                    </tr>
+                    <tr>
+                        <td id="xiang">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">乡镇</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="xiang" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chun">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">行政村</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chun"  class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="zu">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">组别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="zu" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="name">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">户主姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="cardId">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="cardId" lay-verify="identity" placeholder="" autocomplete="off" class="layui-input" required>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="members">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">家庭人口数</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="members" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanRenXingMing">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款人姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanRenXingMing" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="daiKuanRenCardId">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款人身份证</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daiKuanRenCardId" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="familyRelation">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">与户主关系</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="familyRelation" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="tuoPinState">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">脱贫属性</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="tuoPinState" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px;display: block">原有贷款情况</td>
+                    </tr>
+                    <tr>
+                        <td id="yuanYouYuE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">原有余额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="yuanYouYuE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="yuanYouIsYuQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">原有贷款是否逾期</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="yuanYouIsYuQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="yuanYouYuQiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">原有逾期金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="yuanYouYuQiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="yuanYouYuQiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">原有逾期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="yuanYouYuQiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="yuanYouQianXiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">原有欠息金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="yuanYouQianXiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="yuanYouQianXiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">原有欠息时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="yuanYouQianXiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="height:40px;">
+                        <td colspan="7" style="text-align: center;font-size:20px;display: block">扶贫小额信贷</td>
+                    </tr>
+                    <tr>
+                        <td id="fuPingivenStars">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">信用等级评定</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="fuPingivenStars" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinshouXinEDu">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">授信额度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinshouXinEDu" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinshouXinJIGou">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">授信金融机构</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="fuPinshouXinJIGou" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinshouxinData">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">授信时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="fuPinshouxinData" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinXiaoDaidaiKuanJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinXiaoDaidaiKuanJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="fuPindaiKuanQiXian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款期限</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="fuPindaiKuanQiXian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinfangKuanRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">放款日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="fuPinfangKuanRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPindaoQiRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">到期日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="fuPindaoQiRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinXiaoDaiDaiKuanLiLv">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款利率</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinXiaoDaiDaiKuanLiLv" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPindaiKuanJiGou">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款金融机构</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="fuPindaiKuanJiGou" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="fuPinleiJiTieXi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">累计贴息金额(元)</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinleiJiTieXi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinchangHuanDaiKuanJInE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">偿还贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinchangHuanDaiKuanJInE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinhuanKuanShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">还款时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="fuPinhuanKuanShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPindaiKuanYuE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款余额（万元）</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPindaiKuanYuE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinyuQiDaiKuanJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinyuQiDaiKuanJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="fuPinyuQiDaiKuanShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款逾期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="fuPinyuQiDaiKuanShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinqianXiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息金额(元)</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="fuPinqianXiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinqianXiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="fuPinqianXiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinYingDaiWeiDaiShiBie">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">应贷未贷识别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="fuPinYingDaiWeiDaiShiBie" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="fuPinDaiKuanYongTu">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款用途</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="fuPinDaiKuanYongTu" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px;display: block">创业贷款</td>
+                    </tr>
+                    <tr>
+                        <td id="chuangYeJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="chuangYeJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeQiXian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款期限</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chuangYeQiXian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeFangKuanRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">放款日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="chuangYeFangKuanRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeDaoQiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">到期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="chuangYeDaoQiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeLiLv">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款利率</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="chuangYeLiLv" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="chuangYeChangHuanJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">偿还金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="chuangYeChangHuanJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="changYeHuangKuanShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">还款时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="changYeHuangKuanShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeYuE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款余额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="chuangYeYuE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeYuQiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="chuangYeYuQiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeYuQiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="chuangYeYuQiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="chuangYeQianXiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="chuangYeQianXiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeQianXiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="chuangYeQianXiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="chuangYeYongTu">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">创业用途</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chuangYeYongTu" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px;display: block">生源地贷款</td>
+                    </tr>
+                    <tr>
+                        <td id="shengYuanJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="shengYuanJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanQiXian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款期限</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="shengYuanQiXian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanFangKuanRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">放款日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="shengYuanFangKuanRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYaunDaoQiRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">到期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="shengYaunDaoQiRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYaunLiLv">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款利率</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="shengYaunLiLv" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="shengYaunChangHuanJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">偿还金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="shengYaunChangHuanJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanHuanKuanShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">还款时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="shengYuanHuanKuanShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanYuE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款余额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="shengYuanYuE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanYuQiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="shengYuanYuQiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanYuQiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="shengYuanYuQiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="shengYuanQianXiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="shengYuanQianXiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="shengYuanQianXiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="shengYuanQianXiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr style="height:40px;">
+                        <td colspan="5" style="text-align: center;font-size:20px;display: block">其他类型贷款</td>
+                    </tr>
+                    <tr>
+                        <td id="qiTaJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qiTaJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaQiXian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款期限</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="qiTaQiXian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaFangKuanRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">放款日期</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="qiTaFangKuanRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaDaoQiRiQi">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">到期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="qiTaDaoQiRiQi" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaLiLv">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款利率</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qiTaLiLv" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="qiTaChangHuanJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">偿还金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qiTaChangHuanJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaChangHuangKuanShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">还款时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="qiTaChangHuangKuanShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaYuE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">贷款余额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qiTaYuE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaYuQiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qiTaYuQiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaYuQiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">逾期时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="qiTaYuQiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="qiTaQianXiJinE">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="qiTaQianXiJinE" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaQianXiShiJian">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">欠息时间</label>
+                                <div class="layui-input-block">
+                                    <input type="date" name="qiTaQianXiShiJian" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="qiTaYongTu">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">创业用途</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="qiTaYongTu" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td id="note">
+                            <div class="layui-form-item" style="width:300px;">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="note" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="float:right;">
+                <button class="layui-btn layui-layer-btn0" type="reset">重置</button>
+                <button class="layui-btn" lay-submit lay-filter="save">录入</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        //监听提交
+        form.on('submit(save)', function(data){
+            layer.msg("正在录入...");
+//            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+//            parent.layer.close(index); // 关闭layer
+
+            //roleId在这里没多少用
+            $.ajax({
+                type: 'POST',
+                url:'/fpxexd/saveSingle',
+                //dataType:'json',
+                data: data.field,
+                async: true,
+                success: function (result) {
+                    alert(result);
+                    if (result=='ok') {
+                        layer.msg('success:录入成功', {icon: 1, time:2000});
+//                        setTimeout(function(){
+//                            top.layer.closeAll('iframe');
+//                            //刷新父亲的页面
+//                            parent.refreshIframe();
+//                        },800);
+                    } else {
+                        consol.alert(result);
+                        layer.msg('eles:录入失败！', {icon: 2, time:1000});
+                    }
+                },
+                error:function(){
+                    layer.msg('eles:录入失败！', {icon: 2, time:1000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

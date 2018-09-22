@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+</head>
+<body>
+<div class="layui-fluid">
+    <form action="/qtgrjzfpdk/updateSingle" method="post" class="layui-form">
+    <input type="hidden" name="uid" th:value="${qt.uid}">
+    <table class="layui-table">
+        <tr style="height:40px;">
+            <td colspan="5" style="text-align: center;font-size:20px;" th:text="'修改贫困户'+${qt.name}+'的基本情况'">基本情况</td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${qt.name}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款人身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="cardId" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${qt.cardId}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">常驻地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="address" autocomplete="off" class="layui-input" th:value="${qt.address}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="telephone" autocomplete="off" class="layui-input" th:value="${qt.telephone}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款合同编号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="agreementNo" autocomplete="off" class="layui-input" th:value="${qt.agreementNo}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="daiKuanJinE" autocomplete="off" class="layui-input" th:value="${qt.daiKuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款期限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanQiXian"  autocomplete="off" class="layui-input" th:value="${qt.daiKuanQiXian}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="daiKuanDate"  autocomplete="off" class="layui-input" th:value="${#dates.format(qt.daiKuanDate,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">到期日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="daoQiDate"  autocomplete="off" class="layui-input" th:value="${#dates.format(qt.daoQiDate,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款利率</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="daiKuanLiLv" autocomplete="off" class="layui-input" th:value="${qt.daiKuanLiLv}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款种类</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanZhongLei" autocomplete="off" class="layui-input" th:value="${qt.daiKuanZhongLei}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款方式</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanFangShi" autocomplete="off" class="layui-input" th:value="${qt.daiKuanFangShi}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款用途</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanYongTu" autocomplete="off" class="layui-input" th:value="${qt.daiKuanYongTu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款使用地域</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="shiYongDiYu" autocomplete="off" class="layui-input" th:value="${qt.shiYongDiYu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产业类别</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="chanYeLeiBie" autocomplete="off" class="layui-input" th:value="${qt.chanYeLeiBie}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">其他个人精准扶贫贷款类别</label>
+                    <div class="layui-input-block">
+                        <select name="fuPinDaiKuanLeiBie">
+                            <option th:if="${qt.fuPinDaiKuanLeiBie eq '新型农业经营主体精准扶贫贷款'}" th:selected="selected" th:value="新型农业经营主体精准扶贫贷款">新型农业经营主体精准扶贫贷款</option>
+                            <option th:if="${qt.fuPinDaiKuanLeiBie eq '其他类型个人精准扶贫贷款'}" th:selected="selected" th:value="其他类型个人精准扶贫贷款">其他类型个人精准扶贫贷款</option>
+                            <option th:if="${qt.fuPinDaiKuanLeiBie ne '新型农业经营主体精准扶贫贷款'}" th:value="新型农业经营主体精准扶贫贷款">新型农业经营主体精准扶贫贷款</option>
+                            <option th:if="${qt.fuPinDaiKuanLeiBie ne '其他类型个人精准扶贫贷款'}" th:value="其他类型个人精准扶贫贷款">其他类型个人精准扶贫贷款</option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">新型农业经营主体精准扶贫贷款类别</label>
+                    <div class="layui-input-block">
+                        <select name="zhuTiDaiKuanLeiBie">
+                            <option th:if="${qt.zhuTiDaiKuanLeiBie eq '家庭农场贷款'}" th:selected="selected" th:value="家庭农场贷款">家庭农场贷款</option>
+                            <option th:if="${qt.zhuTiDaiKuanLeiBie eq '农业专业大户贷款'}" th:selected="selected" th:value="农业专业大户贷款">农业专业大户贷款</option>
+                            <option th:if="${qt.zhuTiDaiKuanLeiBie eq '其他'}" th:selected="selected" th:value="其他">其他</option>
+                            <option th:if="${qt.zhuTiDaiKuanLeiBie ne '家庭农场贷款'}" th:selected="selected" th:value="家庭农场贷款">家庭农场贷款</option>
+                            <option th:if="${qt.zhuTiDaiKuanLeiBie ne '农业专业大户贷款'}" th:selected="selected" th:value="农业专业大户贷款">农业专业大户贷款</option>
+                            <option th:if="${qt.zhuTiDaiKuanLeiBie ne '其他'}" th:selected="selected" th:value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款金融机构</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiKuanJinRongJiGou" autocomplete="off" class="layui-input" th:value="${qt.daiKuanJinRongJiGou}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">投放日期</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="touFangDate" autocomplete="off" class="layui-input" th:value="${#dates.format(qt.touFangDate,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">投放金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="touFangJinE" autocomplete="off" class="layui-input" th:value="${qt.touFangJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">累计投放金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="leiJiTouFangJinE" autocomplete="off" class="layui-input" th:value="${qt.leiJiTouFangJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">未投放贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="weiTouFangYuE" autocomplete="off" class="layui-input" th:value="${qt.weiTouFangYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">偿还贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="changHuanJinE" autocomplete="off" class="layui-input" th:value="${qt.changHuanJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">偿还贷款时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="changHuanDate" autocomplete="off" class="layui-input" th:value="${#dates.format(qt.changHuanDate,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">累计偿还贷款金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="leiJiChangHuanJinE" autocomplete="off" class="layui-input" th:value="${qt.leiJiChangHuanJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">未偿还贷款余额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="weiChangHuanYuE" autocomplete="off" class="layui-input" th:value="${qt.weiChangHuanYuE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款逾期金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="yuQiJinE" autocomplete="off" class="layui-input" th:value="${qt.yuQiJinE}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贷款逾期时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="yuQiDate" autocomplete="off" class="layui-input" th:value="${#dates.format(qt.yuQiDate,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">欠息时间</label>
+                    <div class="layui-input-block">
+                        <input type="date" name="qianXiDate" autocomplete="off" class="layui-input" th:value="${#dates.format(qt.qianXiDate,'yyyy-MM-dd')}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">欠息金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="qianXiJinE" autocomplete="off" class="layui-input" th:value="${qt.qianXiJinE}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">利益联结方式</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="liYiLianJieFangShi" autocomplete="off" class="layui-input" th:value="${qt.liYiLianJieFangShi}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">带动贫困户名单</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="daiDongPkhMingDan" autocomplete="off" class="layui-input" th:value="${qt.daiDongPkhMingDan}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">带动贫困人口数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="daiDongPkRenKouShu" autocomplete="off" class="layui-input" th:value="${qt.daiDongPkRenKouShu}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">直接带动效益</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="zhiJieDaiDongXiaoYi" autocomplete="off" class="layui-input" th:value="${qt.zhiJieDaiDongXiaoYi}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="note" autocomplete="off" class="layui-input" th:value="${qt.note}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th colspan="5">带动贫困户名单</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="md,userStat:${mds}">
+                    <input type="hidden" name="id" th:value="${md.id}">
+                    <td th:text="${userStat.index+1}">
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">贷款合同编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agreementNo" autocomplete="off" class="layui-input" th:value="${md.agreementNo}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">户主姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="huZhuName" autocomplete="off" class="layui-input" th:value="${md.huZhuName}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份证号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="huZhuCardId" autocomplete="off" class="layui-input" th:value="${md.huZhuCardId}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">家庭人口</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="familyMembers" autocomplete="off" class="layui-input" th:value="${md.familyMembers}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align: center">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="update">立即修改</button>
+                        <a type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">取消</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        //监听提交
+        form.on('submit(update)', function(data){
+            layer.msg('正在修改...', {icon: 1, time:2000});
+            $.ajax({
+                type: 'post',
+                url:'/qtgrjzfpdk/updateSingle',
+                //dataType:'json',
+                data: data.field,
+                async: true,
+                success: function (result) {
+                    if (result=='ok') {
+                        layer.msg('success:修改成功', {icon: 1, time:2000});
+                        window.location.href="/qtgrjzfpdk/baseMessage";
+//                        setTimeout(function(){
+//                            top.layer.closeAll('iframe');
+//                            //刷新父亲的页面
+//                            parent.refreshIframe();
+//                        },800);
+                    } else {
+                        consol.alert(result);
+                        layer.msg('eles:修改失败！', {icon: 2, time:1000});
+                    }
+                },
+                error:function(){
+                    layer.msg('eles:修改失败！', {icon: 2, time:1000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

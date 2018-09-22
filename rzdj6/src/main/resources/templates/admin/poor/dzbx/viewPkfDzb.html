@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        tr{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-container">
+
+        <h2>贫困户[[${pkfDzb.name}]]详情</h2>
+
+        <table class="layui-table">
+            <tbody>
+            <tr class="layui-bg-gray">
+                <td>编号</td>
+                <td>名字</td>
+                <td>住址</td>
+                <td>身份证号码</td>
+                <td>保险金额</td>
+            </tr>
+            <tr>
+                <td th:text="${pkfDzb.uid}">110</td>
+                <td th:text="${pkfDzb.name}">2016-11-28</td>
+                <td th:text="${pkfDzb.address}">…</td>
+                <td th:text="${pkfDzb.cardId}">…</td>
+                <td th:text="${pkfDzb.baoXianJinE}">…</td>
+            </tr>
+            <tr class="layui-bg-gray">
+                <td>保费</td>
+                <td>参保人员类型</td>
+                <td>备注</td>
+                <td>填报单位</td>
+                <td>填报时间</td>
+            </tr>
+            <tr>
+                <td th:text="${pkfDzb.baoFei}">110</td>
+                <td th:text="${pkfDzb.canBaoType}">2016-11-28</td>
+                <td th:text="${pkfDzb.note}">…</td>
+                <td th:text="${pkfDzb.tianBaoDanWei}">…</td>
+                <td th:text="${pkfDzb.tianBaoDate}">…</td>
+            </tr>
+            <tr class="layui-bg-gray">
+                <td>投保年度</td>
+                <td>导入时间</td>
+                <td>note1</td>
+                <td>note2</td>
+                <td>note3</td>
+            </tr>
+            <tr>
+                <td th:text="${pkfDzb.touBaoYear}">110</td>
+                <td th:text="${pkfDzb.importDate}">2016-11-28</td>
+                <td th:text="${pkfDzb.note1}">…</td>
+                <td th:text="${pkfDzb.note2}">…</td>
+                <td th:text="${pkfDzb.note3}">…</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <!--<button class="layui-btn" lay-submit lay-filter="formDemo">立即导出</button>-->
+                <a type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">返回上层</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

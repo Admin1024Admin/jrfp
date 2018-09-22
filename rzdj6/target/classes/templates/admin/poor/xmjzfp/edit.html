@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>add_authority</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <script src="/static/js/jquery2.1.1.min.js" charset="utf-8"></script>
+    <style type="text/css">
+        #main{
+            width: 100%;
+            margin-top: 10px;
+            height: 100%;
+            /*background-color: #00F7DE;*/
+        }
+        .layui-form-item{
+            margin: auto;
+        }
+        #butS{
+            width: 180px;
+            margin: 0px auto;
+            position: relative;
+            top: 20px;
+        }
+        #butS *{
+            margin: 0px auto;
+        }
+        h2{
+            margin: 10px;
+            color: #009F95;
+            text-align: center;
+        }
+        .mou{
+            border-bottom: 1px dashed #009F95;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <form class="layui-form" action="" layui-size="sm" id="frame_form" lay-filter="frame_form">
+            <div class="layui-form-item" hidden>
+                <label class="layui-form-label">ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="uid" name="uid" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">项目贷款名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="projectName" name="projectName" autocomplete="off" placeholder="请输入" class="layui-input" >
+                </div>
+            </div>
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">项目主体名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="projectCompanyName" name="projectCompanyName" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">统一社会信用代码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="tongYiXinYongDaiMa" name="tongYiXinYongDaiMa" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">经营地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="address" name="address" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="telephone" name="telephone" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款金融机构</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daiKuanJiGou" name="daiKuanJiGou" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目内容</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" id="projectContent" name="projectContent" class="layui-textarea"></textarea>
+                </div>
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" id="projectContent" name="projectContent" autocomplete="off" placeholder="请输入" class="layui-input">-->
+                <!--</div>-->
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">项目建设地</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="projectPlace" name="projectPlace" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款合同编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daiKuanAgreementNo" name="daiKuanAgreementNo" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="daiKuanJinE" name="daiKuanJinE" autocomplete="off" placeholder="请输入(保留小数点后2位)" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款期限</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daiKuanQiXian" name="daiKuanQiXian" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daiKuanDate" name="daiKuanDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">到期日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daoQiDate" name="daoQiDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款利率</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="daiKuanLiLv" name="daiKuanLiLv" autocomplete="off" placeholder="请输入(保留小数点后6位)" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款类别</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daiKuanLeiBie" name="daiKuanLeiBie" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款方式</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="daiKuanFangShi" name="daiKuanFangShi" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">行业类别</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="hangYeLeiBie" name="hangYeLeiBie" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">项目精准扶贫类别</label>
+                <div class="layui-input-inline">
+                    <select id="type" name="type" lay-filter="type">
+                        <option value="" selected=""></option>
+                        <option value="易地扶贫搬迁随迁户贷款">易地扶贫搬迁随迁户贷款</option>
+                        <option value="易地扶贫搬迁贫困户贷款">易地扶贫搬迁贫困户贷款</option>
+                        <option value="农田基本建设贷款">农田基本建设贷款</option>
+                        <option value="生产环境改造贷款">生产环境改造贷款</option>
+                        <option value="农村基础设施贷款">农村基础设施贷款</option>
+                        <option value="其他">其他</option>
+                    </select>
+                    <!--<input type="text" id="type" name="type" autocomplete="off" placeholder="请输入" class="layui-input">-->
+                </div>
+            </div>
+
+            <div class="mou">
+
+                <div class="layui-form-item">
+                    <h2 class="layui-form-title">贷款投放进度</h2>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">投放日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="touFangDate" name="touFangDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">投放金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="touFangJinE" name="touFangJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">累计投放金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="leiJiTouFangJinE" name="leiJiTouFangJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">未投放贷款余额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="weiTouFangYuE" name="weiTouFangYuE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mou">
+
+                <div class="layui-form-item">
+                    <h2 class="layui-form-title">贷款偿还计划</h2>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">偿还时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="changHuanPlanDate" name="changHuanPlanDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">偿还金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="changHuanPlanJinE" name="changHuanPlanJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mou">
+                <div class="layui-form-item">
+                    <h2 class="layui-form-title">贷款偿还进度</h2>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">偿还贷款金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="changHuanJinE" name="changHuanJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">偿还贷款时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="changHuanDate" name="changHuanDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">累计偿还贷款金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="leiJiChangHuanJinE" name="leiJiChangHuanJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label">未偿还贷款余额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" id="weiChangHuanYuE" name="weiChangHuanYuE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款逾期金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="yuQiJinE" name="yuQiJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">贷款逾期时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="yuQiDate" name="yuQiDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">欠息时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="qianXiDate" name="qianXiDate" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">欠息金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="qianXiJinE" name="qianXiJinE" autocomplete="off" placeholder="请输入(保留小数点后两位)" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-input-inline">
+                <label class="layui-form-label">服务贫困人口数</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="fuWuPkRenCount" name="fuWuPkRenCount" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" id="note" name="note" class="layui-textarea"></textarea>
+                </div>
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" id="note" name="note" autocomplete="off" placeholder="请输入" class="layui-input">-->
+                <!--</div>-->
+            </div>
+
+
+            <div class="layui-form-item" id="butS">
+                <div class="layui-input-block">
+                    <button id="submit_but" type="button" class="layui-btn" lay-submit lay-filter="sub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+
+            laydate.render({
+                elem: '#daiKuanDate',
+//                value: '0100-01-01'
+            });
+            laydate.render({
+                elem: '#daoQiDate',
+//                value: '0100-01-01'
+            });
+            laydate.render({
+                elem: '#touFangDate',
+//                value: '0100-01-01'
+            });
+            laydate.render({
+                elem: '#changHuanPlanDate',
+//                value: '0100-01-01'
+            });
+            laydate.render({
+                elem: '#changHuanDate',
+//                value: '0100-01-01'
+            });
+            laydate.render({
+                elem: '#yuQiDate',
+//                value: '0100-01-01'
+            });
+            laydate.render({
+                elem: '#qianXiDate',
+//                value: '0100-01-01'
+            });
+        });
+
+
+//        window.onload = function () {
+//            console.log("***")
+//
+//            $.get("/role/getAllPer", function (result) {
+//                var value = eval(result);
+////                console.log(value)
+//                for(var i = 0; i < value.length; i++){
+//                    $("#rolePer").append("<input type=\"checkbox\" name=\""+ value[i].pid +"\" title=\""+value[i].pname+"\">")
+//                }
+//
+//                layui.form.render('checkbox');
+//
+//                $.get("/user/nowEdit", function (result) {
+//                    var value = eval("["+result+"]")[0];
+////                console.log(value)
+//                    if (value.rid !== 0) {
+//                        $("#rid").val(value.rid);
+//                        $("#rcname").val(value.rcname);
+//                        $("#rname").val(value.rname);
+//                        $.get("/role/getPer?rid="+value.rid, function (result1) {
+//                            var value1 = eval(result1);
+//                            console.log(value1)
+//                            for(var i = 0; i < value1.length; i++){
+//                                $("#rolePer input[name="+value1[i].pid+"]").attr("checked",true);
+//                            }
+//                            layui.form.render('checkbox');
+//                        });
+//                    }
+//                });
+//
+//            });
+//
+//        }
+        var $type = $("#type");
+        var mousFun = function () {
+            if ($type.attr("his") === "is"){
+                layui.form.render();
+//                $(document).unbind("mousemove",mousFun);
+                window.clearTimeout(ti);
+            }
+        };
+//        $(document).bind("mousemove",mousFun);
+        var ti = setInterval(mousFun,500);
+
+        var mySubmit = function (data) {
+
+            $.post("/xmjzfp/addOrUpdate",data,function(result){
+//                console.log(result)
+
+                var index1 = parent.layer.getFrameIndex(window.name);
+                layer.msg(result, {
+                    time: 2000, //2s后自动关闭
+                    btn: ['哦']
+                },function (index) {
+
+                    layer.close(index);
+
+                    parent.layer.close(index1);
+                });
+
+            });
+        };
+
+        layui.use('form', function(){
+            var form = layui.form;
+            form.on('submit(sub)', function(data){
+//                console.log(data.field)
+                mySubmit(data.field);
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+    </script>
+</body>
+</html>

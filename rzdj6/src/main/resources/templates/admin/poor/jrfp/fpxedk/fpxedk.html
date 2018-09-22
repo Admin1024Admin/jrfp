@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        .buju{
+            display: flex;
+            flex-direction: row;
+        }
+    </style>
+    <script>
+        $(function(){
+//            getChun();
+            //用来判断
+            var isShow = false;
+            $("#ChaXunMianBan").hide();
+            //查询按钮点击事件
+            $("#chaxun").click(function(){
+                isShow = !isShow;
+                if(isShow){
+                    $("#ChaXunMianBan").show();
+                }else{
+                    $("#ChaXunMianBan").hide();
+                }
+            });
+            //查询按钮点击事件
+            $("#dc").click(function(){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        area: ['800px', '370px'],
+                        anim: 6,
+                        type: 2,
+                        title:"请选择需要导出的字段",
+                        fixed:false,
+                        resize:false,
+                        scrollbar:false,
+                        move:false,
+                        content:'/field'//$("#tanchu").html() //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        ,btn: ['取消']
+                        ,yes: function(index, layero){
+                            layer.closeAll();
+                        },
+                        zIndex: layer.zIndex, //重点1
+                        success: function(layero){
+                            layer.setTop(layero); //重点2
+                        }
+                    });
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row">
+            <!--工具栏-->
+            <div class="layui-card" style="height:50px;margin-top:10px;">
+                    <button class="layui-btn" id="chaxun">查询</button>
+                    <a class="layui-btn" id="luru" href="/luRuFields.html" th:href="@{/luRuFields.html}">录入</a>
+                    <button class="layui-btn layui-btn-normal" id="daochu">导出全部数据</button>
+                    <button class="layui-btn layui-btn-danger" id="exception">异常数据导出</button>
+            </div>
+            <div class="layui-card" id="ChaXunMianBan">
+                <form class="layui-form" action="/fpxexdChooseWhere" method="post" id="#myform">
+                    <!--乡镇，村，社，姓名-->
+                    <div class="layui-form-item">
+                        <div class="layui-inline buju">
+                            <div>
+                                <label class="layui-form-label">乡镇</label>
+                                <div class="layui-input-block">
+                                    <select name="xiangZheng" lay-search style="width: 200px;">
+                                        <option value="">--请选择--</option>
+                                        <option value="文安乡">文安乡</option>
+                                        <option value="大滩镇">大滩镇</option>
+                                        <option value="青林乡">青林乡</option>
+                                        <option value="朝天镇">朝天镇</option>
+                                        <option value="小安乡">小安乡</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">村</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="chun" placeholder="请输入查询的村" autocomplete="off" class="layui-input" style="width: 200px;">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">社</label>
+                                <div class="layui-input-block">
+                                    <select name="she" lay-search style="width: 200px;">
+                                        <option value="">--请选择--</option>
+                                        <option value="黄柏村1组">黄柏村1组</option>
+                                        <option value="银光村2组">银光村2组</option>
+                                        <option value="银光3组">银光3组</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">名字</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" placeholder="请输入查询的名字" autocomplete="off" class="layui-input" style="width: 200px;">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="cardId" placeholder="请输入查询的身份证号" autocomplete="off" class="layui-input" style="width: 210px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn">查询</button>
+                            <button type="button" class="layui-btn layui-bg-blue" id="dc">导出</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/demo/table/user/'}"-->
+            <table class="layui-hide" id="mytable" lay-filter="test"></table>
+            <div id="page"></div>
+        </div>
+    </div>
+    <script>
+        var fields = null;
+        //分页参数设置 这些全局变量关系到分页的功能
+        //开始页
+        var startAllAppoint = 1;
+        //每条页数
+        var limitAllAppoint = [[${limit}]];
+        //当前页
+        var currentPageAllAppoint = [[${page}]];
+        //总条数
+        var pageCount = [[${count}]];
+        //总页数
+        var pages2 = Math.ceil(pageCount/limitAllAppoint);
+
+        var myArray=new Array(25);
+        myArray[0] = {field:'uid', title: 'UID', sort: true,width:'80',align:'center'};
+        myArray[1] = {field:'xiangZhen', title: '乡镇',align: 'center',width:'80',align:'center'};
+        myArray[2] = {field:'chun', title: '村', sort: true,width:'100',align:'center'};
+        myArray[3] = {field:'huZhu', title: '户主',align: 'center',width:'80',align:'center'};
+        myArray[4] = {field:'familyMember', title: '家庭成员',align: 'center',type:"date",width:'140',align:'center'};
+        myArray[5] = {field:'cardId', title: '家庭成员身份证件号', sort: true,align: 'center',width:'140',align:'center'};
+        myArray[6] = {field:'familyMemberCount', title: '家庭人口数', sort: true,width:'180',align:'center'};
+        myArray[7] = {field:'familyRelation',title: '与户主关系',width:'120',align:'center'};
+        myArray[8] = {field:'givenStars', title: '评定星级', sort: true,width:'120',align:'center'};
+        myArray[9] = {field:'pingJiJiGou', title: '评级机构', sort: true,width:'120',align:'center'};
+        myArray[10] = {field:'shouXinEDu', title: '授信额度', sort: true,width:'200',align:'center'};
+        myArray[11] = {field:'daiKuanRen', title: '贷款人', sort: true,width:'120',align:'center'};
+        myArray[11] = {field:'daiKuanBenJin', title: '贷款本金', sort: true,width:'120',align:'center'};
+        myArray[12] = {field:'daiKuanYuE', title: '贷款余额', sort: true,width:'120',align:'center'};
+        myArray[13] = {field:'daiKuanTimeLimit', title: '贷款期限', sort: true,width:'120',align:'center'};
+        myArray[14] = {field:'fangKuanDate', title: '放款日期', sort: true,width:'120',align:'center'};
+        myArray[15] = {field:'huanKuanDate', title: '还款日期', sort: true,width:'200',align:'center'};
+        myArray[16] = {field:'daiKuanLiLv', title: '贷款利率', sort: true,width:'200',align:'center'};
+        myArray[17] = {field:'leiJiTieXi', title: '累计贴 息金额(元)', sort: true,width:'200',align:'center'};
+        myArray[18] = {field:'huanBenJinE', title: '还本金额', sort: true,width:'200',align:'center'};
+        myArray[19] = {field:'benJinYuQiJinE', title: '本金逾期金额', sort: true,width:'200',align:'center'};
+        myArray[20] = {field:'benJinYuQiDate', title: '本金逾期时间', sort: true,width:'200',align:'center'};
+        myArray[21] = {field:'qianXiJinE', title: '欠息金额（元）', sort: true,width:'200',align:'center'}
+        myArray[22] = {field:'qianXiDate', title: '欠息日期', sort: true,width:'200',align:'center'};
+        myArray[23] = {field:'daiKuanJiGou', title: '贷款机构', sort: true,width:'200',align:'center'};
+        myArray[24] = {fixed: 'right',title:"操作", width:150, align:'center', toolbar: '#barDemo'};
+        layui.use(['table','laypage','layer','element','form'], function(){
+            var table = layui.table;
+            var laypage = layui.laypage;
+            var element = layui.element;
+            var form = layui.form;
+            var tableIns = table.render({
+                elem: '#mytable'
+                , height: 600
+                , url: '/pkfFpxexdtzPage?page=' + startAllAppoint + '&limit=' + limitAllAppoint
+                , cellMinWidth: 80
+                , cols: [myArray]
+            });
+//            //分页
+            laypage.render({
+                elem: 'page'
+                ,count:pageCount
+                ,curr: currentPageAllAppoint
+                ,limit:limitAllAppoint
+                ,pages:pages2
+                ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                ,limits:[15,25,35,45,55]
+                ,jump: function(obj, first){
+                    //obj包含了当前分页的所有参数，比如：
+                    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                    console.log(obj.limit); //得到每页显示的条数
+                    layer.msg("开启分页");
+                    //首次不执行
+                    if(!first){
+                        table.render({
+                            elem: '#mytable'
+                            , height: 600
+                            , url: '/pkfFpxexdtzPage?page=' + obj.curr + '&limit=' + obj.limit
+                            , cellMinWidth: 80
+                            , cols: [myArray]
+                        });
+                    }
+                }
+            });
+            //监听工具条
+            table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if(layEvent === 'detail'){ //查看
+                    console.log(data);
+                    alert("查看id:"+data['uid']);
+                    window.location.href='/getPkfFpbx?uid='+data['uid'];
+                    //do somehing
+                } else if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url:"/delPkfFpbx",
+                            data:{uid:index},
+                            async:true,
+                            type:"get",
+                            success:function(result){
+                                layui.use('layer', function(){
+                                    var layer = layui.layer;
+                                    layer.msg(result);
+                                });
+                            }
+                        });
+                    });
+                } else if(layEvent === 'edit'){ //编辑
+                    alert("查看id:"+data['uid']);
+                    window.location.href='/getPkfFpbx?uid='+data['uid']+"&cz=2";
+                }
+            });
+            //监听提交
+            form.on('submit(tj)', function(data){
+                $("#page").hide();
+                layer.alert(JSON.stringify(data.field));
+                fields = data.field;
+                //这里以搜索为例
+                tableIns.reload({
+                    url:'/findPkfFpbxWhere',
+                    method:'post',
+                    where: { //设定异步数据接口的额外参数，任意设
+                        huiJiaoRen:data.field['huiJiaoRen'],
+                        beiBaoRen:data.field['beiBaoRen'],
+                        cardId:data.field['cardId']
+                    }
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                        ,limit:15,
+                        limits:[15,25,35,45,55]
+                    }
+                });
+                return false;
+            });
+//            element.on('btn(dc)', function(data){
+//               alert(2);
+//            });
+//            查询导出
+            $(function(){
+                $("#dc").click(function(){
+                    if(fields==null){
+                        layui.use('layer', function() {
+                            var layer = layui.layer;
+                            layer.msg("请选择查询后再导出！！！");
+                        })
+                    }else {
+                        $.ajax({
+                            url:"/PkfFpbxField",
+                            method:"post",
+                            data: {
+                                "huiJiaoRen": fields['huiJiaoRen'],
+                                "beiBaoRen": fields['beiBaoRen'],
+                                "cardId": fields['cardId']
+                            },
+                            success:function(){
+                                layui.use('layer', function(){
+                                    var layer = layui.layer;
+                                    layer.open({
+                                        area: ['800px', '370px'],
+                                        anim: 6,
+                                        type: 2,
+                                        title:"请选择需要导出的字段",
+                                        fixed:false,
+                                        resize:false,
+                                        scrollbar:false,
+                                        move:false,
+                                        content:'/PkfFpbxField'//$("#tanchu").html() //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                                        ,btn: ['取消']
+                                        ,yes: function(index, layero){
+                                            layer.closeAll();
+                                        },
+                                        zIndex: layer.zIndex, //重点1
+                                        success: function(layero){
+                                            layer.setTop(layero); //重点2
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    }
+                })
+            })
+        });
+    </script>
+    <!--查看删除模板-->
+    <script type="text/html" id="barDemo">
+        <button class="layui-btn layui-btn-xs" lay-event="detail">查看</button>
+        <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+    </script>
+</body>
+</html>

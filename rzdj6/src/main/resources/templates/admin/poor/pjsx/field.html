@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+</head>
+<body>
+    <div class="layui-fluid">
+        <form class="layui-form" action="/daochuPkfPjsx">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="uid" title="UID" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="xiangZhen" title="乡镇" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="chunZu" title="村组" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="huZhu" title="户主姓名" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="daiKuanRen" title="贷款人姓名" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="cardId" title="证件号码" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="healthState" title="健康状况" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="wenHuaChengDu" title="文化程度" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="laoDongNengLi" title="劳动能力" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="givenStars" title="信用评定等级" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="shouXinEDu" title="授信额度" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="contactPhone" title="联系电话" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="note" title="备注" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBaoDanWei" title="填报单位" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBiaoRen" title="填表人" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBiaoRenLianXi" title="填表人联系" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="shenHeRen" title="审核人" lay-skin="primary" checked></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="float:right;">
+                    <button class="layui-btn layui-layer-btn0" type="reset">全选</button>
+                    <button class="layui-btn" lay-submit lay-filter="daochu">确认</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        //Demo
+        layui.use(['form','element'], function(){
+            var form = layui.form;
+            var element = layui.element;
+
+            //监听提交
+            form.on('submit(daochu)', function(data){
+                layer.msg(JSON.stringify(data.field));
+                return true;
+            });
+        });
+    </script>
+</body>
+</html>

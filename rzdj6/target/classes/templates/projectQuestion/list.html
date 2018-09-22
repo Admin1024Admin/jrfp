@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title th:text="|${session.cfg.projectName} - 项目问题|"></title>
+<head th:replace="/layout/bootstrap :: bootstrapHead" />
+<script>
+	var projectId = "[[${projectId}]]";
+	var projectName = "[[${projectName}]]";
+	
+	//获取单个信息
+	function getData(id) {
+		$.ajax({
+			url : "[[@{/projectQuestion/getData}]]",
+			data : {
+				'id' : id
+			},
+			success : function(response) {
+				if (response.success) {
+					$('#id').val(response.obj.id);
+					$('#questionTitle').val(response.obj.questionTitle);
+					$('#content').val(response.obj.content);
+				}
+			}
+		});
+	}
+	
+	//删除请求
+	function deletes(ids) {
+		$.ajax({
+			dataType : 'json',
+			method : 'post',
+			contentType : 'application/x-www-form-urlencoded',
+			url : "[[@{/projectQuestion/delete}]]",
+			data : {
+				'id' : ids
+			},
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+	}	
+
+	//增加或编辑请求
+	function createOrUpdate() {
+		if($("#questionTitle").val() == ''){
+			$("#projectTitleMsg").html("标题不能为空");
+			return;
+		}
+		
+		$.ajax({
+			method : 'post',
+			url : "[[@{/projectQuestion/createOrUpdate}]]",
+			data : $('#form1').serialize(),
+			success : function(obj) {
+				alert(obj.msg);
+				if (obj.success)
+					window.location = window.location;
+			}
+		});
+
+	}
+
+	//按钮事件
+	$(function() {
+		//全部选中按钮
+		$('#selectAll').click(function() {
+			$("input[type='checkbox']").each(function() {
+				if ($(this).prop('checked')) {
+					$('#selectAll').prop("checked", false);
+					$(this).prop('checked', false);
+
+				} else {
+					$('#selectAll').prop("checked", true);
+					$(this).prop('checked', true);
+				}
+			});
+		});
+
+		//顶部增加按钮
+		$('#btnAdd').bind('click', function() {
+			$('#winTitle').html('新增');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+		});
+
+		//顶部编辑按钮
+		$('#btnUpdate').bind('click', function() {
+			var obj = $("input:checkbox[name=id]:checked");
+			var selectCount = obj.length;
+			if (selectCount <= 0) {
+				alert('请选择要编辑的条目');
+				return false;
+			}
+			if (selectCount > 1) {
+				alert('一次只能编辑一个条目');
+				return false;
+			}
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $("input[type='checkbox']:checked").val();
+			getData(id); //获取数据
+		});
+
+		//顶部删除按钮
+		$('#btnDelete').bind('click', function() {
+			var ids = "";
+			$("input:checkbox[name=id]:checked").each(function(i) {
+				if (0 == i) {
+					ids = $(this).val();
+				} else {
+					ids += ("," + $(this).val());
+				}
+			});	
+			if(ids == ""){
+				alert('请选择要删除的条目');
+				return;
+			}
+			var result = confirm('将要删除<' + ids + '>是否继续?');
+			if (!result) return;
+			deletes(ids);
+		});
+
+		//右侧编辑按钮
+		$('.rightUpdate').bind('click', function() {
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			getData(id); //获取数据
+
+		});
+
+		//右侧删除按钮
+		$('.rightDelete').bind('click', function() {
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			var name = $(this).parent().parent().children('td:eq(2)').html();
+			var result = confirm('将要删除<' + name + '>是否继续?');
+			if (!result) return;
+			deletes(id);
+
+		});
+
+		//保存按钮
+		$('#btnSave').click(function() {
+			createOrUpdate(); //更新
+		});
+		
+		
+		$("#projectName").val(projectName);
+		$("#projectId").val(projectId);
+		
+		$(".btnfind").click(function() {
+			$('#winTitle').html('编辑');
+			$('#form1')[0].reset();
+			$('#win').modal({
+
+			});
+			var id = $(this).parent().parent().children('td:eq(1)').html();
+			getData(id); //获取数据
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+		<div class="jumbotron" style="background: #F8F8FF;border:1px solid #F5F5F5 ;color:#4682B4">
+			<h3 th:text="'项目名称：'+${projectName}">项目名称  ： </h3>
+			<p>问题个数 ：<span style="color:red" th:text="${count}"></span></p>
+		</div>
+		<div class="panel">
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnAdd">
+				<span class="glyphicon glyphicon-plus"></span> 增加
+			</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnUpdate">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnDelete">
+				<span class="glyphicon glyphicon-remove"></span> 删除
+			</button>
+			
+		
+
+		</div>
+		<div class="panel panel-default">
+			<table class="table">
+				<tr>
+					<th style="text-align: center"><input type="checkbox"
+						id="selectAll" title="全选"></th>
+					<th style="text-align: center">编号</th>
+					<th style="text-align: left">项目名称</th>
+					<th style="text-align: left">问题标题</th>
+					<th style="text-align: center">问题详细</th>
+	
+				</tr>
+
+				<th:block th:each="model, it : ${list}">
+					<tr>
+						<td style="text-align: center">
+							<input type="checkbox" th:value="${model.id}" th:id="|cb${model.id}|" th:name="id" />
+							<input type="hidden" th:value="${model.id}" th:name="|id${model.id}|" /></td>
+						<td style="text-align: center" th:text="${model.id}"></td>
+						<td style="text-align: left" th:text="${model.projectName}"></td>
+						<td style="text-align: left" th:text="${model.questionTitle}"></td>
+						<td style="text-align: center" th:if="${model.content}==''">
+														
+						</td>
+						
+						<td style="text-align: center" th:if="${model.content}!=''">
+							
+							<button class="btn btn-success btnfind" th:title="${model.content}">查看</button>
+						</td>
+						
+					</tr>
+				</th:block>
+
+			</table>
+		</div>
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+
+	<!-- /container -->
+	<body th:replace="/layout/bootstrap :: bootstrapJs" />
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="win">
+		<div class="modal-dialog" role="document" style="width:800px">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="winTitle">新增</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="form1">
+						<!-- id -->
+						<input type="hidden" id="id" name="id" />
+						<!-- pid -->
+						<input type="hidden" id="projectId" name="projectId" />
+						<input type="hidden" id="projectName" name="projectName" />
+						
+						<div class="form-group">
+							<label><span style="color:red">* </span>问题标题(不超过32个字符)：</label> 
+							<input type="text"
+								class="form-control" id="questionTitle" name="questionTitle"
+								placeholder="问题标题"> <span id="projectTitleMsg"
+								class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="name">问题详细(不超过10000个字符)：</label>
+							<textarea placeholder="在此输入问题详细" class="form-control" name="content" id="content" style="height:300px"></textarea>
+							<span id="contentMsg" class="help-block"></span>
+						</div>
+						
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+		<div class="modal fade" tabindex="-1" role="dialog" id="winPwd">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="winTitle">修改密码</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="form2">
+						<div class="form-group">
+							<label for="pwd">密码：</label>
+							<input type="password" class="form-control" id="pwd" name="pwd" placeholder="密码">
+							<span id="pwdMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="pwd1">确认密码：</label>
+							<input type="password" class="form-control" id="pwd1" name="pwd1" placeholder="密码">
+							<span id="pwd1Msg" class="help-block"></span>
+						</div>
+						<input type="hidden" id="id1" name="id1" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="btnResetPwd">修改密码</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<!-- /.modal -->
+	<div th:replace="/layout/sets :: copy1"></div>
+	<div th:replace="/layout/sets :: copy2"></div>
+	<div th:replace="/layout/sets :: copy3"></div>
+	<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>

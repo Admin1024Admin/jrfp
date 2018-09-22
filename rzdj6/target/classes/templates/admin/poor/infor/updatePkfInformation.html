@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <script>
+        $(function(){
+            var msg = $("#msg").text();
+            if(msg!=null&&msg!=""){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.msg(msg);
+                });
+            };
+        })
+    </script>
+</head>
+<body>
+    <div id="msg" th:text="${Msg}" style="visibility: hidden"></div>
+    <div class="layui-container">
+        <form class="layui-form" action="/updatePkfInformation" method="post">
+            <!--隐藏控件-->
+            <!--uid-->
+            <input type="hidden" name="uid" th:value="${pkfInformation.uid}">
+            <!--no-->
+            <input type="hidden" name="no" th:value="${pkfInformation.no}">
+            <!--uid-->
+            <input type="hidden" name="tongJiShiJian" th:value="${pkfInformation.tongJiShiJian}">
+            <h2>贫困户[[${pkfInformation.name}]]信息修改</h2>
+            <table class="layui-table">
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">市区旗</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="shiQuQi" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.shiQuQi}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">乡镇</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="xiangZheng" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.xiangZheng}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">村</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="chun" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.chun}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">社、组</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="she" autocomplete="off" class="layui-input" th:value="${pkfInformation.she}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">户编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="familyNo" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.familyNo}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">人编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="memberNo" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.memberNo}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.name}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份证</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cardId" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.cardId}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">家庭成员数</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="members" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.members}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">与户主关系</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="familyRelation" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.familyRelation}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">民族</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="mz" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.mz}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文化程度</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="xueLi"  autocomplete="off" class="layui-input" th:value="${pkfInformation.xueLi}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">在校生状况</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="schoolState"   autocomplete="off" class="layui-input" th:value="${pkfInformation.schoolState}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">健康状况</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="healthState"   autocomplete="off" class="layui-input" th:value="${pkfInformation.healthState}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">劳动技能</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="skill"   autocomplete="off" class="layui-input" th:value="${pkfInformation.skill}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">务工状况</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="workState"   autocomplete="off" class="layui-input" th:value="${pkfInformation.workState}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">务工时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="workMonth" autocomplete="off" class="layui-input" th:value="${pkfInformation.workMonth}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">脱贫属性</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tuoPinState"   autocomplete="off" class="layui-input" th:value="${pkfInformation.tuoPinState}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">贫困户属性</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="pinKunState"   autocomplete="off" class="layui-input" th:value="${pkfInformation.pinKunState}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主要贫困原因</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="pinKunYuanYin" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.pinKunYuanYin}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否参加大病医疗</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="isDaBinYiLiao" lay-skin="switch">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否是危病户</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="isWeiFangHu" lay-skin="switch">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否饮水安全</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="isYinShuiAnQuan" lay-skin="switch">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否饮水困难</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="isYinShuiKunNan" lay-skin="switch">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">人均纯收入</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="renJunChunShouRu" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.renJunChunShouRu}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="telephone" required  lay-verify="required"  autocomplete="off" class="layui-input" th:value="${pkfInformation.telephone}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即修改</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">还原</button>
+                                <a type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">取消</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+        <script>
+            //Demo
+            layui.use('form', function(){
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(formDemo)', function(data){
+                    layer.msg(JSON.stringify(data.field));
+                    return true;
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

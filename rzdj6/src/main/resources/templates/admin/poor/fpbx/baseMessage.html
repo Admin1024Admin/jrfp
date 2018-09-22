@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+</head>
+<style>
+    .buju{
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+<script>
+    $(function(){
+//            getChun();
+        //用来判断
+        var isShow = false;
+        var isShow2 = false;
+        $("#ChaXunMianBan").hide();
+        //查询按钮点击事件
+        $("#tongJiMianBan").hide();
+        $("#chaxun").click(function(){
+            isShow = !isShow;
+            if(isShow){
+                $("#ChaXunMianBan").show();
+            }else{
+                $("#ChaXunMianBan").hide();
+            }
+        });
+        //统计按钮
+        $("#tongji").click(function(){
+            isShow2=!isShow2;
+            if(isShow2){
+                $("#tongJiMianBan").show();
+            }else{
+                $("#tongJiMianBan").hide();
+            }
+        });
+        //查询按钮点击事件
+        $("#dc").click(function(){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    area: ['90%', '90%'],
+                    anim: 6,
+                    type: 2,
+                    title:"请选择需要导出的字段",
+                    fixed:false,
+                    //resize:false,
+                    scrollbar:false,
+//                    move:false,
+                    moveOut:true,
+                    content:'/fpbx/gotoFpxexdFields'//$("#tanchu").html() //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    ,btn: ['取消']
+                    ,yes: function(index, layero){
+                        layer.closeAll();
+                    },
+                    zIndex: layer.zIndex, //重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            });
+        });
+        //查询按钮点击事件
+        $("#danTiaoLuRu").click(function(){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    area: ['70%', '60%'],
+                    anim: 6,
+                    type: 2,
+                    title:"请选择需要录入的字段",
+                    fixed:false,
+                    //resize:false,
+                    scrollbar:false,
+//                    move:false,
+                    moveOut:true,
+                    content:'/fpbx/gotoFpxexdFields?cz=dtlr'//$("#tanchu").html() //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    ,btn: ['取消']
+                    ,yes: function(index, layero){
+                        layer.closeAll();
+                    },
+                    zIndex: layer.zIndex, //重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            });
+        });
+        //批量录入样式表格下载
+        $("#demo").click(function(){
+            alert("xx");
+            $.ajax({
+                url:'/fpxexd/demoExportFpxexd',
+                method:'get',
+                success:function (data) {
+                    alert("下载成功");
+                }
+            })
+        })
+    })
+</script>
+<body>
+    <div class="layui-fluid">
+    <div class="layui-row">
+        <!--工具栏-->
+        <div class="layui-card" style="height:50px;margin-top:10px;">
+            <button class="layui-btn" id="chaxun">查询</button>
+            <button class="layui-btn" id="tongji">统计</button>
+            <button class="layui-btn layui-btn-danger" id="danTiaoLuRu">单条录入</button>
+            <a href="/fpbx/uploadExcel" th:href="@{/fpbx/uploadExcel}" class="layui-btn layui-btn-danger">批量录入</a>
+            <a href="/fpbx/demoExportFpxexd" th:href="@{/fpbx/demoExportFpxexd}" class="layui-btn layui-btn-danger">批量录入样式表格下载</a>
+            <a href="/fpbx/daoChuAll" th:href="@{/fpbx/daoChuAll}" class="layui-btn layui-btn-normal">导出全部数据</a>
+            <!--<button href="#" class="layui-btn">未知1</button>-->
+            <!--<button href="#" class="layui-btn">未知2</button>-->
+            <!--<button href="#" class="layui-btn">未知3</button>-->
+        </div>
+        <div class="layui-card" id="ChaXunMianBan">
+            <form class="layui-form" id="#myform">
+                <!--乡镇，村，社，姓名-->
+                <div class="layui-form-item">
+                    <div class="layui-inline buju">
+                        <div>
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="huZhuName" placeholder="请输入查询的户主名字" autocomplete="off" class="layui-input" style="width: 200px;">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="layui-form-label">身份证号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cardId" placeholder="请输入查询的身份证" autocomplete="off" class="layui-input" style="width: 200px;">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="layui-form-label">行政村</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="chun" placeholder="请输入查询的行政村" autocomplete="off" class="layui-input" style="width: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="tj">查询</button>
+                        <button type="button" class="layui-btn layui-bg-blue" id="dc">导出</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--统计面板-->
+     <div class="layui-row" id="tongJiMianBan">
+         <form action="/fpxexd/statistical" method="post">
+             <div class="layui-inline">
+                 <label class="layui-form-label">开始时间:</label>
+                 <div class="layui-input-inline">
+                     <input type="date" name="beginDate" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+             <div class="layui-inline">
+                 <label class="layui-form-label">结束时间:</label>
+                 <div class="layui-input-inline">
+                     <input type="date" name="endDate" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+            <input type="submit" value="统计" class="layui-btn layui-btn-danger">
+         </form>
+     </div>
+    <table class="layui-table" lay-data="{url:'/fpbx/fpbx',cellMinWidth:200,page:true,id:'mytable'}" lay-filter="mytable" lay-size="sm">
+        <thead>
+        <tr>
+            <td colspan="24">扶贫保险</td>
+        </tr>
+        <tr>
+            <th lay-data="{field:'id',align:'center'}" rowspan="2">序号</th>
+            <th lay-data="{field:'xiang',align:'center'}" rowspan="2">乡（镇）</th>
+            <th lay-data="{field:'chun',align:'center'}" rowspan="2">行政村</th>
+            <th lay-data="{field:'zu',align:'center'}" rowspan="2">组别</th>
+            <th lay-data="{field:'huZhuName',align:'center'}" rowspan="2">户主姓名</th>
+            <th lay-data="{field:'familyMemberName',align:'center'}" rowspan="2">家庭成员姓名</th>
+            <th lay-data="{field:'cardId',align:'center'}" rowspan="2">身份证号</th>
+            <th lay-data="{field:'familyRelation',align:'center'}" rowspan="2">与户主关系</th>
+            <th lay-data="{field:'familyMemberCount',align:'center'}" rowspan="2">家庭人口</th>
+            <th lay-data="{align:'center'}" rowspan="1" colspan="3">总费</th>
+            <th lay-data="{field:'baoZhangJinE',align:'center'}" rowspan="2">保障金额</th>
+            <th lay-data="{field:'baoZhangQiJian',align:'center'}" rowspan="2">保障期间</th>
+            <th lay-data="{field:'touBaoDate',align:'center'}" rowspan="2">投保时间</th>
+            <th lay-data="{field:'daoQiDate',align:'center'}" rowspan="2">到期时间</th>
+            <th lay-data="{align:'center'}" rowspan="1" colspan="3">理赔</th>
+            <th lay-data="{field:'liPeiShouYiRen',align:'center'}" rowspan="2">受益人</th>
+            <th lay-data="{field:'chengBaoJiGou',align:'center'}" rowspan="2">承办保险机构</th>
+            <th lay-data="{field:'touPinYear',align:'center'}" rowspan="2">脱贫年度</th>
+            <th lay-data="{field:'note',align:'center'}" rowspan="2">备注</th>
+            <th lay-data="{field:'shuJuWeiHuDanWei',align:'center'}" rowspan="2">数据维护单位</th>
+            <th lay-data="{fixed: 'right',title:'操作', width:240, align:'center', toolbar: '#barDemo'}">操作</th>
+        </tr>
+        <tr>
+            <th lay-data="{field:'baoFeiZongE',align:'center'}" rowspan="1">总额</th>
+            <th lay-data="{field:'baoFeiZiFu',align:'center'}" rowspan="1">其中：自付</th>
+            <th lay-data="{field:'baoFeiBuTie',align:'center'}" rowspan="1">其中：财政补贴</th>
+            <th lay-data="{field:'liPeiShiXiang',align:'center'}" rowspan="1">理赔事项</th>
+            <th lay-data="{field:'liPeiDate',align:'center'}" rowspan="1">理赔时间</th>
+            <th lay-data="{field:'liPeiJinE',align:'center'}" rowspan="1">理赔金额</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+        //监听提交
+        form.on('submit(tj)', function(data){
+            alert(1);
+            //这里以搜索为例
+            table.reload('mytable',{
+                url:'/fpbx/findFpbxWhere',
+                method:'post',
+                where: { //设定异步数据接口的额外参数，任意设
+                    chun:data.field['chun'],
+                    huZhuName:data.field['huZhuName'],
+                    cardId:data.field['cardId']
+                }
+            });
+            return false;
+        });
+        //监听工具条
+        table.on('tool(mytable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if(layEvent === 'detail'){ //查看
+                console.log(data);
+                alert("查看的编号:"+data['id']);
+                // window.location.href='/fields';
+                window.location.href='/fpbx/findByNo?no='+data['id'];
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    alert(index);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url:"/fpbx/delByNo?no="+data['id'],
+                        async:true,
+                        type:"get",
+                        success:function(result){
+                            layui.use('layer', function(){
+                                var layer = layui.layer;
+                                layer.msg(result);
+                                table.reload('mytable', {});
+                            });
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                alert("编辑的id:"+data['id']);
+                window.location.href='/fpbx/findByNo?no='+data['id']+"&cz=update";
+            }
+        });
+    });
+</script>
+<!--查看删除模板-->
+<script type="text/html" id="barDemo">
+    <button class="layui-btn layui-btn-xs" lay-event="detail">查看</button>
+    <button class="layui-btn layui-btn-xs" lay-event="edit">编辑</button>
+    <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+</script>
+</body>
+</html>

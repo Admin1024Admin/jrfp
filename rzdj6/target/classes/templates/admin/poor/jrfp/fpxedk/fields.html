@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        tr{
+            width:100px;
+        }
+        .fieldTou{
+            font-size: 20px;
+            color:#000;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-fluid">
+        <form class="layui-form" action="/fpxexdChooseFields" method="post">
+            <center>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <span class="fieldTou">贫困户-基本信息字段</span>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="shiQuQi" title="市区旗" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="xiangZheng" title="乡镇" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="chun" title="村" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="she" title="社、组" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="familyNo" title="户编号" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="memberNo" title="人编号" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="name" title="姓名" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="cardID" title="身份证号" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="members" title="家庭成员数" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="familyRelation" title="与户主关系" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="mz" title="民族" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="xueLi" title="文化程度" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="schoolState" title="在校生状况" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="healthState" title="健康状况" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="skill" title="劳动技能" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="workState" title="务工状况" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="workMonth" title="务工时间(月)" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="isDaBinYiLiao" title="参加大病医疗" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tuoPinState" title="脱贫属性" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="pinKunState" title="贫困户属性" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="pinKunYuanYin" title="主要致贫原因" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="isWeiFangHu" title="危房户" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="isYinShuiAnQuan" title="饮水安全" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="isYinShuiKunNan" title="饮水困难" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="renJunChunShouRu" title="人均纯收入" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="telephone" title="联系电话" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tongJiShiJian" title="统计时间" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="familyMember" title="家庭成员" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="familyMemberCount" title="家庭人口数" lay-skin="primary" checked></td>
+                        </tr>
+                    </table>
+                        <span class="fieldTou">贫困户-扶贫保</span>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="zhiYeCode" title="职业代码" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="cardIdType" title="证件类型" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="shouYiRen" title="受益人" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="beiBaoRenSign" title="受益人签字" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="huiJiaoRen" title="汇交人" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="touBaoCompany" title="投保公司" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="touBaoYear" title="投保年度" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="xianZhong" title="险种" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="billNo" title="投保单号" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="bornDate" title="出生日期" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="baoE" title="保额" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="baoFei" title="保费" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="address" title="地址" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="baoXianJinE" title="保险金额" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="touBaoRen" title="投保人" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+
+                            <td><input type="checkbox" name="beiBaoRen" title="被保险人" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="gender" title="性别" lay-skin="primary" checked></td>
+                        </tr>
+                    </table>
+                    <span class="fieldTou">贫困户-地震保险</span>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="canBaoType" title="参保人员类型" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBaoDanWei" title="填报单位" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBaoDate" title="填报时间" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="touBaoYear" title="投保年度" lay-skin="primary" checked></td>
+                        </tr>
+                    </table>
+                    <span class="fieldTou"> 贫困户-评级授信表</span>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="huZhu" title="户主姓名" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanRen" title="贷款人姓名" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="wenHuaChengDu" title="文化程度" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="laoDongNengLi" title="劳动能力" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="shouXinEDu" title="授信额度" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="contactPhone" title="联系电话" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBiaoRen" title="填表人" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="tianBiaoRenLianXi" title="填表人联系" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="shenHeRen" title="审核人" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+
+                            <td><input type="checkbox" name="givenStars" title="信用评定等级" lay-skin="primary" checked></td>
+                        </tr>
+                    </table>
+                    <span class="fieldTou">贫困户-扶贫小额信贷台账</span>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="pingJiJiGou" title="评级机构" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="shouXinEDu" title="授信额度" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="shouXinDate" title="授信日期" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="isQueryZhengXin" title="征信查询情况" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="shouXinZiLiaoOk" title="评级授信资料是否规范" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanRen" title="贷款人" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="isHuZhu" title="与户主是否一致" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanBenJin" title="贷款本金" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanYuE" title="贷款余额" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="fangKuanDate" title="放款日期" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanTimeLimit" title="贷款期限" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="huanKuanDate" title="还款日期" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanLiLv" title="贷款利率" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="leiJiTieXi" title="累计贴息金额(元)" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="huanBenJinE" title="还本金额" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="huanBenDate" title="还本时间" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="benJinYuQiJinE" title="本金逾期金额" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="benJinYuQiDate" title="本金逾期时间" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="qianXiJinE" title="欠息金额（元）" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="qianXiDate" title="欠息日期" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanZiLiaoOk" title="贷款资料是否规范" lay-skin="primary" checked></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="ziJinShiYongOk" title="资金使用是否规范" lay-skin="primary" checked></td>
+                            <td><input type="checkbox" name="daiKuanJiGou" title="贷款机构" lay-skin="primary" checked></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="float:right;">
+                    <button class="layui-btn layui-layer-btn0" type="reset">全选</button>
+                    <button class="layui-btn layui-layer-btn0" type="reset">反选</button>
+                    <button class="layui-btn" lay-submit lay-filter="daochu">确认</button>
+                </div>
+            </div>
+            </center>
+        </form>
+    </div>
+
+    <script>
+        //Demo
+        layui.use(['form','element'], function(){
+            var form = layui.form;
+            var element = layui.element;
+
+            //监听提交
+            form.on('submit(daochu)', function(data){
+                layer.msg(JSON.stringify(data.field));
+//                var index=parent.layer.getFrameIndex(window.name);
+//                parent.layer.close(index);
+                return true;
+            });
+        });
+    </script>
+</body>
+</html>

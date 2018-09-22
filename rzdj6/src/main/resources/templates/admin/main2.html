@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+	<script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+	<link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+		<style>
+			.item{
+				height:100px;
+				width:100%;
+				display: flex;
+				flex-direction:row;
+				align-items: center;		
+			}
+			.btt{
+				font-size: 60px;
+				color:#000;
+				font-weight: 400;
+				font-family: "微软雅黑";
+				color:#FF5722;
+			}
+			.btt-item{
+				font-size: 30px;
+				color:#000;
+				font-weight: 200;
+				font-family: "宋体";
+				margin-left:30px;
+				color: #01AAED;
+			}
+			/*A:link 超链接的默认样式 
+			A:visited 访问过的（已经看过的）链接样式 
+			A:hover 鼠标处于鼠标悬停状态的链接样式 
+			A:active 当鼠标左键按下时，被激活（就是鼠标按下去那一瞬间）的链接样式。 */
+
+			a:link{color:#333 ;text-decoration:none ; } 
+			a:visited { color:#333 ;text-decoration:none ;} 
+			a:hover { color:#FF6600 ;text-decoration:none ;} 
+			a:active {text-decoration:none ; color:#FF6600 ;text-decoration:none ; } 
+		</style>
+	</head>
+	<body>
+		<div class="layui-fluid" style="margin-top:20px;">
+			<!--金融精准扶贫贷款-->
+			<div class="item">
+				<div class="btt layui-bg-orange">
+					&nbsp;&nbsp;金融精准扶贫贷款&nbsp;&nbsp;
+				</div>
+			</div>
+			<div class="item">
+				<div class="btt-item">
+					<a href="#">金融精准扶贫贷款</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">个人精准贷款</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">产业精准扶贫</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">项目精准扶贫</a>
+				</div>
+			</div>
+			<!--保险扶贫-->
+			<div class="item">
+				<div class="btt layui-bg-blue">
+					&nbsp;&nbsp;保险扶贫&nbsp;&nbsp;
+				</div>
+			</div>
+			<div class="item">
+				<div class="btt-item">
+					<a href="#">扶贫保</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">住宅地震巨灾保险</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">政策性农业保险</a>
+				</div>
+			</div>
+						
+			<!--农村信用体系建设-->
+			<div class="item">
+				<div class="btt layui-bg-red">
+					&nbsp;&nbsp;农村信用体系建设&nbsp;&nbsp;
+				</div>	
+			</div>
+			<div class="item">
+				<div class="btt-item">
+					<a href="#">信用户</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">信用村</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">信用乡镇</a>
+				</div>
+			</div>
+			
+			<!--农村金融综合服务(站)点-->
+			<div class="item">
+				<div class="btt layui-bg-green">
+					&nbsp;&nbsp;农村金融综合服务(站)点&nbsp;&nbsp;
+				</div>				
+			</div>
+			<div class="item">
+				<div class="btt-item">
+					<a href="#">农业银行朝天支行</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">农商银行朝天支行</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">贵商村镇银行朝天支行</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">邮储银行朝天支行</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">工商银行朝天支行</a>
+				</div>
+				<div class="btt-item">
+					<a href="#">乡镇</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

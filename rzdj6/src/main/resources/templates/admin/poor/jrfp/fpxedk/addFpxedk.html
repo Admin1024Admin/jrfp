@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+</head>
+<body>
+    <div class="layui-container">
+        <h1>扶贫小额贷款信息录取</h1>
+        <div class="layui-form-item" th:each="k,v:${fieldNames}" style="width:400px;">
+            <label class="layui-form-label" th:text="${v.current.value}"></label>
+            <div class="layui-input-block">
+                <input type="text" name="touBaoRen" autocomplete="off" class="layui-input" th:name="${v.current.key}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="float:right;">
+                <button class="layui-btn layui-layer-btn0" type="reset">重置</button>
+                <button class="layui-btn" lay-submit lay-filter="daochu">录入</button>
+            </div>
+        </div>
+    </div>
+        <script>
+            //Demo
+            layui.use('form', function(){
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(formDemo)', function(data){
+                    layer.msg(JSON.stringify(data.field));
+                    return true;
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

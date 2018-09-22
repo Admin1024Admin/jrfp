@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>xmjzfp</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <script src="/static/js/jquery2.1.1.min.js" charset="utf-8"></script>
+    <style type="text/css">
+        #but_left{
+            float: left;
+            height: 70px;
+        }
+        #but_right{
+            float: right;
+        }
+        .layui-table,.main_div{
+            width: 100%;
+        }
+        #search_div{
+            /*margin-left: 20px;*/
+            border-radius: 5px;
+            /*border: 1px solid transparent;*/
+            width: auto;
+            max-width: 239px;
+            height: 30px;
+        }
+        #user_search{
+            float: left;
+        }
+        #search_input{
+            float: left;
+            border: none;
+            height: 30px;
+            /*width: 200px;*/
+            width: 0px;
+            padding: 0px;
+            margin: 0px auto;
+            /*display: none;*/
+        }
+        #search_choose_div{
+            margin: 0px;
+            opacity: 0;
+            width: 241px;
+        }
+        .clear{
+            clear:both;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main_div">
+    <div id="but_left">
+        <div id="search_div">
+            <input type="text" name="title" autocomplete="off" placeholder="请输入" id="search_input">
+
+            <button class="layui-btn layui-btn-sm layui-btn-normal" id="user_search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </div>
+
+        <div class="layui-form">
+            <div id="search_choose_div" class="layui-input-block">
+                <div class="layui-form-item">
+                    <!--<label class="layui-form-label">搜索列</label>-->
+                    <div class="layui-input-inline">
+                        <select id="search_search" name="search_search" lay-filter="search_search">
+                            <option value="uid" selected="true">序号</option>
+                            <option value="projectName">项目贷款名称</option>
+                            <option value="projectCompanyName">项目主体名称</option>
+                            <option value="tongYiXinYongDaiMa">统一社会信用代码</option>
+                            <option value="address">经营地址</option>
+                            <option value="telephone">联系电话</option>
+                            <option value="daiKuanJiGou">贷款金融机构</option>
+                            <option value="projectContent">项目内容</option>
+                            <option value="projectPlace">项目建设地</option>
+                            <option value="daiKuanAgreementNo">贷款合同编号</option>
+                            <option value="daiKuanJinE">贷款金额</option>
+                            <option value="daiKuanQiXian">贷款期限</option>
+                            <option value="daiKuanDate">贷款日期</option>
+                            <option value="daoQiDate">到期日期</option>
+                            <option value="daiKuanLiLv">贷款利率</option>
+                            <option value="daiKuanLeiBie">贷款类别</option>
+                            <option value="daiKuanFangShi">贷款方式</option>
+                            <option value="hangYeLeiBie">行业类别</option>
+                            <option value="type">项目精准扶贫类别</option>
+                            <option value="yiDaiDaiKuanType">易地扶贫搬迁贷款类别</option>
+                            <option value="touFangDate">投放日期</option>
+                            <option value="touFangJinE">投放金额</option>
+                            <option value="leiJiTouFangJinE">累计投放金额</option>
+                            <option value="weiTouFangYuE">未投放贷款余额</option>
+                            <option value="changHuanPlanDate">偿还时间</option>
+                            <option value="changHuanPlanJinE">偿还金额</option>
+                            <option value="changHuanJinE">偿还贷款金额</option>
+                            <option value="changHuanDate">偿还贷款时间</option>
+                            <option value="leiJiChangHuanJinE">累计偿还贷款金额</option>
+                            <option value="weiChangHuanYuE">未偿还贷款余额</option>
+                            <option value="yuQiJinE">贷款逾期金额</option>
+                            <option value="yuQiDate">贷款逾期时间</option>
+                            <option value="qianXiDate">欠息时间</option>
+                            <option value="qianXiJinE">欠息金额</option>
+                            <option value="fuWuPKRenCount">服务贫困人口数</option>
+                            <option value="note">备注</option>
+                            <option value="shuJuWeiHuDanWei">数据维护单位</option>
+                            <option value="operationDate">操作时间</option>
+                            <option value="operation">操作类型</option>
+                            <option value="operationPerson">操作人</option>
+                            <option value="checkStatus">审核状态</option>
+                            <option value="checkPerson">审核人</option>
+                            <option value="checkDate">审核时间</option>
+                            <option value="reason">拒绝理由</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="but_right">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" id="user_add">
+            <i class="layui-icon layui-icon-ok"></i>
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-normal" id="user_delete">
+            <i class="layui-icon layui-icon-close"></i>
+        </button>
+    </div>
+
+    <div class="clear"></div>
+
+    <table class="layui-table" lay-data="{ url:'/xmjzfp/findPageSH', page: true, limit: 10, limits:[10], id: 'userTable'}" lay-size="sm" lay-filter="userTable">
+        <thead>
+        <tr>
+            <th lay-data="{checkbox:true, fixed:'left'}" rowspan="3"></th>
+            <th lay-data="{align:'center'}" colspan="49" rowspan="1">项目精准扶贫贷款</th>
+            <th lay-data="{fixed: 'right', width: 180, align: 'center', toolbar: '#barDemo'}" rowspan="3">操作</th>
+        </tr>
+        <tr>
+            <th lay-data="{field:'uid' ,width:100, align:'center'}" rowspan="2">序号</th>
+            <th lay-data="{field:'projectName' ,width:100, align:'center'}" rowspan="2">项目贷款名称</th>
+            <th lay-data="{field:'projectCompanyName' ,width:100, align:'center'}" rowspan="2">项目主体名称</th>
+            <th lay-data="{field:'tongYiXinYongDaiMa' ,width:100, align:'center'}" rowspan="2">统一社会信用代码</th>
+            <th lay-data="{field:'address' ,width:100, align:'center'}" rowspan="2">经营地址</th>
+            <th lay-data="{field:'telephone' ,width:100, align:'center'}" rowspan="2">联系电话</th>
+            <th lay-data="{field:'daiKuanJiGou' ,width:100, align:'center'}" rowspan="2">贷款金融机构</th>
+            <th lay-data="{field:'projectContent' ,width:100, align:'center'}" rowspan="2">项目内容</th>
+            <th lay-data="{field:'projectPlace' ,width:100, align:'center'}" rowspan="2">项目建设地</th>
+            <th lay-data="{field:'daiKuanAgreementNo' ,width:100, align:'center'}" rowspan="2">贷款合同编号</th>
+            <th lay-data="{field:'daiKuanJinE' ,width:100, align:'center'}" rowspan="2">贷款金额</th>
+            <th lay-data="{field:'daiKuanQiXian' ,width:100, align:'center'}" rowspan="2">贷款期限</th>
+            <th lay-data="{field:'daiKuanDate' ,width:100, align:'center'}" rowspan="2">贷款日期</th>
+            <th lay-data="{field:'daoQiDate' ,width:100, align:'center'}" rowspan="2">到期日期</th>
+            <th lay-data="{field:'daiKuanLiLv' ,width:100, align:'center'}" rowspan="2">贷款利率</th>
+            <th lay-data="{field:'daiKuanLeiBie' ,width:100, align:'center'}" rowspan="2">贷款类别</th>
+            <th lay-data="{field:'daiKuanFangShi' ,width:100, align:'center'}" rowspan="2">贷款方式</th>
+            <th lay-data="{field:'hangYeLeiBie' ,width:100, align:'center'}" rowspan="2">行业类别</th>
+            <th lay-data="{align:'center'}" rowspan="1" colspan="2" >易地扶贫搬迁贷款类别</th>
+            <th lay-data="{field:'type_nongTianJiBenJianSe' ,width:100, align:'center'}" rowspan="2">农田基本建设贷款</th>
+            <th lay-data="{field:'type_shengChanHuanJinGaiZhao' ,width:100, align:'center'}" rowspan="2">生产环境改造贷款</th>
+            <th lay-data="{field:'type_nongCunJiChuSheSi' ,width:100, align:'center'}" rowspan="2">生产环境改造贷款</th>
+            <th lay-data="{field:'type_qiTa' ,width:100, align:'center'}" rowspan="2">其他</th>
+            <th lay-data="{align:'center'}" colspan="4">贷款投放进度</th>
+            <th lay-data="{align:'center'}" colspan="2">贷款偿还计划</th>
+            <th lay-data="{align:'center'}" colspan="4">贷款偿还进度</th>
+
+
+            <th lay-data="{field:'yuQiJinE' ,width:100, align:'center'}" rowspan="2">贷款逾期金额</th>
+            <th lay-data="{field:'yuQiDate' ,width:100, align:'center'}" rowspan="2">贷款逾期时间</th>
+            <th lay-data="{field:'qianXiDate' ,width:100, align:'center'}" rowspan="2">欠息时间</th>
+            <th lay-data="{field:'qianXiJinE' ,width:100, align:'center'}" rowspan="2">欠息金额</th>
+            <th lay-data="{field:'fuWuPKRenCount' ,width:100, align:'center'}" rowspan="2">服务贫困人口数</th>
+            <th lay-data="{field:'note' ,width:100, align:'center'}" rowspan="2">备注</th>
+            <th lay-data="{field:'shuJuWeiHuDanWei' ,width:100, align:'center'}" rowspan="2">数据维护单位</th>
+            <th lay-data="{field:'gid' ,width:100, align:'center'}" rowspan="2">对应正式表序号</th>
+            <th lay-data="{field:'operationDate' ,width:100, align:'center'}" rowspan="2">操作时间</th>
+            <th lay-data="{field:'operation' ,width:100, align:'center'}" rowspan="2">操作类型</th>
+            <th lay-data="{field:'operationPerson' ,width:100, align:'center'}" rowspan="2">操作人</th>
+            <th lay-data="{field:'checkStatus' ,width:100, align:'center'}" rowspan="2">审核状态</th>
+            <th lay-data="{field:'checkPerson' ,width:100, align:'center'}" rowspan="2">审核人</th>
+            <th lay-data="{field:'checkDate' ,width:100, align:'center'}" rowspan="2">审核时间</th>
+            <th lay-data="{field:'reason' ,width:100, align:'center'}" rowspan="2">拒绝理由</th>
+        </tr>
+        <tr>
+            <th lay-data="{field:'type_yiDiBanQianSuiQian' ,width:100, align:'center'}" rowspan="1">易地扶贫搬迁随迁户贷款</th>
+            <th lay-data="{field:'type_yiDiBanQianPinKun' ,width:100, align:'center'}" rowspan="1">易地扶贫搬迁贫困户贷款</th>
+            <th lay-data="{field:'touFangDate' ,width:100, align:'center'}" rowspan="1">投放日期</th>
+            <th lay-data="{field:'touFangJinE' ,width:100, align:'center'}" rowspan="1">投放金额</th>
+            <th lay-data="{field:'leiJiTouFangJinE' ,width:100, align:'center'}" rowspan="1">累计投放金额</th>
+            <th lay-data="{field:'weiTouFangYuE' ,width:100, align:'center'}" rowspan="1">未投放贷款余额</th>
+            <th lay-data="{field:'changHuanPlanDate' ,width:100, align:'center'}" rowspan="1">偿还时间</th>
+            <th lay-data="{field:'changHuanPlanJinE' ,width:100, align:'center'}" rowspan="1">偿还金额</th>
+            <th lay-data="{field:'changHuanJinE' ,width:100, align:'center'}" rowspan="1">偿还贷款金额</th>
+            <th lay-data="{field:'changHuanDate' ,width:100, align:'center'}" rowspan="1">偿还贷款时间</th>
+            <th lay-data="{field:'leiJiChangHuanJinE' ,width:100, align:'center'}" rowspan="1">累计偿还贷款金额</th>
+            <th lay-data="{field:'weiChangHuanYuE' ,width:100, align:'center'}" rowspan="1">未偿还贷款余额</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">
+        <i class="layui-icon layui-icon-edit"></i>
+    </a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs pass_one_but" lay-event="add">
+        <i class="layui-icon layui-icon-ok"></i>
+    </a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="del">
+        <i class="layui-icon layui-icon-close"></i>
+    </a>
+</script>
+
+<script>
+
+    var table;
+    layui.use('table', function(){
+        table = layui.table;
+
+        table.on('tool(userTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                parent.layer.confirm('真的删除行么', function(index){
+
+                    var str = "";
+                    str += "," + data.uid;
+                    $.post("/xmjzfp/delSH",{
+                        "value" : str
+                    },function(result){
+                        parent.layer.msg(result, {
+                            time: 5000, //20s后自动关闭
+                            btn: ['哦']
+                        });
+                    table.reload('userTable');
+                        parent.layer.close(index);
+                    });
+
+                });
+            } else if(obj.event === 'edit'){
+//console.log(str)
+                var x = true;
+                parent.layer.open({
+                    type : 2 ,
+                    area : ["800px", "600px"] ,
+                    title : "修改" ,
+                    anim: 1 ,
+//                    resize : false ,
+                    moveOut:true,
+                    maxmin: true,
+                    content : '/xmjzfp/editSH',
+                    end : function () {
+                        if(x) {
+                            table.reload('userTable');
+                        }else {
+                            x = true;
+                        }
+                    },
+                    cancel : function () {
+                        x = false;
+                    },
+                    success :function (layero, index) {
+//                        var frame_form = $("#frame_form");"#layui-layer1"
+                        var frame_form = parent.layer.getChildFrame('body',index);
+                        for (var key in data){
+                            var value = data[key];
+                            frame_form.find("#"+key).val(value);
+                        }
+                        var $type = frame_form.find("#type");
+                        var isDel = true;
+                        if (data['type_yiDiBanQianSuiQian']=== "√"){
+                            $type.find("option:contains('易地扶贫搬迁随迁户贷款')").prop("selected", true);
+                            console.log($type.find("option:contains('易地扶贫搬迁随迁户贷款')").text())
+                            console.log($type.find("option:contains('易地扶贫搬迁随迁户贷款')").prop("selected"))
+                        }else if (data['type_yiDiBanQianPinKun']=== "√"){
+                            $type.find("option:contains('易地扶贫搬迁贫困户贷款')").prop("selected", true);
+                        }else if (data['type_nongTianJiBenJianSe']=== "√"){
+                            $type.find("option:contains('农田基本建设贷款')").prop("selected", true);
+                        }else if (data['type_shengChanHuanJinGaiZhao']=== "√"){
+                            $type.find("option:contains('生产环境改造贷款')").prop("selected", true);
+                        }else if (data['type_nongCunJiChuSheSi']=== "√"){
+                            $type.find("option:contains('农村基础设施贷款')").prop("selected", true);
+                        }else if(data['type_qiTa']=== "√"){
+                            $type.find("option:contains('其他')").prop("selected", true);
+                        }else {
+                            isDel = false;
+                        }
+                        if (isDel){
+                            $type.find("option[selected]").removeAttr("selected");
+                        }
+                        $type.find("option:not(:selected)").remove();
+                        $type.attr("his","is");
+//                        type_yiDiBanQianSuiQian
+//                        type_yiDiBanQianPinKun
+//                        type_nongTianJiBenJianSe
+//                        type_shengChanHuanJinGaiZhao
+//                        type_nongCunJiChuSheSi
+//                        type_qiTa
+
+//                        layui.form.render();
+//                        parent.layui.layer.render();
+                    }
+                });
+            }else if(obj.event === 'add'){
+                parent.layer.confirm('真的通过么', function(index){
+
+                    var str = "";
+                    str += "," + data.uid;
+                    $.post("/xmjzfp/passSH",{
+                        "value" : str
+                    },function(result){
+                        parent.layer.msg(result, {
+                            time: 5000, //20s后自动关闭
+                            btn: ['哦']
+                        });
+                    table.reload('userTable');
+                        parent.layer.close(index);
+                    });
+
+                });
+            }
+        });
+    });
+
+    $("#user_search").click(function () {
+        $("#search_input").animate({
+            "padding-left": "10px",
+            "width": "190px"
+        },"normal", function () {
+            $("#search_choose_div").animate({
+                "opacity": "1"
+            },"normal");
+        });
+        $("#search_div").css({"border":"1px solid #1E9FFF"});
+
+        //点出搜索框之后改变点击事件
+        $(this).click(function () {
+            var value = $("#search_input").val();
+            var column = $("#search_search").val();
+            if (value){
+                table.reload('userTable', {
+                    url: '/xmjzfp/searchSH?value='+value+"&column="+column
+                });
+            }else {
+                table.reload('userTable',{
+                    url:"/xmjzfp/findPageSH"
+                });
+            }
+        });
+    });
+//    var layer = parent.layer;
+//    layui.use('layer', function(){
+//        layer = layui.layer;
+//
+//    });
+
+    $("#user_add").click(function () {
+        var checkStatus = table.checkStatus('userTable')
+        var tableData = checkStatus.data;
+        if (tableData.length > 0) {
+            parent.layer.confirm('确认要通过这' + tableData.length + '条吗？', {
+                btn: ['确定', '取消']//按钮
+            }, function (index) {
+                var str = "";
+                for (var i = 0; i < tableData.length; i++){
+                    str += "," + tableData[i].uid;
+                }
+//console.log(str)
+                $.post("/xmjzfp/passSH",{
+                    "value" : str
+                },function(result){
+                    parent.layer.msg(result, {
+                        time: 5000, //20s后自动关闭
+                        btn: ['哦']
+                    });
+                    parent.layer.close(index);
+                    table.reload('userTable');
+                });
+            });
+        }else {
+            parent.layer.confirm('请勾选要通过的行！', {
+                btn: ['确定']//按钮
+            });
+        }
+    });
+
+
+    $("#user_delete").click(function () {
+        var checkStatus = table.checkStatus('userTable')
+        var tableData = checkStatus.data;
+        if (tableData.length > 0) {
+            parent.layer.confirm('确认要删除这个' + tableData.length + '角色吗？', {
+                btn: ['确定', '取消']//按钮
+            }, function (index) {
+                var str = "";
+                for (var i = 0; i < tableData.length; i++){
+                    str += "," + tableData[i].uid;
+                }
+//console.log(str)
+                $.post("/xmjzfp/delSH",{
+                    "value" : str
+                },function(result){
+                    parent.layer.msg(result, {
+                        time: 5000, //20s后自动关闭
+                        btn: ['哦']
+                    });
+                    parent.layer.close(index);
+                    table.reload('userTable');
+                });
+            });
+        }else {
+            parent.layer.confirm('请勾选要删除的行！', {
+                btn: ['确定']//按钮
+            });
+        }
+    });
+
+
+    window.onload = function () {
+        var isAd = false;
+        $.ajax({
+            type:"POST",
+            url:"/xmjzfp/isAdSH",
+            dataType:"text",
+//            async : false,
+            success:function(result){
+                if (result === "true")
+                    isAd = true;
+                if (!isAd){
+                    $(".pass_one_but").hide();
+                    $("#user_add").hide();
+//                    layui.form.render()
+                }
+            }
+        });
+    };
+</script>
+
+</body>
+</html>

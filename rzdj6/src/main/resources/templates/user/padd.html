@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>add_authority</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <script src="/static/js/jquery2.1.1.min.js" charset="utf-8"></script>
+    <style type="text/css">
+        #main{
+            margin-top: 10px;
+            width: 350px;
+            /*background-color: #00F7DE;*/
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <form class="layui-form" action="">
+            <div class="layui-form-item" hidden>
+                <label class="layui-form-label">ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="pid" name="pid" autocomplete="off" class="layui-input" value="0">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="pname" name="pname" lay-verify="required" autocomplete="off" placeholder="请输入权限名" class="layui-input" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限模块</label>
+                <div class="layui-input-inline">
+                    <select id="ptype" name="ptype" lay-filter="ptype">
+                        <option value="" selected=""></option>
+                        <option value="个人精准扶贫-建档立卡贫困人口贷款">个人精准扶贫-建档立卡贫困人口贷款</option>
+                        <option value="个人精准扶贫-其他个人精准扶贫贷款">个人精准扶贫-其他个人精准扶贫贷款</option>
+                        <option value="产业精准扶贫">产业精准扶贫</option>
+                        <option value="项目精准扶贫">项目精准扶贫</option>
+                        <option value="保险扶贫-扶贫保">保险扶贫-扶贫保</option>
+                        <option value="保险扶贫-住宅地震巨灾保险">保险扶贫-住宅地震巨灾保险</option>
+                        <option value="保险扶贫-政策性农业保险">保险扶贫-政策性农业保险</option>
+                        <option value="保险扶贫-特色农业保险">保险扶贫-特色农业保险</option>
+                        <option value="保险扶贫-其他扶贫保险">保险扶贫-其他扶贫保险</option>
+                        <option value="农村信用体系建设-信用户">农村信用体系建设-信用户</option>
+                        <option value="农村信用体系建设-信用村">农村信用体系建设-信用村</option>
+                        <option value="农村信用体系建设-信用乡（镇）">农村信用体系建设-信用乡（镇）</option>
+                        <option value="农村信用体系建设-诚信红名单">农村信用体系建设-诚信红名单</option>
+                        <option value="农村信用体系建设-失信黑名单">农村信用体系建设-失信黑名单</option>
+                        <option value="农村信用体系建设-信用村">农村信用体系建设-信用村</option>
+                        <option value="农村金融服务（站）点">农村金融服务（站）点</option>
+                        <option value="政策文件">政策文件</option>
+                        <option value="贫困户基础数据">贫困户基础数据</option>
+                        <option value="系统管理">系统管理</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限URL</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="purl" name="purl" lay-verify="required" autocomplete="off" placeholder="请输入权限URL" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="submit_but" type="button" class="layui-btn" lay-submit lay-filter="sub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        window.onload = function () {
+            var role;
+            $.get("/user/nowEdit", function (result) {
+                var value = eval("["+result+"]")[0];
+//                console.log(value)
+                if (value.uid !== 0) {
+                    $("#pid").val(value.pid);
+                    $("#pname").val(value.pname);
+//                    $("#ptype").val(value.ptype);
+                    $("#ptype option[selected]").removeAttr("selected");
+                    $("#ptype option[value='" + value.ptype + "']").attr("selected", true);
+
+                    $("#purl").val(value.purl);
+                    layui.form.render('select');
+                }
+            });
+
+        }
+
+        var mySubmit = function () {
+            var pidVal = $("#pid").val();
+            $.post("/permissions/addOrUpdate",{
+                "pid" : pidVal === 0 ? '': pidVal,
+                "pname" : $("#pname").val() ,
+                "ptype" : $("#ptype").val() ,
+                "purl" : $("#purl").val()
+            },function(result){
+                var index1 = parent.layer.getFrameIndex(window.name);
+                layer.msg(result, {
+                    time: 2000, //2s后自动关闭
+                    btn: ['哦']
+                },function (index) {
+
+                    layer.close(index);
+
+                    parent.layer.close(index1);
+                });
+
+            });
+        };
+
+        layui.use('form', function(){
+            var form = layui.form;
+            form.on('submit(sub)', function(data){
+                mySubmit();
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+    </script>
+</body>
+</html>

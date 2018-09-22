@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <style>
+        .bj{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .bt{
+            height:200px;
+            width:200px;
+            margin-left:40px;
+            font-size:20px;
+            cursor:pointer
+        }
+    </style>
+    <script>
+        $(function(){
+            $("#jrfp").click(function(){
+                alert(1);
+                window.location.href='/jrfp';
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class="layui-container">
+        <div class="layui-row bj"  style="height:800px;">
+            <div class="layui-bg-orange bj bt" id="jrfp">金融扶贫</div>
+            <div class="layui-bg-blue bj bt">xxx</div>
+            <div class="layui-bg-cyan bj bt">xxx</div>
+            <div class="layui-bg-red bj bt">xxx</div>
+            <div class="layui-bg-green bj bt">xxx</div>
+        </div>
+    </div>
+</body>
+</html>

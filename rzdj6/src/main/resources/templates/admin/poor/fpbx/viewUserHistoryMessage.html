@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/layui/jquery-2.1.0.min.js" th:src="@{/static/layui/jquery-2.1.0.min.js}"></script>
+    <script src="/static/layui/layui.js" th:src="@{/static/layui/layui.js}"></script>
+    <link href="/static/layui/css/layui.css" rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+</head>
+<body>
+<div class="layui-fluid">
+    <table class="layui-table">
+        <tr style="height:40px;">
+            <td colspan="5" style="text-align: center;font-size:20px;" th:text="'审核'+${qt2.name}+'的基本情况'">基本情况</td>
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>贷款人姓名</td>
+            <td>贷款人身份证号</td>
+            <td>常驻地址</td>
+            <td>联系电话</td>
+            <td>贷款合同编号</td>
+        </tr>
+        <tr>
+            <td th:text="${qt2.name}">2016-11-28</td>
+            <td th:text="${qt2.cardId}">…</td>
+            <td th:text="${qt2.address}">…</td>
+            <td th:text="${qt2.telephone}">…</td>
+            <td th:text="${qt2.agreementNo}">…</td>
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>贷款金额</td>
+            <td>贷款期限</td>
+            <td>贷款日期</td>
+            <td>到期日期</td>
+            <td>贷款利率</td>
+        </tr>
+        <tr>
+            <td th:text="${qt2.daiKuanJinE}">2016-11-28</td>
+            <td th:text="${qt2.daiKuanQiXian}">…</td>
+            <td th:text="${#dates.format(qt2.daiKuanDate,'yyyy-MM-dd')}">…</td>
+            <td th:text="${#dates.format(qt2.daoQiDate,'yyyy-MM-dd')}">…</td>
+            <td th:text="${qt2.daiKuanLiLv}">…</td>
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>贷款种类</td>
+            <td>贷款方式</td>
+            <td>贷款用途</td>
+            <td>贷款使用地域</td>
+            <td>产业类别</td>
+        </tr>
+        <tr>
+        <tr>
+            <td th:text="${qt2.daiKuanZhongLei}">2016-11-28</td>
+            <td th:text="${qt2.daiKuanFangShi}">…</td>
+            <td th:text="${qt2.daiKuanYongTu}">…</td>
+            <td th:text="${qt2.shiYongDiYu}">…</td>
+            <td th:text="${qt2.chanYeLeiBie}">…</td>
+        </tr>
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>其他个人精准扶贫贷款类别</td>
+            <td>新型农业经营主体精准扶贫贷款类别</td>
+            <td>贷款金融机构</td>
+            <td>投放日期</td>
+            <td>投放金额</td>
+        </tr>
+        <tr>
+            <td th:text="${qt2.fuPinDaiKuanLeiBie}">2016-11-28</td>
+            <td th:text="${qt2.zhuTiDaiKuanLeiBie}">…</td>
+            <td th:text="${qt2.daiKuanJinRongJiGou}">…</td>
+            <td th:text="${#dates.format(qt2.touFangDate,'yyyy-MM-dd')}">…</td>
+            <td th:text="${qt2.touFangJinE}">…</td>
+
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>累计投放金额</td>
+            <td>未投放贷款余额</td>
+            <td>偿还贷款金额</td>
+            <td>偿还贷款时间</td>
+            <td>累计偿还贷款金额</td>
+        </tr>
+        <tr>
+            <td th:text="${qt2.leiJiTouFangJinE}">2016-11-28</td>
+            <td th:text="${qt2.weiTouFangYuE}">…</td>
+            <td th:text="${qt2.changHuanJinE}">…</td>
+            <td th:text="${#dates.format(qt2.changHuanDate,'yyyy-MM-dd')}">…</td>
+            <td th:text="${qt2.leiJiChangHuanJinE}">…</td>
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>未偿还贷款余额</td>
+            <td>贷款逾期金额</td>
+            <td>贷款逾期时间</td>
+            <td>欠息时间</td>
+            <td>欠息金额</td>
+        </tr>
+        <tr>
+            <td th:text="${qt2.weiChangHuanYuE}">2016-11-28</td>
+            <td th:text="${qt2.yuQiJinE}">…</td>
+            <td th:text="${#dates.format(qt2.yuQiDate,'yyyy-MM-dd')}">…</td>
+            <td th:text="${#dates.format(qt2.qianXiDate,'yyyy-MM-dd')}">…</td>
+            <td th:text="${qt2.qianXiJinE}">…</td>
+        </tr>
+        <tr class="layui-bg-gray">
+            <td>利益联结方式</td>
+            <td>带动贫困户名单</td>
+            <td>带动贫困人口数</td>
+            <td>直接带动效益</td>
+            <td>备注</td>
+        </tr>
+        <tr>
+            <td th:text="${qt2.liYiLianJieFangShi}">2016-11-28</td>
+            <td th:text="${qt2.daiDongPkhMingDan}">…</td>
+            <td th:text="${qt2.daiDongPkRenKouShu}">…</td>
+            <td th:text="${qt2.zhiJieDaiDongXiaoYi}">…</td>
+            <td th:text="${qt2.note}">…</td>
+        </tr>
+    </table>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th colspan="5">带动贫困户名单</th>
+        </tr>
+        <tr>
+            <th>序号</th>
+            <th>贷款合同编号</th>
+            <th>户主姓名</th>
+            <th>身份证号</th>
+            <th>家庭人口</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="md,userStat:${mds}">
+            <td th:text="${userStat.index}"></td>
+            <td th:text="${md.agreementNo}"></td>
+            <td th:text="${md.huZhuName}"></td>
+            <td th:text="${md.huZhuCardId}"></td>
+            <td th:text="${md.familyMembers}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <!--<button class="layui-btn" lay-submit lay-filter="formDemo">立即导出</button>-->
+            <a type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">返回上层</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="|${session.cfg.projectName} - 年度审计项目管理|"></title>
+	<head th:replace="/layout/bootstrap :: bootstrapHead"/>
+	<head th:replace="/layout/bootstrap :: bootstrapDate" />
+	<script>
+		//分页控制
+		var page = "[[${page}]]"; //表中最大数
+		var count = "[[${count}]]"; //表中最大数
+		var size = "[[${size}]]"; //每页显示多少条
+		var pageCount = Math.round((count/size) + 0.5);
+		function next(page){
+			var page = parseInt(page);
+			if((page < 1) | (page > pageCount)){
+				return;
+			}
+			$("#page").val(page);
+			$("#f1").submit();
+		}
+		// 验证中文名称
+		function isName(name) {
+		    var pattern = /^[\u4E00-\u9FA5]{1,6}$/;
+		    return pattern.test(name);
+		}
+		function isTrue(str){
+			var reg = /^[\u4E00-\u9FA5,]+$/;
+			return reg.test(str);
+		}
+		
+		function isInt(str){
+			var reg = /^[0-9]*[1-9][0-9]*$/;
+			return reg.test(str);
+		}
+		
+		//判空
+		function validate() {
+			var result = true;
+	
+			if (!$('#projectName').val()) {
+				$('#projectNameMsg').html('项目名不能空');
+				result = false;
+			} else {
+				if($('#projectName').val().length > 32){
+					$('#projectNameMsg').html('项目名长度不能超过32个字符');
+					result = false;
+				}else{
+					$('#projectNameMsg').html('');
+				}
+			}
+	
+			if (!$('#projectDpt').val()) {
+				$('#projectDptMsg').html('立项单位不能空');
+				result = false;
+			} else {
+				if($('#projectDpt').val().length > 32){
+					$('#projectDptMsg').html('立项单位长度不能超过32个字符');
+					result = false;
+				}else{
+					$('#projectDptMsg').html('');
+				}
+				
+			}
+			
+			if (!$('#projectKZ').val()) {
+				$('#projectKZMsg').html('项目组长不能空');
+				result = false;
+			} else {
+				if(!isName($('#projectKZ').val())){
+					$('#projectKZMsg').html('项目组长不合法');
+					result = false;
+				}else{
+					$('#projectKZMsg').html('');
+				}
+				
+			}
+			
+			if (!$('#projectZS').val()) {
+				$('#projectZSMsg').html('项目主审不能空');
+				result = false;
+			} else {
+				if(!isName($('#projectZS').val())){
+					$('#projectZSMsg').html('项目主审不合法');
+					result = false;
+				}else{
+					$('#projectZSMsg').html('');
+				}
+				
+			}
+			
+			if (!$('#projectCY').val()) {
+				$('#projectCYMsg').html('项目成员不能空');
+				result = false;
+			} else {
+				if(!isTrue($('#projectCY').val())){
+					$('#projectCYMsg').html('项目成员不合法');
+					result = false;
+				}else{
+					$('#projectCYMsg').html('');
+				}
+				if($('#projectCY').val().length > 64){
+					$('#projectCYMsg').html('项目成员长度不能超过64个字符');
+					result = false;
+				}
+				else{
+					$('#projectCYMsg').html('');
+				}
+				
+			}
+			
+			if (!$('#workDays').val()) {
+				$('#workDaysMsg').html('工作量不能空');
+				result = false;
+			} else {
+				if(!isInt($('#workDays').val())){
+					$('#workDaysMsg').html('工作量不合法');
+					result = false;
+				}else{
+					$('#workDaysMsg').html('');
+				}
+				
+			}
+			
+			if (!$('#start').val()) {
+				$('#startMsg').html('开始时间不能空');
+				result = false;
+			} else {
+				$('#startMsg').html('');
+			}
+			
+			if (!$('#end').val()) {
+				$('#endMsg').html('结束时间不能空');
+				result = false;
+			} else {
+				$('#endMsg').html('');
+			}
+	
+			return result;
+		}
+	
+		//删除请求
+		function deletes(ids) {
+			$.ajax({
+				dataType : 'json',
+				method : 'post',
+				contentType : 'application/x-www-form-urlencoded',
+				url : "[[@{/auditProject/delete}]]",
+				data : {
+					'id' : ids
+				},
+				success : function(obj) {
+					alert(obj.msg);
+					if (obj.success)
+						window.location = window.location;
+				}
+			});
+		}
+	
+		//获取单个信息
+		function getData(id) {
+			$.ajax({
+				url : "[[@{/auditProject/getData}]]",
+				data : {
+					'id' : id
+				},
+				success : function(response) {
+					if (response.success) {
+						$('#id').val(response.obj.id);
+						$('#projectName').val(response.obj.projectName);
+						$('#type').val(response.obj.type);
+						$('#projectDpt').val(response.obj.projectDpt);
+						$('#projectKZ').val(response.obj.projectKz);
+						$('#projectZS').val(response.obj.projectZs);
+						$('#projectCY').val(response.obj.projectCy);
+						$('#checkData').val(response.obj.checkData);
+						$('#workDays').val(response.obj.workDays);
+						$('#remark').val(response.obj.remark);					
+						$("#start").datepicker("setDate", response.obj.start);//设置
+						$("#end").datepicker("setDate", response.obj.end);//设置
+						//alert(response.obj.type);
+					}
+				}
+			});
+		}
+	
+		//增加或编辑请求
+		function createOrUpdate() {
+			if(!validate()){
+				return false;
+			}else{
+				$.ajax({
+					method : 'post',
+					url : "[[@{/auditProject/createOrUpdate}]]",
+					data : $('#form1').serialize(),
+					success : function(obj) {
+						alert(obj.msg);
+						if (obj.success) window.location = window.location;
+					},
+					error : function(){
+						alert("请求失败");
+					}
+				
+				});
+			}
+	
+		}
+	
+		//按钮事件
+		$(function() {
+			//动态添加生成的列表
+			var currentDate = new Date();
+			var year = $("#year");
+			year.empty();
+			for (var i = currentDate.getFullYear(); i > 2000; i--) {
+				var option = $("<option>").text(i + "年度").val(i);
+				year.append(option);
+			}
+
+			//全部选中按钮
+			$('#selectAll').click(function() {
+				$("input[type='checkbox']").each(function() {
+					if ($(this).prop('checked')) {
+						$('#selectAll').prop("checked", false);
+						$(this).prop('checked', false);
+	
+					} else {
+						$('#selectAll').prop("checked", true);
+						$(this).prop('checked', true);
+					}
+				});
+			});
+	
+			//顶部增加按钮
+			$('#btnAdd').bind('click', function() {
+				$('#winTitle').html('新增');
+				$('#form1')[0].reset();
+				$('#win').modal({
+	
+				});
+			});
+	
+			//顶部编辑按钮
+			$('#btnUpdate').bind('click', function() {
+				var obj = $("input:checkbox[name=id]:checked");
+				var selectCount = obj.length;
+				if (selectCount <= 0) {
+					alert('请选择要编辑的条目');
+					return false;
+				}
+				if (selectCount > 1) {
+					alert('一次只能编辑一个条目');
+					return false;
+				}
+				$('#winTitle').html('编辑');
+				$('#form1')[0].reset();
+				$('#win').modal({
+	
+				});
+				var id = $("input[type='checkbox']:checked").val();
+				getData(id); //获取数据
+			});
+	
+			//顶部删除按钮
+			$('#btnDelete').bind('click', function() {
+				var ids = "";
+				$("input:checkbox[name=id]:checked").each(function(i) {
+					if (0 == i) {
+						ids = $(this).val();
+					} else {
+						ids += ("," + $(this).val());
+					}
+				});
+				if (ids == "") {
+					alert('请选择要删除的条目');
+					return;
+				}
+				var result = confirm('将要删除<' + ids + '>是否继续?');
+				if (!result)
+					return;
+				deletes(ids);
+			});
+	
+			//保存按钮
+			$('#btnSave').click(function() {
+				createOrUpdate(); 
+			});
+	
+			//搜索按钮
+			$('#btnSearch').click(function() {
+				$("#pram").val($("#search").val());
+				$("#f1").submit();
+			});
+			
+			var type = $("#type");
+			//读取配置
+			$.ajax({
+				url : "[[@{/sysConfig/getKey}]]",
+				data : {
+					'itemType' : "审计项目",
+					'itemKey' : "项目类型"
+				},
+				success : function(res) {
+					if (res.success) {
+						type.empty();
+						for(var i = 0; i<res.res.length; i++){
+							//alert(res.res[i].itemValue)
+							var option = $("<option>").text(res.res[i].itemValue).val(res.res[i].itemValue);
+							type.append(option);
+						}
+					}
+				},
+				error: function(){
+					alert("false");	
+				}
+			});
+			
+			//日期格式化
+			$(".datepicker").datepicker({
+	            language: "zh-CN",
+	            autoclose: true,//选中之后自动隐藏日期选择框
+	            clearBtn: true,//清除按钮
+	            todayBtn: true,//今日按钮
+	            format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+	        });
+			
+			//if(count <= 20){
+			//	$("#pagebar").hide();
+			//}
+			
+			//下一页
+			$('#page1').click(function() {
+				next(parseInt(page)-1);
+			});
+			
+			//上一页
+			$('#page2').click(function() {
+				//alert(page);
+				next(parseInt(page)+1);
+			});
+			
+			$(".btnQuestion").click(function() {
+				var projectId = $(this).parent().parent().children('td:eq(1)').html();
+				var url = '[[@{/projectQuestion/list}]]';
+				url += '?projectId=' + projectId;
+				window.open(url);
+			});
+
+		});
+	</script>
+	</head>
+<body>
+	<div class="container">
+		<div th:replace="/layout/menu :: copy"></div>
+			<div class="jumbotron" style="background: #F8F8FF;border:1px solid #F5F5F5 ;color:#4682B4">
+			<h3>年度审计项目</h3>
+			<p>
+				年度审计项目的增、删、改、查
+			</p>
+		</div>	
+		<div class="panel" th:if="${session.currentUser.type < 3}">
+			<button th:if="${session.currentUser.type < 3}" type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnAdd">
+				<span class="glyphicon glyphicon-plus"></span> 增加
+			</button>
+			<button th:if="${session.currentUser.type < 3}" type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnUpdate">
+				<span class="glyphicon glyphicon-pencil"></span> 编辑
+			</button>
+			<button th:if="${session.currentUser.type < 3}" type="button" class="btn btn-primary" data-toggle="modal"
+				id="btnDelete">
+				<span class="glyphicon glyphicon-remove"></span> 删除
+			</button>
+
+			<form style="float: right; position: relative; width: 40%" id="f1"
+				th:action="@{/auditProject/list}" method="POST">
+					
+				<button type="button" class="btn btn-primary" data-toggle="modal"
+					id="btnSearch" style="width: 12%; float: right; margin-left: 1%">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+				
+				<input type="text" class="form-control" id="value" name="value"
+					placeholder="在此输入关键词" style="width: 47%; float: right">
+				
+				<select id="key" name="key" class="form-control" style="float:right;width:23%;margin-right:5px;">
+					<option value="id">编号</option>
+					<option value="projectName">项目名称</option>
+					<option value="type">项目类型</option>
+					<option value="year">项目年度</option>
+					<option value="projectDpt">立项单位</option>
+					<option value="projectKz">项目组长</option>
+					<option value="projectZs">项目主审</option>
+					<option value="projectCy">项目成员</option>
+					<option value="workDays">工作量</option>
+				</select>
+		
+				<!-- 传参 -->
+				<input type="hidden" id="page" name="page" th:value="${page}">
+				<input type="hidden" id="size" name="size" th:value="${size}">
+				<input type="hidden" id="key" name="key" th:value="${key}">
+				<input type="hidden" id="value" name="value" th:value="${value}">
+				
+			</form>
+		</div>
+		<div class="panel panel-default">
+			<table class="table">
+				<tr>
+					<th style="text-align: center">
+						<input type="checkbox" id="selectAll" title="全选">
+					</th>
+					<th style="text-align: center">编号</th>
+					<th style="text-align: center">项目名称</th>
+					<th style="text-align: center">项目类型</th>
+					<th style="text-align: center">项目年度</th>
+					<th style="text-align: center">立项单位</th>
+					<th style="text-align: center">项目组长</th>
+					<th style="text-align: center">项目主审</th>
+					<th style="text-align: center">项目成员</th>
+					<th style="text-align: center">项目起始时间</th>
+					<th style="text-align: center">现场工作量(人\天)</th>
+					<th style="text-align: center">备注</th>
+					<th style="text-align: center">项目问题</th>
+				</tr>
+			
+				<th:block th:each="auditProject, it : ${list}">
+					<tr>
+						<td style="text-align: center">
+							<input type="checkbox" th:value="${auditProject.id}" th:id="|cb${auditProject.id}|" th:name="id" />
+							<input type="hidden" th:value="${auditProject.id}" th:name="|id${id}|" />
+						</td>
+						<td style="text-align: center" th:text="${auditProject.id}"></td>
+						<td style="text-align: center" th:text="${auditProject.projectName}"></td>
+						<td style="text-align: center" th:text="${auditProject.type}"></td>
+						<td style="text-align: center" th:text="${auditProject.year}"></td>
+						<td style="text-align: center" th:text="${auditProject.projectDpt}"></td>
+						<td style="text-align: center" th:text="${auditProject.projectKz}"></td>
+						<td style="text-align: center" th:text="${auditProject.projectZs}"></td>
+						<td style="text-align: center" th:text="${auditProject.projectCy}"></td>
+						<td style="text-align: center" >
+						    <span th:text="${auditProject.start} + '至' + ${auditProject.end}" >
+						    </span>
+						</td>
+						<td style="text-align: center" th:text="${auditProject.workDays}"></td>
+						<td style="text-align: center" th:text="${auditProject.remark}"></td>
+						
+						<td style="text-align: center">
+							<button class="btn btn-success btnQuestion">查看</button>
+						</td>
+						
+					</tr>
+				</th:block>
+			</table>
+		</div>
+		<div class="panel panel-default" style="height:55px;margin-top:-10px" id="pagebar">
+			<ul class="pagination" style="margin-left:46%;margin-top:9px">
+				<li><a href="javascript:void(0)" id="page1">&laquo;</a></li>
+				<li class="active"><a href="#" th:text="${page}"></a></li>
+				<li><a href="javascript:void(0)" id="page2">&raquo;</a></li>
+			</ul>
+		</div>
+		<div th:replace="/layout/bootstrap :: bottom" />
+	</div>
+	<!-- /container -->
+	<body th:replace="/layout/bootstrap :: bootstrapJs" />
+	<div class="modal fade" tabindex="-1" role="dialog" id="win">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="winTitle">新增</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="form1">
+						<!-- id -->
+						<input type="hidden" id="id" name="id" />
+						
+						<div class="form-group">
+							<label for="projectName"><span style="color:red">* </span>项目名称(不超过32个字符)：</label> 
+							<input type="text"
+								class="form-control" id="projectName" name="projectName" placeholder="项目名称">
+							<span id="projectNameMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="type"><span style="color:red">* </span>项目类型：</label> 
+							<select id="type" name="type"
+								class="form-control">
+							</select>
+						</div>		
+						<div class="form-group">
+							<label for="type"><span style="color:red">* </span>项目年度：</label> 
+							<select id="year" name="year"
+								class="form-control">
+							</select>
+						</div>					
+						<div class="form-group">
+							<label for="projectDpt"><span style="color:red">* </span>立项单位(不超过32个字符)：</label> 
+							<input type="text"
+								class="form-control" id="projectDpt" name="projectDpt" placeholder="立项单位">
+							<span id="projectDptMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="projectKZ"><span style="color:red">* </span>项目组长(不超过10个字符)：</label> 
+							<input type="text"
+								class="form-control" id="projectKZ" name="projectKZ" placeholder="项目组长">
+							<span id="projectKZMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="projectZS"><span style="color:red">* </span>项目主审(不超过10个字符)：</label> 
+							<input type="text"
+								class="form-control" id="projectZS" name="projectZS" placeholder="项目主审">
+							<span id="projectZSMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="projectCY"><span style="color:red">* </span>项目成员(多个用空格隔开,不超过32个字符)：</label> 
+							<input type="text"
+								class="form-control" id="projectCY" name="projectCY" placeholder="项目成员">
+							<span id="projectCYMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="checkData"><span style="color:red">* </span>项目开始时间(例:2016-7-8)：</label> 
+							<input type="text"
+								class="form-control datepicker" id="start" name="start" placeholder="  请选择日期">
+							<span id="startMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="checkData"><span style="color:red">* </span>项目结束时间：</label> 
+							<input type="text"
+								class="form-control datepicker" id="end" name="end" placeholder="  请选择日期">
+							<span id="endMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="workDays"><span style="color:red">* </span>现场工作量(人\天)：</label> 
+							<input class="form-control" type="number" id="workDays" name="workDays" placeholder="现场工作日">
+							<span id="workDaysMsg" class="help-block"></span>
+						</div>
+						<div class="form-group">
+							<label for="remark">备注(不超过100个字符)：</label> 
+							<input type="text"
+								class="form-control" id="remark" name="remark" placeholder="备注">
+							<span id="remarkMsg" class="help-block"></span>
+						</div>
+						
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="btnSave">保存</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+<div th:replace="/layout/sets :: copy1"></div>
+<div th:replace="/layout/sets :: copy2"></div>
+<div th:replace="/layout/sets :: copy3"></div>
+<script th:replace="/layout/sets :: copy4"></script>
+</body>
+</html>
